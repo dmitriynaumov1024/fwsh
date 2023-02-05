@@ -1,51 +1,67 @@
 Production management and order processing system for a furniture workshop
+--------------------------------------------------------------------------
 
 Copyright 2022 - 2023 Dmitriy Naumov naumov1024@gmail.com
 
 Repository https://github.com/dmitriynaumov1024/fwsh/
 
-1. This work was created for academic research purposes only, copyright of this work or any fragment is preserved to author, if no other is mentioned, as long as the repository exists.
+1. This work was created for academic research purposes only, copyright of 
+this work or any fragment is preserved to author, if no other is mentioned, 
+as long as the repository exists.
 
-2. End user must read this document and may proceed to use executable form of this work only if they have read this document and agree with all statements.
+2. End user must read this document and may proceed to use executable form of 
+this work only if they have read this document and agree with all statements.
 
-3. Commercial (with intent of earning money or any other advantage) redistribution of either source or compiled executable files of this work via any physical media or network, either with or without source code or copyright notice, is PROHIBITED. 
+3. Commercial (with intent of earning money or any other advantage) 
+redistribution of either source or compiled executable files of this work via 
+any physical media or network, either with or without source code or copyright
+notice, is PROHIBITED. 
 
-4. Permission is granted to anyone to manipulate this work free of charge for either demonstration or research purposes if all conditions of this document are met.
+4. Permission is granted to anyone to manipulate this work free of charge for 
+either demonstration or research purposes if all conditions of this document 
+are met.
 
 5. Explainations
 
-5.1. "This work" means source code and any text or multimedia or binary file in this repository except for files that are hidden or generated either by operational system or IDE or development tool CLI or ignored by Git.
+5.1. "This work" means source code and any text or multimedia or binary file 
+in this repository except for files that are hidden or generated either by 
+operational system or IDE or development tool CLI or ignored by Git.
 
 5.2. "Manipulate" means either:
-    - redistribute this work for free;
-    - modify this work or any fragment of it;
-    - include this work or any fragment of it, in your own works.
+  - redistribute this work for free;
+  - modify this work or any fragment of it;
+  - include this work or any fragment of it, in your own works.
 
-5.3. "Modified" means any modification to source code as long as it is either visually similar to original work or serves the exact same or similar purpose.
+5.3. "Modified" means any modification to source code as long as it is either 
+visually similar to original work or serves the exact same or similar purpose.
 
-5.4. "Fragment" means file or class or method as long as it can not serve the original or similar purpose of this work.
+5.4. "Fragment" means file or class or method as long as it can not serve the 
+original or similar purpose of this work.
 
-6. When redistributing exact copy of this work or compiled executable version of it, 
-you must:
-    - provide a copy of this document;
-    - provide either original source code of this work or link to source repository;
-    - not change this document;
-    - not change copyright notices provided in this work.
+6. When redistributing exact copy of this work or compiled executable version 
+of it, you must:
+  - provide a copy of this document;
+  - provide either source code of this work or link to source repository;
+  - not change this document;
+  - not change copyright notices provided in this work.
 
-7. When redistributing modified version of this work or compiled executable version of it, 
-you must:
-    - provide a copy of this document with addition of your copyright notice; 
-    - provide either original source code of this work or link to source repository;
-    - describe changes made by you;
-    - not distribute under different license.
+7. When redistributing modified version of this work or compiled executable 
+version of it, you must:
+  - provide a copy of this document with addition of your copyright notice; 
+  - provide either source code of this work or link to source repository;
+  - describe changes made by you;
+  - not distribute under different license.
 
-8. When including a fragment of this work in your own work, 
-you must:
-    - provide a copy of this document;
-    - provide either original source code of fragment or link to source repository;
-    - put copyright notice in corresponding section of result of your manipulation;
-you may:
-    - provide another copy of source code with your manipulations.
-    - distribute your work under different well-known license, if latter allows combining different licenses, and provide a copy of this document. 
+8. When including a fragment of this work in your own work, you must:
+  - provide a copy of this document;
+  - provide either source code of fragment or link to source repository;
+  - put copyright notice in corresponding section of your own work;
 
-9. WARRANTY DISCLAIMER: This work is provided AS IS with NO WARRANTY with NO EXCEPTIONS, neither authors nor distributors shall be liable for data loss or any other damage to property.
+  you may:
+  - provide another copy of source code with your manipulations;
+  - distribute your work under different well-known license, if latter
+    allows combining different licenses, and provide a copy of this document. 
+
+9. WARRANTY DISCLAIMER:  This work is provided  AS IS  with  NO WARRANTY with
+NO EXCEPTIONS, neither authors nor distributors shall be liable for data loss
+or any other damage to property.
