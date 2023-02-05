@@ -14,5 +14,5 @@ public abstract class Resource
 
     public double PricePerUnit { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

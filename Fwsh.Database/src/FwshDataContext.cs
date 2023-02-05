@@ -27,7 +27,7 @@ public class FwshDataContext : DbContext
     public DbSet<RepairOrder> RepairOrders { get; set; }
 
     // TO Be DONE
-    // Events, Paychecks etc are not yet in the graph.
+    // Events are not yet in the graph.
 
     public FwshDataContext() { }
 
@@ -47,7 +47,10 @@ public class FwshDataContext : DbContext
     {
         modelBuilder.Entity<Design>(entity => {
             entity.HasKey("Id");
-            entity.HasIndex("NameKey").IsUnique();
+
+            entity.HasIndex("NameKey")
+                .IsUnique();
+
             entity.Ignore("DimCompact");
             entity.Ignore("DimExpanded");
         });
@@ -114,7 +117,15 @@ public class FwshDataContext : DbContext
                 .HasForeignKey("Id");
         });
 
+        modelBuilder.Entity<Customer>(customer => {
+            customer.HasIndex("Phone")
+                .IsUnique();
+        });
+
         modelBuilder.Entity<Worker>(worker => {
+            worker.HasIndex("Phone")
+                .IsUnique();
+
             worker.HasMany(w => w.Roles)
                 .WithOne()
                 .HasForeignKey("WorkerId");
