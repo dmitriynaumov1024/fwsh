@@ -2,6 +2,7 @@ namespace Fwsh.Common;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Customer : Person
 {
@@ -19,5 +20,16 @@ public class Customer : Person
     {
         this.ProductionOrders = new HashSet<ProductionOrder>();
         this.RepairOrders = new HashSet<RepairOrder>();
+    }
+
+    public int CalculateDiscountPercent()
+    {
+        double discountPerOneOrder = this.IsOrganization ? 0.25 : 2.0;
+
+        double discount = this.ProductionOrders
+            .Where(order => order.Status == OrderStatus.Accepted)
+            .Count() * discountPerOneOrder;
+
+        return (int)Math.Clamp(discount, 0, PriceFormation.MaxDiscountPercent);
     }
 }

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public static class PriceFormationExtensions
 {
-    public static int PriceMarginPercent = 45;
-    public static int MaxDiscountPercent = 30;
+    static int PriceMarginPercent => PriceFormation.PriceMarginPercent;
+    static int MaxDiscountPercent => PriceFormation.MaxDiscountPercent;
 
 
     public static int WithMargin (this int price)

@@ -8,7 +8,7 @@ public abstract class Order
     public int Id { get; set; }
     public int CustomerId { get; set; }
     
-    public string Status { get; set; }
+    public string Status { get; set; } = OrderStatus.Unknown;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? StartedAt { get; set; }
