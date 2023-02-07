@@ -26,4 +26,38 @@ public class PriceFormationTest
             customer.DiscountPercent, initialPrice, initialPrice.WithMargin(), 
             initialPrice.WithMargin().WithDiscountFor(customer));
     }
+
+    [Test]
+    public void TestDiscountLogicForIndividual()
+    {
+        int initialPrice = 1000;
+        var customer = new Customer();
+        for (int i=0; i<5; i++) {
+            customer.ProductionOrders.Add (new ProductionOrder() { 
+                Status = OrderStatus.ReceivedAndPaid
+            });
+        }
+        customer.UpdateDiscountPercent();
+        Console.Write("Discount for individual\n  with {4} orders\ndiscount: -{0}% \n  {1} -> {2} -> {3}\n", 
+            customer.DiscountPercent, initialPrice, initialPrice.WithMargin(), 
+            initialPrice.WithMargin().WithDiscountFor(customer), customer.ProductionOrders.Count);
+    }
+
+    [Test]
+    public void TestDiscountLogicForOrganization()
+    {
+        int initialPrice = 1000;
+        var customer = new Customer() {
+            IsOrganization = true
+        };
+        for (int i=0; i<5; i++) {
+            customer.ProductionOrders.Add (new ProductionOrder() { 
+                Status = OrderStatus.ReceivedAndPaid
+            });
+        }
+        customer.UpdateDiscountPercent();
+        Console.Write("Discount for organization\n  with {4} orders\ndiscount: -{0}% \n  {1} -> {2} -> {3}\n", 
+            customer.DiscountPercent, initialPrice, initialPrice.WithMargin(), 
+            initialPrice.WithMargin().WithDiscountFor(customer), customer.ProductionOrders.Count);
+    }
 }
