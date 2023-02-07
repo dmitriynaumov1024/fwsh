@@ -27,9 +27,14 @@ public class Customer : Person
         double discountPerOneOrder = this.IsOrganization ? 0.25 : 2.0;
 
         double discount = this.ProductionOrders
-            .Where(order => order.Status == OrderStatus.Accepted)
+            .Where(order => order.Status == OrderStatus.ReceivedAndPaid)
             .Count() * discountPerOneOrder;
 
         return (int)Math.Clamp(discount, 0, PriceFormation.MaxDiscountPercent);
+    }
+
+    public void UpdateDiscountPercent()
+    {
+        this.DiscountPercent = this.CalculateDiscountPercent();
     }
 }

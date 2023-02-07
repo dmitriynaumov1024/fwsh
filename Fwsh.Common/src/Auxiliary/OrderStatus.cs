@@ -8,7 +8,7 @@ public static class OrderStatus
         Delayed = "delayed",
         Production = "production",
         Finished = "finished",
-        Accepted = "accepted",
+        ReceivedAndPaid = "receivedpaid",
         Rejected = "rejected",
         Impossible = "impossible";
 }
