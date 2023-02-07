@@ -26,6 +26,9 @@ public class FwshDataContext : DbContext
     public DbSet<ProductionOrder> ProductionOrders { get; set; }
     public DbSet<RepairOrder> RepairOrders { get; set; }
 
+    public DbSet<ProductionTask> ProductionTasks { get; set; }
+    public DbSet<RepairTask> RepairTasks { get; set; }
+
     // TO Be DONE
     // Events are not yet in the graph.
 
