@@ -14,6 +14,41 @@ public class FwshDataSeeder
     Factory<string> PhoneNumber = new PhoneNumberFactory();
     Factory<string> Password = new PasswordFactory();
     Factory<string> Email = new EmailFactory(); 
+    Factory<string> OrgName = new OrgNameFactory();
+    Factory<ICollection<WorkerRole>> WorkerRoles = new WorkerRoleFactory();
+
+    void SeedWorkers (FwshDataContext context, int count)
+    {
+        for (int i=0; i<count; i++) {
+            var (surname, name, patronym) = this.FullName.Next();
+            var worker = new Worker {
+                Surname = surname,
+                Name = name,
+                Patronym = patronym,
+                Phone = this.PhoneNumber.Next(),
+                Email = this.Email.Next(),
+                Password = this.Password.Next()
+            };
+            worker.Roles = this.WorkerRoles.Next();
+            context.Workers.Add(worker);
+        }
+    }
+
+    void SeedSuppliers (FwshDataContext context, int count)
+    {
+        for (int i=0; i<count; i++) {
+            var (surname, name, patronym) = this.FullName.Next();
+            var supplier = new Supplier {
+                Surname = surname,
+                Name = name,
+                Patronym = patronym,
+                OrgName = this.OrgName.Next(),
+                Phone = this.PhoneNumber.Next(),
+                Email = this.Email.Next()
+            };
+            context.Suppliers.Add(supplier);
+        }
+    }
 
     void SeedCustomers (FwshDataContext context, int count)
     {
@@ -34,6 +69,8 @@ public class FwshDataSeeder
 
     public void Seed (FwshDataContext context)
     {
-        this.SeedCustomers(context, 20);
+        this.SeedWorkers(context, 14);
+        this.SeedSuppliers(context, 6);
+        this.SeedCustomers(context, 25);
     }
 }

@@ -5,13 +5,14 @@ using System;
 public class PasswordFactory : Factory<string>
 {
     Random random = new Random();
+
+    static string passwordChars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789!/;:()*&^%$#@?_-+=,.'[]";
     
     public override string Next()
     {
-        string passwordChars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789!/;:()*&^%$#@?_-+=,.'[]";
-        char[] result = new char[random.Next(8, 19)];
+        char[] result = new char[random.Next(8, 17)];
         for (int i=0; i<result.Length; i++) {
-            result[i] = passwordChars[random.Next(0, passwordChars.Length)];
+            result[i] = random.Choice(passwordChars);
         }
         return new String(result);
     }
