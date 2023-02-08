@@ -3,6 +3,7 @@ namespace Fwsh.Common;
 using System;
 
 public class StoredResource<TCount, TResource> : ResourceQuantity<TCount, TResource>
+where TResource : Resource
 {
     public int Id { get; set; }
     
@@ -16,6 +17,8 @@ public class StoredResource<TCount, TResource> : ResourceQuantity<TCount, TResou
     public DateTime LastCheckedAt { get; set; } = DateTime.UtcNow;
 
     public virtual Supplier Supplier { get; set; }
+
+    public virtual int InStock => 0;
 
     public override int CalculateResourcePrice()
     {
