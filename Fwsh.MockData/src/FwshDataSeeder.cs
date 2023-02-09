@@ -16,6 +16,8 @@ public class FwshDataSeeder
     Factory<string> Email = new EmailFactory(); 
     Factory<string> OrgName = new OrgNameFactory();
     Factory<ICollection<WorkerRole>> WorkerRoles = new WorkerRoleFactory();
+    Factory<Color> Color = new ColorFactory();
+    Factory<FabricType> FabricType = new FabricTypeFactory();
 
     void SeedWorkers (FwshDataContext context, int count)
     {
@@ -67,10 +69,23 @@ public class FwshDataSeeder
         }
     }
 
+    void SeedColors (FwshDataContext context)
+    {
+        context.Colors.AddRange (this.Color.All());
+    }
+
+    void SeedFabricTypes (FwshDataContext context)
+    {
+        context.FabricTypes.AddRange (this.FabricType.All());
+    }
+
     public void Seed (FwshDataContext context)
     {
         this.SeedWorkers(context, 14);
         this.SeedSuppliers(context, 6);
         this.SeedCustomers(context, 25);
+
+        this.SeedColors(context);
+        this.SeedFabricTypes(context);
     }
 }
