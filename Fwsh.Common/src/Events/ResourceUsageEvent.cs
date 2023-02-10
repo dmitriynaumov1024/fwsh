@@ -1,6 +1,6 @@
 namespace Fwsh.Common;
 
-public abstract class ResourceUsageEvent : BasicEvent
+public class ResourceUsageEvent : BasicEvent
 {
     public string ResourceType { get; set; }
     public int WorkerId { get; set; }

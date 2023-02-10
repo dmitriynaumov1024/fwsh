@@ -1,6 +1,6 @@
 namespace Fwsh.Common;
 
-public abstract class ResourcePurchaseEvent : BasicEvent
+public class ResourcePurchaseEvent : BasicEvent
 {
     public string ResourceType { get; set; }
     public int ItemId { get; set; }
