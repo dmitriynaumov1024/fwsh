@@ -9,12 +9,22 @@ using Fwsh.Common;
 
 public class FwshDataContext : DbContext
 {
+    private Action<DbContextOptionsBuilder> Configure;
+
+    // Object-like entities --------------------------------------------------
+
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Worker> Workers { get; set; }
+    // Worker paychecks, Worker roles are accessible via Worker
     public DbSet<Supplier> Suppliers { get; set; }
 
     public DbSet<Design> Designs { get; set; }
-    
+    public DbSet<TaskPrototype> TaskPrototypes { get; set; }
+    // TaskPart, TaskMaterial, TaskFabric are accessible via TaskPrototype
+
+    public DbSet<Color> Colors { get; set; }
+    public DbSet<FabricType> FabricTypes { get; set; }
+
     public DbSet<Part> Parts { get; set; }
     public DbSet<Material> Materials { get; set; }
     public DbSet<Fabric> Fabrics { get; set; }
@@ -23,27 +33,45 @@ public class FwshDataContext : DbContext
     public DbSet<StoredMaterial> StoredMaterials { get; set; }
     public DbSet<StoredFabric> StoredFabrics { get; set; }
 
+    public DbSet<PartSupplyOrder> PartSupplyOrders { get; set; }
+    public DbSet<MaterialSupplyOrder> MaterialSupplyOrders { get; set; }
+    public DbSet<FabricSupplyOrder> FabricSupplyOrders { get; set; }
+
     public DbSet<ProductionOrder> ProductionOrders { get; set; }
     public DbSet<RepairOrder> RepairOrders { get; set; }
 
     public DbSet<ProductionTask> ProductionTasks { get; set; }
     public DbSet<RepairTask> RepairTasks { get; set; }
 
-    // TO Be DONE
-    // Events are not yet in the graph.
+    // Events ----------------------------------------------------------------
 
-    public FwshDataContext() { }
+    public DbSet<SignupEvent> SignupEvents { get; set; }
 
-    public FwshDataContext(DbContextOptions<FwshDataContext> options) : base(options) { }
+    public DbSet<ProductionOrderEvent> ProductionOrderEvents { get; set; }
+    public DbSet<RepairOrderEvent> RepairOrderEvents { get; set; }
+
+    public DbSet<ProductionEvent> ProductionEvents { get; set; }
+    public DbSet<RepairEvent> RepairEvents { get; set; }
+
+    public DbSet<ProductionPaymentEvent> ProductionPaymentEvents { get; set; }
+    public DbSet<RepairPaymentEvent> RepairPaymentEvents { get; set; }
+
+    public DbSet<ResourcePurchaseEvent> ResourcePurchaseEvents { get; set; }
+    public DbSet<ResourceUsageEvent> ResourceUsageEvents { get; set; }
+
+    public DbSet<PaycheckReceiveEvent> PaycheckReceiveEvents { get; set; }
+
+
+    public FwshDataContext(Action<DbContextOptionsBuilder> configure = null) : base()
+    { 
+        this.Configure = configure;
+    }
 
     protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder
-            .UseSnakeCaseNamingConvention()
-            .UseNpgsql ( String.Format (
-                "Host={0};Port={1};Database={2};Username={3};Password={4}",
-                "192.168.0.104", 5432, "fwshtest", "postgres", "postgres20"
-            ));
+        if (this.Configure != null) {
+            this.Configure(optionsBuilder);
+        }
     }
 
     protected override void OnModelCreating (ModelBuilder modelBuilder)
