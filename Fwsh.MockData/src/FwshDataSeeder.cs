@@ -15,6 +15,7 @@ public class FwshDataSeeder
     Factory<string> Password = new PasswordFactory();
     Factory<string> Email = new EmailFactory(); 
     Factory<string> OrgName = new OrgNameFactory();
+    Factory<string> ExternalId = new ExternalIdFactory();
     Factory<ICollection<WorkerRole>> WorkerRoles = new WorkerRoleFactory();
     Factory<Color> Color = new ColorFactory();
     Factory<FabricType> FabricType = new FabricTypeFactory();
@@ -128,6 +129,57 @@ public class FwshDataSeeder
         context.Parts.AddRange(this.Parts.All());
     }
 
+    void SeedStoredFabrics (FwshDataContext context)
+    {
+        var fabrics = context.Fabrics.Local.ToList();
+        var suppliers = context.Suppliers.Local.ToArray();
+
+        foreach (var fabric in fabrics) {
+            context.StoredFabrics.Add ( new StoredFabric {
+                Item = fabric,
+                Supplier = random.Choice(suppliers),
+                ExternalId = this.ExternalId.Next(),
+                Quantity = random.Next(60, 98),
+                NormalStock = 100,
+                RefillPeriodDays = 30
+            });
+        }
+    }
+
+    void SeedStoredMaterials (FwshDataContext context)
+    {
+        var materials = context.Materials.Local.ToList();
+        var suppliers = context.Suppliers.Local.ToArray();
+
+        foreach (var mat in materials) {
+            context.StoredMaterials.Add ( new StoredMaterial {
+                Item = mat,
+                Supplier = random.Choice(suppliers),
+                ExternalId = this.ExternalId.Next(),
+                Quantity = (int)((double)random.Next(4400, 5000) / Math.Sqrt(mat.PricePerUnit)),
+                NormalStock = (int)((double)random.Next(4950, 6000) / Math.Sqrt(mat.PricePerUnit)),
+                RefillPeriodDays = 14
+            });
+        }
+    }
+
+    void SeedStoredParts (FwshDataContext context)
+    {
+        var parts = context.Parts.Local.ToList();
+        var suppliers = context.Suppliers.Local.ToArray();
+
+        foreach (var part in parts) {
+            context.StoredParts.Add ( new StoredPart {
+                Item = part,
+                Supplier = random.Choice(suppliers),
+                ExternalId = this.ExternalId.Next(),
+                Quantity = (int)((double)random.Next(3600, 4000) / Math.Sqrt(part.PricePerUnit)),
+                NormalStock = (int)((double)random.Next(3950, 4000) / Math.Sqrt(part.PricePerUnit)),
+                RefillPeriodDays = 30
+            });
+        }
+    }
+
     public void Seed (FwshDataContext context)
     {
         this.SeedWorkers(context, 14);
@@ -140,5 +192,9 @@ public class FwshDataSeeder
         this.SeedParts(context);
         this.SeedMaterials(context);
         this.SeedFabrics(context);
+
+        this.SeedStoredParts(context);
+        this.SeedStoredMaterials(context);
+        this.SeedStoredFabrics(context);
     }
 }
