@@ -18,6 +18,8 @@ public class FwshDataSeeder
     Factory<ICollection<WorkerRole>> WorkerRoles = new WorkerRoleFactory();
     Factory<Color> Color = new ColorFactory();
     Factory<FabricType> FabricType = new FabricTypeFactory();
+    Factory<Material> Materials = new MaterialFactory();
+    Factory<Part> Parts = new PartFactory();
 
     void SeedWorkers (FwshDataContext context, int count)
     {
@@ -79,6 +81,53 @@ public class FwshDataSeeder
         context.FabricTypes.AddRange (this.FabricType.All());
     }
 
+    void SeedFabrics (FwshDataContext context)
+    {
+        var fabrics = context.Colors.Local
+            .Join ( context.FabricTypes.Local, 
+                color => !color.Name.Contains("wood"), fabric => true, 
+                (color, fabric) => new Tuple<Color, FabricType>(color, fabric) 
+            )
+            .Where(_ => random.Probability(0.85))
+            .ToList();
+
+        foreach (var (color, fabric) in fabrics) {
+            context.Fabrics.Add ( new Fabric {
+                Name = $"{fabric.Name} {color.Name}",
+                Description = fabric.Description,
+                PricePerUnit = random.Next(150, 290),
+                PhotoUrl = "/stub.jpg",
+                Color = color,
+                FabricType = fabric
+            });
+        }
+    }
+
+    void SeedMaterials (FwshDataContext context)
+    {
+        context.Materials.AddRange(this.Materials.All()); 
+
+        var woodColors = context.Colors.Local
+            .Where(color => color.Name.Contains("wood"))
+            .ToList();
+
+        foreach (var color in woodColors) {
+            context.Materials.Add ( new Material {
+                Name = $"{color.Name} decorative slab",
+                MeasureUnit = MeasureUnits.SquareMeters,
+                IsDecorative = true,
+                PricePerUnit = 80,
+                PhotoUrl = "/stub.jpg",
+                Color = color
+            });
+        }
+    }
+
+    void SeedParts (FwshDataContext context)
+    {
+        context.Parts.AddRange(this.Parts.All());
+    }
+
     public void Seed (FwshDataContext context)
     {
         this.SeedWorkers(context, 14);
@@ -87,5 +136,9 @@ public class FwshDataSeeder
 
         this.SeedColors(context);
         this.SeedFabricTypes(context);
+
+        this.SeedParts(context);
+        this.SeedMaterials(context);
+        this.SeedFabrics(context);
     }
 }

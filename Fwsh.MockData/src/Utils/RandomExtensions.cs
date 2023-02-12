@@ -13,4 +13,9 @@ static class RandomExtensions
     {
         return data[random.Next(0, data.Length)];
     }
+
+    public static bool Probability(this Random random, double p)
+    {
+        return random.NextDouble() <= p;
+    }
 }

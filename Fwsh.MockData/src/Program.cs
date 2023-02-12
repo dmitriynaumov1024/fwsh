@@ -10,7 +10,7 @@ public class Program
 {
     public static void Main (string[] args) 
     {
-        FwshDataContext context = new FwshDataContext();
+        FwshDataContext context = new FwshDataContextPostgres();
         FwshDataSeeder seeder = new FwshDataSeeder();
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
