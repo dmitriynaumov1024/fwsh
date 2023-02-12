@@ -5,7 +5,7 @@ using System;
 public class Material : Resource 
 {
     public string MeasureUnit { get; set; }
-
+    public bool IsDecorative { get; set; }
     public int? ColorId { get; set; }
     public string PhotoUrl { get; set; }
 
