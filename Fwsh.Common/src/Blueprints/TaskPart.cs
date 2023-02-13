@@ -2,9 +2,8 @@ namespace Fwsh.Common;
 
 using System;
 
-public class TaskPart : ResourceQuantity<int, Part>
+public class TaskPart : TaskResourceUsage<int, Part>
 {
-    public int TaskId { get; set; }
     public int PartId { get; set; }
 
     public override int CalculateResourcePrice()

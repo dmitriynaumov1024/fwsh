@@ -27,18 +27,20 @@ public class Design
 
     public string DimCompactString { 
         get { 
-            return this.DimCompact.ToConventionalString(); 
+            return this.DimCompact?.ToConventionalString(); 
         }
         set { 
+            if (value == null || value == String.Empty) return;
             this.DimCompact = Dimensions.Parse(value); 
         }
     }
 
     public string DimExpandedString { 
         get { 
-            return this.DimExpanded.ToConventionalString(); 
+            return this.DimExpanded?.ToConventionalString(); 
         }
         set { 
+            if (value == null || value == String.Empty) return;
             this.DimExpanded = Dimensions.Parse(value); 
         }
     }

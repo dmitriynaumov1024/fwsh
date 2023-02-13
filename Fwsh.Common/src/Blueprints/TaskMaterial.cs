@@ -2,10 +2,9 @@ namespace Fwsh.Common;
 
 using System;
 
-public class TaskMaterial : ResourceQuantity<double, Material>
+public class TaskMaterial : TaskResourceUsage<double, Material>
 {
     // some Materials, like Fabrics, can also be determined by order 
-    public int TaskId { get; set; }
     public int? MaterialId { get; set; }
     public bool DeterminedByOrder => this.Item == null && this.MaterialId == null;
 
