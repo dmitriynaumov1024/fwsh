@@ -8,6 +8,11 @@ using Fwsh.Common;
 public class ColorFactory : Factory<Color>
 {
     static Color[] data = new[] {
+        // new Color {
+        //     Id = -1,
+        //     Name = "default",
+        //     RgbCode = null
+        // },
         new Color {
             Name = "Fuchsia",
             RgbCode = "#991687"
