@@ -21,6 +21,7 @@ public class FwshDataSeeder
     Factory<FabricType> FabricType = new FabricTypeFactory();
     Factory<Material> Materials = new MaterialFactory();
     Factory<Part> Parts = new PartFactory();
+    Factory<Design> Designs = new DesignFactory();
 
     void SeedWorkers (FwshDataContext context, int count)
     {
@@ -180,6 +181,177 @@ public class FwshDataSeeder
         }
     }
 
+    void SeedDesigns (FwshDataContext context)
+    {
+        var designs = this.Designs.All();
+        
+        foreach (var design in designs) {
+            var photos = Enumerable.Range(0, random.Next(2, 5))
+                .Select(i => new DesignPhoto {
+                    Position = i,
+                    Url = $"/{design.NameKey}{i}.jpg"
+                });
+            design.Photos = new HashSet<DesignPhoto>(photos);
+        }
+
+        context.Designs.AddRange(designs);
+    }
+
+    void SeedTaskPrototypes (FwshDataContext context)
+    {
+        var designs = context.Designs.Local.ToList();
+        
+        // context.Fabrics.Add ( new Fabric {
+        //     Id = -1,
+        //     Name = "default",
+        //     ColorId = -1,
+        //     FabricTypeId = -1
+        // });
+
+        var screwPart = context.Parts.Local
+            .Where(p => p.Name.Contains("Screw 55mm")).FirstOrDefault();
+        
+        var wood = context.Materials.Local
+            .Where(m => m.Name == "Wood").FirstOrDefault();
+
+        var woodenSlab = context.Materials.Local
+            .Where(m => m.Name.Contains("slab")).FirstOrDefault();
+
+        var pvaGlue = context.Materials.Local
+            .Where(m => m.Name.Contains("PVA")).FirstOrDefault();
+
+        var foam50 = context.Materials.Local
+            .Where(m => m.Name.Contains("Foam 50mm")).FirstOrDefault();
+
+        var syntp = context.Materials.Local
+            .Where(m => m.Name == "Synthepone").FirstOrDefault();
+
+        var interlin = context.Materials.Local
+            .Where(m => m.Name.Contains("Interlining")).FirstOrDefault();
+
+        var foamGlue = context.Materials.Local
+            .Where(m => m.Name.Contains("Foam glue")).FirstOrDefault();
+
+        var joints = context.Parts.Local
+            .Where(p => p.Name.Contains("mechanism")).ToArray();
+
+        var leg = context.Parts.Local
+            .Where(p => p.Name.Contains("leg")).FirstOrDefault();
+
+        foreach (var design in designs) 
+        {
+            var dimensions = design.DimExpanded ?? design.DimCompact 
+                            ?? new Dimensions { Length = 100, Width = 100 };
+
+            double approxArea = (double)dimensions.Length 
+                              * (double)dimensions.Width / 10000;
+
+            design.TaskPrototypes = new HashSet<TaskPrototype> {
+                new TaskPrototype {
+                    Precedence = 0,
+                    RoleName = Roles.Carpentry,
+                    Payment = 300,
+                    Description = "Wooden frame manufacture",
+                    InstructionUrl = $"/{design.NameKey}-task-0.pdf",
+                    Materials = new HashSet<TaskMaterial> {
+                        new TaskMaterial {
+                            Item = wood,
+                            Quantity = approxArea * 0.01
+                        },
+                        new TaskMaterial {
+                            Item = pvaGlue,
+                            Quantity = 0.075
+                        }
+                    },
+                    Parts = new HashSet<TaskPart> {
+                        new TaskPart {
+                            Item = screwPart,
+                            Quantity = (int)(approxArea * 10) + random.Next(0, 5)
+                        }
+                    }
+                },
+                new TaskPrototype {
+                    Precedence = 1,
+                    RoleName = Roles.Carpentry,
+                    Payment = 300,
+                    Description = "Compound frame manufacture",
+                    InstructionUrl = $"/{design.NameKey}-task-1.pdf",
+                    Materials = new HashSet<TaskMaterial> {
+                        new TaskMaterial {
+                            Item = wood,
+                            Quantity = approxArea * 0.005
+                        },
+                        new TaskMaterial {
+                            Item = woodenSlab,
+                            Quantity = approxArea 
+                        }
+                    },
+                    Parts = new HashSet<TaskPart> {
+                        new TaskPart {
+                            Item = screwPart,
+                            Quantity = (int)(approxArea * 12) + random.Next(0, 5)
+                        }
+                    }
+                },
+                new TaskPrototype {
+                    Precedence = 1,
+                    RoleName = Roles.Sewing,
+                    Payment = 300,
+                    Description = "Cover manufacture",
+                    InstructionUrl = $"/{design.NameKey}-task-2.pdf",
+                    Fabrics = new HashSet<TaskFabric> {
+                        new TaskFabric {
+                            // FabricId = -1,
+                            Quantity = approxArea * 2
+                        }
+                    } 
+                },
+                new TaskPrototype {
+                    Precedence = 2,
+                    RoleName = Roles.Upholstery,
+                    Payment = 300,
+                    Description = "Upholstery",
+                    InstructionUrl = $"/{design.NameKey}-task-3.pdf",
+                    Materials = new HashSet<TaskMaterial> {
+                        new TaskMaterial {
+                            Item = foamGlue,
+                            Quantity = 0.025 * approxArea
+                        },
+                        new TaskMaterial {
+                            Item = foam50,
+                            Quantity = approxArea * 1.8
+                        },
+                        new TaskMaterial {
+                            Item = syntp,
+                            Quantity = approxArea * 1.5
+                        },
+                        new TaskMaterial {
+                            Item = interlin,
+                            Quantity = approxArea * 2
+                        }
+                    }
+                },
+                new TaskPrototype {
+                    Precedence = 3,
+                    RoleName = Roles.Assembly,
+                    Payment = 250,
+                    Description = "Final assembly",
+                    InstructionUrl = $"/{design.NameKey}-task-4.pdf",
+                    Parts = new HashSet<TaskPart> {
+                        new TaskPart {
+                            Item = leg,
+                            Quantity = random.Next(4, 6)
+                        },
+                        new TaskPart {
+                            Item = random.Choice(joints),
+                            Quantity = 2
+                        }
+                    }
+                }
+            };
+        }
+    }
+
     public void Seed (FwshDataContext context)
     {
         this.SeedWorkers(context, 14);
@@ -196,5 +368,8 @@ public class FwshDataSeeder
         this.SeedStoredParts(context);
         this.SeedStoredMaterials(context);
         this.SeedStoredFabrics(context);
+
+        this.SeedDesigns(context);
+        this.SeedTaskPrototypes(context);
     }
 }
