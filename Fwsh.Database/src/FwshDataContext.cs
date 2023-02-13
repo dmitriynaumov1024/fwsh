@@ -101,7 +101,7 @@ public class FwshDataContext : DbContext
         });
 
         modelBuilder.Entity<TaskPart>(entity => {
-            entity.HasKey("TaskId", "PartId");
+            entity.HasKey("Id");
 
             entity.HasOne(t => t.Item)
                 .WithMany()
@@ -109,19 +109,21 @@ public class FwshDataContext : DbContext
         });
 
         modelBuilder.Entity<TaskMaterial>(entity => {
-            entity.HasKey("TaskId", "MaterialId");
-
+            entity.HasKey("Id");
+            
             entity.HasOne(t => t.Item)
                 .WithMany()
-                .HasForeignKey("MaterialId");
+                .HasForeignKey("MaterialId")
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<TaskFabric>(entity => {
-            entity.HasKey("TaskId", "FabricId");
-
+            entity.HasKey("Id");
+            
             entity.HasOne(t => t.Item)
                 .WithMany()
-                .HasForeignKey("FabricId");
+                .HasForeignKey("FabricId")
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<StoredPart>(entity => {
