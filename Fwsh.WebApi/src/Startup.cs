@@ -24,6 +24,7 @@ public class Startup
     public void ConfigureServices (IServiceCollection services)
     {
         services.AddSingleton<FwshDataContext>(new FwshDataContextInMemory());
+        services.AddSingleton<FwshUserStorage>(new FwshUserStorageInMemory());
         // services.AddSingleton<UniformCrudProvider>();
         services.AddRouting();
         services.AddControllers();

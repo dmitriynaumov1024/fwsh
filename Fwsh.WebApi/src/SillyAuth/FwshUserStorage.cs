@@ -4,83 +4,86 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class FwshUserStorage
+public abstract class FwshUserStorage
 {
-    private static TimeSpan SessionTimeout = new TimeSpan(4, 0, 0); // 4 hours
-    private static TimeSpan TokenTimeTTL = new TimeSpan(0, 10, 0); // 10 minutes
-    private static int TokenRequestTTL = 16; // 16 requests and then token should be updated
+    protected abstract FwshUser GetUserById (string id);
+    protected abstract void PutUser (string id, FwshUser user);
+    protected abstract void RemoveUser (string id);
+    protected abstract bool ContainsUserId (string id);
+    protected abstract int TryCleanUp ();
 
-    private static Dictionary<string, FwshUser> users = new();
+    protected readonly TimeSpan CleanUpInterval = new TimeSpan(0, 10, 0); // 10 minutes
+    protected readonly TimeSpan SessionTimeout = new TimeSpan(4, 0, 0); // 4 hours
+    protected readonly TimeSpan TokenTimeTTL = new TimeSpan(0, 10, 0); // 10 minutes
+    protected readonly int TokenRequestTTL = 16; // 16 requests and then token should be updated
 
-    public static FwshUser GetUserById (string id)
+    private DateTime LastCleanUpTime = DateTime.UtcNow;
+    
+    public FwshUser GetUserByIdToken (string id, string token)
     {
-        FwshUser result = null;
-        users.TryGetValue(id, out result);
-        return result;
-    }
+        // 1. Null guard
+        if (id == null || token == null) {
+            return null;
+        } 
 
-    public static FwshUser GetUserByIdToken (string id, string token)
-    {
-        var now = DateTime.UtcNow;
-
-        FwshUser result = null;
-        users.TryGetValue(id, out result);
+        // 2. Try get value
+        FwshUser result = this.GetUserById(id);
         
         if (result == null) {
             return null;
         }
 
+        // 3. If user session is expired, terminate anyway
+        var now = DateTime.UtcNow;
         if (now - result.LastTokenUpdate >= SessionTimeout) {
-            int expiredCleanedUp = TryCleanUp();
-            Console.WriteLine("  Cleaned up {0} expired users", expiredCleanedUp);
+            this.OnExpiredUser(result);
             return null;
         }
 
-        if (result.Token != token) {
+        // 4. Check token
+        if (!(result.Token == token || result.OldToken == token)) {
             return null;
         }
 
+        // 5. If request TTL or time TTL reaches 0, update token
         result.TTL--;
         if (result.TTL <= 0 || now - result.LastTokenUpdate >= TokenTimeTTL) {
             result.TTL = TokenRequestTTL;
-            result.LastTokenUpdate = DateTime.UtcNow;
+            result.LastTokenUpdate = now;
+            result.OldToken = result.Token;
             result.Token = Guid.NewGuid().ToString();
+            this.PutUser(id, result);
         }
 
+        // 6. return result
         return result;
     }
 
-    public static KeyValuePair<string, FwshUser> NewUser ()
+    public KeyValuePair<string, FwshUser> NewUser ()
     {
         FwshUser user = new() {
             Token = Guid.NewGuid().ToString(),
             LastTokenUpdate = DateTime.UtcNow,
             TTL = TokenRequestTTL
         };
-        string key = null;
+        string id = null;
         do { 
-            key = Guid.NewGuid().ToString();
-        } while (users.ContainsKey(key));
-        users[key] = user;
-        return new (key, user);
+            id = Guid.NewGuid().ToString();
+        } while (this.ContainsUserId(id));
+        this.PutUser(id, user);
+        return new (id, user);
     }
 
-    private static DateTime LastCleanUpTime = DateTime.UtcNow;
-    private static TimeSpan CleanUpInterval = new TimeSpan(0, 10, 0);
-    
-    public static int TryCleanUp ()
+    public void UpdateUser (string id, FwshUser user)
     {
-        if (DateTime.UtcNow - LastCleanUpTime <= CleanUpInterval) return 0;
+        this.PutUser(id, user);
+    }
 
-        var now = DateTime.UtcNow;
-        LastCleanUpTime = now;
-        var expired = users
-            .Where(kv => now - kv.Value.LastTokenUpdate >= SessionTimeout)
-            .Select(kv => kv.Key)
-            .ToList();
-        foreach (var key in expired) {
-            users.Remove(key);
-        }
-        return expired.Count;
+    protected void OnExpiredUser (FwshUser user)
+    {
+        if (DateTime.UtcNow - this.LastCleanUpTime <= CleanUpInterval) return;
+        int expiredCleanedUp = this.TryCleanUp();
+        this.LastCleanUpTime = DateTime.UtcNow;
+        Console.WriteLine("  Cleaned up {0} expired users", expiredCleanedUp);
     }
 }
