@@ -9,19 +9,22 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+
+using Fwsh.WebApi.Logging;
 
 public class SillyAuthMiddleware
 {
     // Note: this middleware is not really responsible for authorization. 
     // It provides session-like infrastructure to persist user info in intervals 
     // between HTTP requests.
+    private Logger logger;
     private FwshUserStorage userStorage;
     private RequestDelegate next;
 
-    public SillyAuthMiddleware (FwshUserStorage userStorage, RequestDelegate next) 
+    public SillyAuthMiddleware (Logger logger, FwshUserStorage userStorage, RequestDelegate next) 
     {
+        this.logger = logger;
         this.userStorage = userStorage;
         this.next = next;
     }
@@ -58,22 +61,22 @@ public class SillyAuthMiddleware
         user.Token = storedUser.Token;
 
         if (tokenUpdated) {
-            Console.WriteLine("  Token updated");
+            logger.Warn("Token updated");
             context.Response.Headers["Authorization"] = $"Bearer {key} {user.Token}";
         }
 
         await next(context);
 
-        Console.WriteLine($"  Auth token: {key}\n              {user.Token}");
+        logger.Log($"Auth token: {key} {user.Token}");
 
         if (storedUser.ConfirmedId == user.ConfirmedId) {
-            Console.WriteLine($"  ConfirmedId: {user.ConfirmedId}");
+            logger.Log($"ConfirmedId: {user.ConfirmedId}");
         }
         else { 
             // This could mean logging into another account 
             // so we need to reduce TTL of user
             storedUser.TTL = 0;
-            Console.WriteLine($"  ConfirmedId: {storedUser.ConfirmedId} => {user.ConfirmedId}");
+            logger.Warn($"ConfirmedId: {storedUser.ConfirmedId} => {user.ConfirmedId}");
         }
 
         storedUser.ConfirmedId = user.ConfirmedId;

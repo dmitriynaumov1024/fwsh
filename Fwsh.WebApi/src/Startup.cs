@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
 using Fwsh.Common;
@@ -23,8 +22,9 @@ public class Startup
 {
     public void ConfigureServices (IServiceCollection services)
     {
-        services.AddSingleton<FwshDataContext>(new FwshDataContextInMemory());
-        services.AddSingleton<FwshUserStorage>(new FwshUserStorageInMemory());
+        services.AddSingleton<Logger, ConsoleLogger>();
+        services.AddSingleton<FwshDataContext, FwshDataContextPostgres>();
+        services.AddSingleton<FwshUserStorage, FwshUserStorageInMemory>();
         // services.AddSingleton<UniformCrudProvider>();
         services.AddRouting();
         services.AddControllers();

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Fwsh.WebApi.Logging;
+
 public abstract class FwshUserStorage
 {
     protected abstract FwshUser GetUserById (string id);
@@ -18,6 +20,13 @@ public abstract class FwshUserStorage
     protected readonly int TokenRequestTTL = 16; // 16 requests and then token should be updated
 
     private DateTime LastCleanUpTime = DateTime.UtcNow;
+
+    private Logger logger;
+
+    public FwshUserStorage (Logger logger)
+    {
+        this.logger = logger;
+    }
     
     public FwshUser GetUserByIdToken (string id, string token)
     {
@@ -84,6 +93,6 @@ public abstract class FwshUserStorage
         if (DateTime.UtcNow - this.LastCleanUpTime <= CleanUpInterval) return;
         int expiredCleanedUp = this.TryCleanUp();
         this.LastCleanUpTime = DateTime.UtcNow;
-        Console.WriteLine("  Cleaned up {0} expired users", expiredCleanedUp);
+        logger.Log("Cleaned up {0} expired users", expiredCleanedUp);
     }
 }

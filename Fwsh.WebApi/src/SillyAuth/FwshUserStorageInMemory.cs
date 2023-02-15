@@ -4,9 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Fwsh.WebApi.Logging;
+
 public class FwshUserStorageInMemory : FwshUserStorage
 {
     private Dictionary<string, FwshUser> users = new();
+
+    public FwshUserStorageInMemory (Logger logger) : base(logger) { }
 
     protected override FwshUser GetUserById (string id)
     {
