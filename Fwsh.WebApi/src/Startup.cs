@@ -13,10 +13,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
+using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
-using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Logging;
+using Fwsh.WebApi.SillyAuth;
+using Fwsh.WebApi.RouteGuard;
 
 public class Startup 
 {
@@ -35,7 +37,7 @@ public class Startup
         services.AddScoped<FwshUser>();
     }
 
-    public void Configure (IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure (IApplicationBuilder app, IWebHostEnvironment environment)
     {
         // Enable routing
         app.UseRouting();
@@ -54,8 +56,11 @@ public class Startup
         // Console logging
         app.UseMiddleware<HttpRequestLoggerMiddleware>();
 
-        // Custom silly auth
+        // Custom silly authentication
         app.UseMiddleware<SillyAuthMiddleware>();
+
+        // Custom route guard
+        app.UseMiddleware<RouteGuardMiddleware>();
 
         // Configure endpoints
         app.UseEndpoints (endpoints => {
@@ -65,16 +70,21 @@ public class Startup
         app.Run (async (context) => {
             var request = context.Request;
             var response = context.Response;
-            var query = String.Join("\n", request.Query.Select(kv => kv.Key+"="+kv.Value));
-            response.StatusCode = 404;
-            response.ContentType = "text/plain; encoding=utf-8";
-            await response.WriteAsync (
-                $"Nothing here\n" +
-                $"Host: {request.Host}\n" +
-                $"Method: {request.Method}\n" +
-                $"Path: {request.Path}\n" +
-                $"Query: {query}\n"
-            );
+            
+            response.StatusCode = StatusCodes.Status404NotFound;
+            
+            if (env.isDevelopment) {
+                await response.WriteAsJsonAsync (new {
+                    Message = $"Nothing here on {request.Path}",
+                    Host = request.Host.ToString(),
+                    Method = request.Method.ToString(),
+                    Path = request.Path.ToString(),
+                    Query = String.Join(", ", request.Query.Select(kv => kv.Key+"="+kv.Value))
+                });
+            }
+            else {
+                await response.WriteAsJsonAsync<object>(null);
+            }
         });
     }
 }
