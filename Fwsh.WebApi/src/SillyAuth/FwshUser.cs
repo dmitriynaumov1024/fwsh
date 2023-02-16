@@ -10,4 +10,11 @@ public class FwshUser
     public string OldToken { get; set; }
     public int TTL { get; set; }
     public DateTime LastTokenUpdate { get; set; }
+
+    public void Destroy()
+    {
+        this.ConfirmedId = 0;
+        this.ConfirmedRole = UserRole.Unknown;
+        this.LastTokenUpdate = DateTime.MinValue;
+    }
 }
