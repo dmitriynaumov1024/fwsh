@@ -6,5 +6,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Fwsh.Common\Fwsh.Common.csproj" />
     <ProjectReference Include="..\Fwsh.Database\Fwsh.Database.csproj" />
+    <ProjectReference Include="..\Fwsh.Utils\Fwsh.Utils.csproj" />
   </ItemGroup>
 </Project>

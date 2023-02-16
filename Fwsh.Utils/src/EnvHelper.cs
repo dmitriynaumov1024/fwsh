@@ -1,4 +1,4 @@
-namespace Fwsh.Database;
+namespace Fwsh.Utils;
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ public static class env
         }
     }
 
-    public static readonly IDictionary<string, string> dotenvVariables = readDotenvVariables();
+    static readonly IDictionary<string, string> dotenvVariables = readDotenvVariables();
     
     public static string get (string key) 
     {
@@ -28,4 +28,6 @@ public static class env
         dotenvVariables.TryGetValue(key, out result); 
         return result ?? Environment.GetEnvironmentVariable(key);
     }
+
+    public static bool isDevelopment = get("ENVIRONMENT_TYPE").ToLower() == "development";
 }
