@@ -13,7 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 using Fwsh.WebApi.SillyAuth;
-using Fwsh.WebApi.Logging;
+using Fwsh.Logging;
 
 public class RouteGuardMiddleware
 {
@@ -28,7 +28,8 @@ public class RouteGuardMiddleware
 
     public async Task InvokeAsync (HttpContext context, FwshUser user)
     {
-        string path = context.Request.Path.ToString().Split('/').FirstOrDefault(s => s.Length > 0);
+        string path = context.Request.Path.ToString()
+            .Split('/').FirstOrDefault(s => s.Length > 0);
         UserRole role = user.ConfirmedRole;
 
         bool allowed = (path == "auth") 

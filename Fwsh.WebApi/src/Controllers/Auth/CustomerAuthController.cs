@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
-using Fwsh.WebApi.Logging;
+using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
@@ -71,7 +71,7 @@ public class CustomerAuthController : ControllerBase
             .FirstOrDefault();
 
         if (storedCustomer == null) {
-            return NotFound(new MessageResult($"No customer with phone {request.Phone}"));
+            return NotFound(new BadFieldResult("phone"));
         }
         if (storedCustomer.Password == request.Password.SHA512Hash()) {
             user.ConfirmedId = storedCustomer.Id;

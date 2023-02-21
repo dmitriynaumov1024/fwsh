@@ -11,11 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
+using Fwsh.Logging;
+
 public class HttpRequestLoggerMiddleware
 {
     private Logger logger;
     private RequestDelegate next;
-
 
     public HttpRequestLoggerMiddleware (Logger logger, RequestDelegate next) 
     {

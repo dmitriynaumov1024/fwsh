@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Fwsh.WebApi.Logging;
+using Fwsh.Logging;
 
 public class FwshUserStorageInMemory : FwshUserStorage
 {

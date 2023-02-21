@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
+using Fwsh.Logging;
 using Fwsh.WebApi.Logging;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.RouteGuard;
