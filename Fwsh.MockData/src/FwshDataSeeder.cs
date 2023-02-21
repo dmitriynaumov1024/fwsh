@@ -5,9 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Fwsh.Common;
 using Fwsh.Database;
+using Fwsh.Logging;
+using Fwsh.Utils;
 
 public class FwshDataSeeder
 {
+    public Logger CredentialsLogger { get; set; }
+
     Random random = new Random();
 
     Factory<Tuple<string, string, string>> FullName = new FullNameFactory();
@@ -23,6 +27,25 @@ public class FwshDataSeeder
     Factory<Part> Parts = new PartFactory();
     Factory<Design> Designs = new DesignFactory();
 
+    void SeedManagers (FwshDataContext context, int count)
+    {
+        for (int i=0; i<count; i++) {
+            var (surname, name, patronym) = this.FullName.Next();
+            var manager = new Worker {
+                Surname = surname,
+                Name = name,
+                Patronym = patronym,
+                Phone = this.PhoneNumber.Next(),
+                Email = this.Email.Next(),
+                Password = this.Password.Next()
+            };
+            this.CredentialsLogger?.Log("manager, {0}, {1}", manager.Phone, manager.Password);
+            manager.Password = manager.Password.SHA512Hash();
+            manager.Roles.Add(new WorkerRole { RoleName = Roles.Management });
+            context.Workers.Add(manager);
+        }
+    }
+
     void SeedWorkers (FwshDataContext context, int count)
     {
         for (int i=0; i<count; i++) {
@@ -35,6 +58,8 @@ public class FwshDataSeeder
                 Email = this.Email.Next(),
                 Password = this.Password.Next()
             };
+            this.CredentialsLogger?.Log("worker, {0}, {1}", worker.Phone, worker.Password);
+            worker.Password = worker.Password.SHA512Hash();
             worker.Roles = this.WorkerRoles.Next();
             context.Workers.Add(worker);
         }
@@ -60,16 +85,17 @@ public class FwshDataSeeder
     {
         for (int i=0; i<count; i++) {
             var (surname, name, patronym) = this.FullName.Next();
-            context.Customers.Add (
-                new Customer {
-                    Surname = surname,
-                    Name = name,
-                    Patronym = patronym,
-                    Phone = this.PhoneNumber.Next(),
-                    Email = this.Email.Next(),
-                    Password = this.Password.Next()
-                }
-            );
+            var customer = new Customer {
+                Surname = surname,
+                Name = name,
+                Patronym = patronym,
+                Phone = this.PhoneNumber.Next(),
+                Email = this.Email.Next(),
+                Password = this.Password.Next()
+            };
+            this.CredentialsLogger?.Log("customer, {0}, {1}", customer.Phone, customer.Password);
+            customer.Password = customer.Password.SHA512Hash();
+            context.Customers.Add(customer);
         }
     }
 
@@ -354,6 +380,7 @@ public class FwshDataSeeder
 
     public void Seed (FwshDataContext context)
     {
+        this.SeedManagers(context, 2);
         this.SeedWorkers(context, 14);
         this.SeedSuppliers(context, 6);
         this.SeedCustomers(context, 25);

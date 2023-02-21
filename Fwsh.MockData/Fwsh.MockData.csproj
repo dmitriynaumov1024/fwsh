@@ -5,6 +5,8 @@
     <RootNamespace>Fwsh.MockData</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fwsh.Utils\Fwsh.Utils.csproj" />
+    <ProjectReference Include="..\Fwsh.Logging\Fwsh.Logging.csproj" />
     <ProjectReference Include="..\Fwsh.Common\Fwsh.Common.csproj" />
     <ProjectReference Include="..\Fwsh.Database\Fwsh.Database.csproj" />
   </ItemGroup>

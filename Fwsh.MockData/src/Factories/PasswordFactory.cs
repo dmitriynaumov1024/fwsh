@@ -1,12 +1,13 @@
 namespace Fwsh.MockData;
 
 using System;
+using Fwsh.Utils;
 
 public class PasswordFactory : Factory<string>
 {
     Random random = new Random();
 
-    static string passwordChars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789!/;:()*&^%$#@?_-+=,.'[]";
+    static string passwordChars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789!:()[]&@?-_=";
     
     public override string Next()
     {
