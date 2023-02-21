@@ -1,4 +1,4 @@
-namespace Fwsh.WebApi.Logging;
+namespace Fwsh.Logging;
 
 public abstract class Logger
 {
