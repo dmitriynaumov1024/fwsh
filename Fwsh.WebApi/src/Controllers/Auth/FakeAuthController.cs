@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Fwsh.Utils;
 using Fwsh.WebApi.SillyAuth; 
+using Fwsh.WebApi.Results;
 
 [ApiController]
 [Route("auth/fake-auth")]

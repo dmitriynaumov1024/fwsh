@@ -56,7 +56,7 @@ public class CustomerAuthController : ControllerBase
             dataContext.Customers.Add(storedCustomer);
             dataContext.SaveChanges();
             int id = storedCustomer.Id;
-            return Ok(new CreatedResult(id, $"Successfully created {id}"));
+            return Ok(new CreationResult(id, $"Successfully created {id}"));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
