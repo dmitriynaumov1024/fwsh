@@ -34,10 +34,9 @@ public class ManagerAuthController : ControllerBase
     [HttpPost("signup")]
     public IActionResult Signup (WorkerSignupRequest request)
     {
+        // forbid manager signup in prod. environment
         if (!env.isDevelopment) {
-            return NotFound (new {
-                Message = "Not found"
-            });
+            return NotFound (new MessageResult("Not found"));
         }
 
         bool phoneAlreadyExists = dataContext.Workers
@@ -63,7 +62,8 @@ public class ManagerAuthController : ControllerBase
         try {
             dataContext.Workers.Add(storedWorker);
             dataContext.SaveChanges();
-            return Ok(new MessageResult($"Successfully created {storedWorker.Id}"));
+            int id = storedWorker.Id;
+            return Ok(new CreatedResult(id, $"Successfully created {id}"));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());

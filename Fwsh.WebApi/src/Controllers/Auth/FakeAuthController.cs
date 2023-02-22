@@ -23,19 +23,13 @@ public class FakeAuthController : ControllerBase
     [HttpGet("become-{rolename}")]
     public IActionResult Become (string rolename)
     {
-        if (!env.isDevelopment) {
-            return NotFound (new {
-                Message = "Not found"
-            });
+        if (!env.isDevelopment) { 
+            return NotFound (new MessageResult("Not found"));
         }
         if (Enum.TryParse<UserRole>(rolename, true, out UserRole role)) {
             user.ConfirmedRole = role;
-            return Ok (new {
-                Message = $"Now you are {rolename}"
-            });
+            return Ok (new MessageResult($"Now you are {rolename}"));
         }
-        return BadRequest (new { 
-            Message = $"Unrecognized role {rolename}"
-        });
+        return BadRequest (new MessageResult($"Unrecognized role {rolename}"));
     }
 }

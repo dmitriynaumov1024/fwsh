@@ -4,7 +4,7 @@ public class MessageResult
 {
     public string Message { get; set; }
 
-    public MessageResult (string message) 
+    public MessageResult (string message = null) 
     {
         this.Message = message;
     }

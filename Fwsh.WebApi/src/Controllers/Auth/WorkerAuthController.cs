@@ -58,7 +58,8 @@ public class WorkerAuthController : ControllerBase
         try {
             dataContext.Workers.Add(storedWorker);
             dataContext.SaveChanges();
-            return Ok(new MessageResult($"Successfully created {storedWorker.Id}"));
+            int id = storedWorker.Id;
+            return Ok(new CreatedResult(id, $"Successfully created {id}"));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
