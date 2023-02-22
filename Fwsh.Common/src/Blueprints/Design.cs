@@ -10,6 +10,8 @@ public class Design
 
     public string NameKey { get; set; }
 
+    public string Type { get; set; } = FurnitureTypes.Unknown;
+
     public string DisplayName { get; set; }
     public string Description { get; set; }
 

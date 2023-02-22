@@ -13,7 +13,8 @@ public class DesignFactory : Factory<Design>
         new Design {
             NameKey = "prague",
             DisplayName = "Prague",
-            Description = "Compact transformable couch",
+            Type = FurnitureTypes.Ottoman,
+            Description = "Compact transformable ottoman couch",
             IsTransformable = true,
             DimCompact = new Dimensions {
                 Length = 100,
@@ -29,6 +30,7 @@ public class DesignFactory : Factory<Design>
         new Design {
             NameKey = "lyra",
             DisplayName = "Lyra",
+            Type = FurnitureTypes.Ottoman,
             Description = "Compact transformable couch",
             IsTransformable = true,
             DimCompact = new Dimensions {
@@ -45,6 +47,7 @@ public class DesignFactory : Factory<Design>
         new Design {
             NameKey = "barras",
             DisplayName = "Barras",
+            Type = FurnitureTypes.Corner,
             Description = "Transformable corner couch",
             IsTransformable = true,
             DimCompact = new Dimensions {
@@ -61,6 +64,7 @@ public class DesignFactory : Factory<Design>
         new Design {
             NameKey = "londonese",
             DisplayName = "Londonese",
+            Type = FurnitureTypes.Armchair,
             Description = "Comfortable armchair",
             IsTransformable = false,
             DimCompact = new Dimensions {
@@ -77,6 +81,7 @@ public class DesignFactory : Factory<Design>
         new Design {
             NameKey = "chester",
             DisplayName = "Chester",
+            Type = FurnitureTypes.Pouffe,
             Description = "Compact round pouffe",
             IsTransformable = false,
             DimCompact = new Dimensions {
