@@ -1,4 +1,4 @@
-namespace Fwsh.WebApi.Controllers;
+namespace Fwsh.WebApi.Controllers.Worker;
 
 using System;
 using System.Collections.Generic;
@@ -12,19 +12,20 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
-using Fwsh.WebApi.Requests;
-using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
+using Fwsh.WebApi.Requests.Worker;
+using Fwsh.WebApi.Results;
+using Fwsh.WebApi.Results.Worker;
 
 [ApiController]
 [Route("worker/profile")]
-public class WorkerProfileController : ControllerBase
+public class ProfileController : ControllerBase
 {
     private FwshDataContext dataContext;
     private Logger logger;
     private FwshUser user;
 
-    public WorkerProfileController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    public ProfileController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;
         this.logger = logger;
@@ -43,7 +44,7 @@ public class WorkerProfileController : ControllerBase
             return NotFound(new MessageResult($"Can not view own profile."));
         }
 
-        return Ok (new WorkerResult(storedWorker)); 
+        return Ok (new WorkerProfileResult(storedWorker)); 
     }
 
     [HttpPost("update")]

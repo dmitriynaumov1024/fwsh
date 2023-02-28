@@ -1,4 +1,4 @@
-namespace Fwsh.WebApi.Results;
+namespace Fwsh.WebApi.Results.Common;
 
 using System;
 using Fwsh.Common;

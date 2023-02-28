@@ -1,4 +1,4 @@
-namespace Fwsh.WebApi.Requests;
+namespace Fwsh.WebApi.Requests.Worker;
 
 public class WorkerUpdateRequest 
 {

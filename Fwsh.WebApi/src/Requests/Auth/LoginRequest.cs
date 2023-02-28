@@ -1,4 +1,4 @@
-namespace Fwsh.WebApi.Requests;
+namespace Fwsh.WebApi.Requests.Auth;
 
 public class LoginRequest
 {

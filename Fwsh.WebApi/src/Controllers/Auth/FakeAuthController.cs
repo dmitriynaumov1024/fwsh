@@ -1,4 +1,4 @@
-namespace Fwsh.WebApi.Controllers;
+namespace Fwsh.WebApi.Controllers.Auth;
 
 using System;
 using System.Collections.Generic;

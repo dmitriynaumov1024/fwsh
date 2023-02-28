@@ -1,4 +1,4 @@
-namespace Fwsh.WebApi.Controllers;
+namespace Fwsh.WebApi.Controllers.Customer;
 
 using System;
 using System.Collections.Generic;
@@ -11,19 +11,20 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
-using Fwsh.WebApi.Requests;
+using Fwsh.WebApi.Requests.Customer;
 using Fwsh.WebApi.Results;
+using Fwsh.WebApi.Results.Customer;
 using Fwsh.WebApi.SillyAuth;
 
 [ApiController]
 [Route("customer/profile")]
-public class CustomerProfileController : ControllerBase
+public class ProfileController : ControllerBase
 {
     private FwshDataContext dataContext;
     private Logger logger;
     private FwshUser user;
 
-    public CustomerProfileController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    public ProfileController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;
         this.logger = logger;
@@ -40,7 +41,7 @@ public class CustomerProfileController : ControllerBase
             return NotFound(new MessageResult($"Can not view own profile."));
         }
 
-        return Ok (new CustomerResult(storedCustomer)); 
+        return Ok (new CustomerProfileResult(storedCustomer)); 
     }
 
     [HttpPost("update")]

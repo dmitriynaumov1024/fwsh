@@ -1,4 +1,4 @@
-namespace Fwsh.WebApi.Controllers;
+namespace Fwsh.WebApi.Controllers.Auth;
 
 using System;
 using System.Collections.Generic;
@@ -11,9 +11,9 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
-using Fwsh.WebApi.Requests;
-using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
+using Fwsh.WebApi.Requests.Auth;
+using Fwsh.WebApi.Results;
 
 [ApiController]
 [Route("auth/worker")]
