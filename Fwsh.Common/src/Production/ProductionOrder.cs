@@ -14,6 +14,8 @@ public class ProductionOrder : Order
     public int Prepayment { get; set; }
 
     public virtual Design Design { get; set; }
+    public virtual Fabric Fabric { get; set; }
+    public virtual Material DecorMaterial { get; set; }
     public virtual ICollection<ProductionNotification> Notifications { get; set; }
     public virtual ICollection<ProductionTask> Tasks { get; set; }
 
