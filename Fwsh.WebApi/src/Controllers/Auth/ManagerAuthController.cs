@@ -53,7 +53,7 @@ public class ManagerAuthController : ControllerBase
             Patronym = request.Patronym,
             Phone = request.Phone,
             Email = request.Email,
-            Password = request.Password.SHA512Hash(),
+            Password = request.Password.QuickHash(),
             Roles = new HashSet<WorkerRole> { 
                 new WorkerRole { RoleName = Roles.Management } 
             }
@@ -86,7 +86,7 @@ public class ManagerAuthController : ControllerBase
             return NotFound(new BadFieldResult("phone"));
         }
 
-        if (storedWorker.Password == request.Password.SHA512Hash()) {
+        if (storedWorker.Password == request.Password.QuickHash()) {
             user.ConfirmedId = storedWorker.Id;
             user.ConfirmedRole = UserRole.Manager;
             return Ok();

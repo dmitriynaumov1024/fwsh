@@ -58,11 +58,11 @@ public class ProfileController : ControllerBase
         if (storedWorker == null) {
             return NotFound(new MessageResult($"Can not update own profile"));
         }
-        if (storedWorker.Password != request.OldPassword.SHA512Hash()) {
+        if (storedWorker.Password != request.OldPassword.QuickHash()) {
             return BadRequest(new BadFieldResult("oldPassword"));
         }
 
-        storedWorker.Password = request.NewPassword.SHA512Hash();
+        storedWorker.Password = request.NewPassword.QuickHash();
         dataContext.Workers.Update(storedWorker);
         dataContext.SaveChanges();
         return Ok(new MessageResult("Profile updated successfully"));

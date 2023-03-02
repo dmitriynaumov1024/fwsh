@@ -47,7 +47,7 @@ public class WorkerAuthController : ControllerBase
             Patronym = request.Patronym,
             Phone = request.Phone,
             Email = request.Email,
-            Password = request.Password.SHA512Hash(),
+            Password = request.Password.QuickHash(),
             Roles = new HashSet<WorkerRole> ( 
                 new HashSet<string>(request.Roles)
                     .Where(role => Roles.KnownWorkerRoles.Contains(role))
@@ -77,7 +77,7 @@ public class WorkerAuthController : ControllerBase
         if (storedWorker == null) {
             return NotFound(new BadFieldResult("phone"));
         }
-        if (storedWorker.Password == request.Password.SHA512Hash()) {
+        if (storedWorker.Password == request.Password.QuickHash()) {
             user.ConfirmedId = storedWorker.Id;
             user.ConfirmedRole = UserRole.Worker;
             return Ok();

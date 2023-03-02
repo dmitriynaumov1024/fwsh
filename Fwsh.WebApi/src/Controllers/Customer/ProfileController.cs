@@ -53,11 +53,11 @@ public class ProfileController : ControllerBase
         if (storedCustomer == null) {
             return NotFound(new MessageResult($"Can not update own profile"));
         }
-        if (storedCustomer.Password != request.OldPassword.SHA512Hash()) {
+        if (storedCustomer.Password != request.OldPassword.QuickHash()) {
             return BadRequest(new BadFieldResult("oldPassword"));
         }
 
-        storedCustomer.Password = request.NewPassword.SHA512Hash();
+        storedCustomer.Password = request.NewPassword.QuickHash();
         dataContext.Customers.Update(storedCustomer);
         dataContext.SaveChanges();
         return Ok(new MessageResult("Profile updated successfully"));

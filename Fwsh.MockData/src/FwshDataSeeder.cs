@@ -40,7 +40,7 @@ public class FwshDataSeeder
                 Password = this.Password.Next()
             };
             this.CredentialsLogger?.Log("manager, {0}, {1}", manager.Phone, manager.Password);
-            manager.Password = manager.Password.SHA512Hash();
+            manager.Password = manager.Password.QuickHash();
             manager.Roles.Add(new WorkerRole { RoleName = Roles.Management });
             context.Workers.Add(manager);
         }
@@ -59,7 +59,7 @@ public class FwshDataSeeder
                 Password = this.Password.Next()
             };
             this.CredentialsLogger?.Log("worker, {0}, {1}", worker.Phone, worker.Password);
-            worker.Password = worker.Password.SHA512Hash();
+            worker.Password = worker.Password.QuickHash();
             worker.Roles = this.WorkerRoles.Next();
             context.Workers.Add(worker);
         }
@@ -94,7 +94,7 @@ public class FwshDataSeeder
                 Password = this.Password.Next()
             };
             this.CredentialsLogger?.Log("customer, {0}, {1}", customer.Phone, customer.Password);
-            customer.Password = customer.Password.SHA512Hash();
+            customer.Password = customer.Password.QuickHash();
             context.Customers.Add(customer);
         }
     }

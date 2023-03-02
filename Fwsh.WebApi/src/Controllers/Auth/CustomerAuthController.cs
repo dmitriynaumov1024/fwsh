@@ -41,7 +41,7 @@ public class CustomerAuthController : ControllerBase
             IsOrganization = request.OrgName != null && request.OrgName.Length > 1,
             Phone = request.Phone,
             Email = request.Email,
-            Password = request.Password.SHA512Hash()
+            Password = request.Password.QuickHash()
         };
 
         bool phoneAlreadyExists = dataContext.Customers
@@ -74,7 +74,7 @@ public class CustomerAuthController : ControllerBase
         if (storedCustomer == null) {
             return NotFound(new BadFieldResult("phone"));
         }
-        if (storedCustomer.Password == request.Password.SHA512Hash()) {
+        if (storedCustomer.Password == request.Password.QuickHash()) {
             user.ConfirmedId = storedCustomer.Id;
             user.ConfirmedRole = UserRole.Customer;
             return Ok();
