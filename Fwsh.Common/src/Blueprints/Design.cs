@@ -56,6 +56,7 @@ public class Design
     public void UpdatePrice()
     {
         this.Price = this.CalculateResourcePrice() + this.CalculatePayment();
+        this.PriceRecalculatedAt = DateTime.UtcNow;
     }
 
     public int CalculateResourcePrice()
