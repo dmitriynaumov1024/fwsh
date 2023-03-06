@@ -26,7 +26,7 @@ public class Startup
     public void ConfigureServices (IServiceCollection services)
     {
         services.AddSingleton<Logger, ConsoleLogger>();
-        services.AddSingleton<FwshDataContext, FwshDataContextPostgres>();
+        services.AddDbContext<FwshDataContext, FwshDataContextPostgres>(ServiceLifetime.Scoped);
         services.AddSingleton<FwshUserStorage, FwshUserStorageInMemory>();
         // services.AddSingleton<UniformCrudProvider>();
         services.AddRouting();

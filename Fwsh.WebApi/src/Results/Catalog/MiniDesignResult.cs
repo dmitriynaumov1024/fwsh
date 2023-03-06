@@ -26,7 +26,7 @@ public class MiniDesignResult
         this.CreatedAt = design.CreatedAt;
         
         if (includePhotos) this.PhotoUrls = new List<string> { 
-            design.Photos.OrderBy(p => p.Position).FirstOrDefault()?.Url 
+            design.Photos.MinBy(p => p.Position)?.Url 
         };
     }
 }
