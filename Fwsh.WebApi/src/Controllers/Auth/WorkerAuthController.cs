@@ -33,6 +33,10 @@ public class WorkerAuthController : ControllerBase
     [HttpPost("signup")]
     public IActionResult Signup (WorkerSignupRequest request)
     {
+        if (request.Validate() is BadFieldResult badFields) {
+            return BadRequest(badFields);
+        }
+
         bool phoneAlreadyExists = dataContext.Workers
             .Where(c => c.Phone == request.Phone)
             .FirstOrDefault() != null; 

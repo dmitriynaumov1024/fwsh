@@ -47,6 +47,10 @@ public class ProfileController : ControllerBase
     [HttpPost("update")]
     public IActionResult Update (CustomerUpdateRequest request)
     {
+        if (request.Validate() is BadFieldResult badFields) {
+            return BadRequest(badFields);
+        }
+
         int id = user.ConfirmedId;
         var storedCustomer = dataContext.Customers.Find(id);
 

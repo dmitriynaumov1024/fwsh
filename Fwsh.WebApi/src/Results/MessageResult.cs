@@ -1,6 +1,6 @@
 namespace Fwsh.WebApi.Results;
 
-public class MessageResult
+public class MessageResult : Result
 {
     public string Message { get; set; }
 

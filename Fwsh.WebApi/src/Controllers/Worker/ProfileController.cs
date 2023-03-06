@@ -50,6 +50,10 @@ public class ProfileController : ControllerBase
     [HttpPost("update")]
     public IActionResult Update (WorkerUpdateRequest request)
     {
+        if (request.Validate() is BadFieldResult badFields) {
+            return BadRequest(badFields);
+        }
+
         int id = user.ConfirmedId;
         var storedWorker = dataContext.Workers
             .Include(w => w.Roles)

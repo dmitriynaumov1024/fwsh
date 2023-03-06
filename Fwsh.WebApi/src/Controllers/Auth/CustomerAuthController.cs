@@ -33,6 +33,10 @@ public class CustomerAuthController : ControllerBase
     [HttpPost("signup")]
     public IActionResult Signup (CustomerSignupRequest request)
     {
+        if (request.Validate() is BadFieldResult badFields) {
+            return BadRequest(badFields);
+        }
+
         var storedCustomer = new Customer() {
             Surname = request.Surname,
             Name = request.Name,
