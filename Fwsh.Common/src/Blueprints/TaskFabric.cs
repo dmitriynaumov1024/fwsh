@@ -10,6 +10,7 @@ public class TaskFabric : TaskResourceUsage<double, Fabric>
 
     public override int CalculateResourcePrice()
     {
+        // Be careful here
         if (this.DeterminedByOrder) return 0;
         return (int)Math.Ceiling(this.Quantity * this.Item.PricePerUnit);
     }

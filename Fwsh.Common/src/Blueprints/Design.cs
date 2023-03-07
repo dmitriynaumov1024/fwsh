@@ -19,6 +19,9 @@ public class Design
     public Dimensions DimCompact { get; set; }
     public Dimensions DimExpanded { get; set; }
 
+    public double FabricQuantity { get; set; }
+    public double DecorMaterialQuantity { get; set; }
+
     public int Price { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -57,6 +60,15 @@ public class Design
     {
         this.Price = this.CalculateResourcePrice() + this.CalculatePayment();
         this.PriceRecalculatedAt = DateTime.UtcNow;
+    }
+
+    public void UpdateResourceQuantities()
+    {
+        this.FabricQuantity = this.TaskPrototypes
+            .Sum(task => task.Fabrics.Where(f => f.DeterminedByOrder).Sum(f => f.Quantity));
+
+        this.DecorMaterialQuantity = this.TaskPrototypes
+            .Sum(task => task.Materials.Where(m => m.DeterminedByOrder).Sum(m => m.Quantity));
     }
 
     public int CalculateResourcePrice()
