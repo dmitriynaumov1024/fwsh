@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Fwsh.WebApi.Requests;
-using Fwsh.WebApi.Results;
+using Fwsh.WebApi.Validation;
 using Fwsh.Utils;
 
 public class WorkerSignupRequest : Request
@@ -17,17 +17,28 @@ public class WorkerSignupRequest : Request
     public string Password { get; set; }
     public List<string> Roles { get; set; } = new List<string>();
 
-    public override Result Validate()
+    protected override void OnValidation (ObjectValidator validator)
     {
-        return Validator()
-            .Assert("surname", this.Surname != null && this.Surname.Length.InRange(2, 30))
-            .Assert("name", this.Name != null && this.Name.Length.InRange(2, 24))
-            .Assert("patronym", this.Patronym != null && this.Patronym.Length.InRange(5, 28))
-            .Assert("phone", this.Phone != null && PhoneRegex.IsMatch(this.Phone))
-            .Assert("email", this.Email != null && EmailRegex.IsMatch(this.Email))
-            .Assert("password", this.Password != null && this.Password.Length.InRange(8, 64))
-            .Assert("roles", this.Roles != null && this.Roles.Count.InRange(0, 4))
-            .GetVerdict();
+        validator.Property("surname", this.Surname)
+                .NotNull().LengthInRange(2, 30);
+
+        validator.Property("name", this.Name)
+                .NotNull().LengthInRange(2, 24);
+
+        validator.Property("patronym", this.Patronym)
+                .NotNull().LengthInRange(4, 28);
+
+        validator.Property("phone", this.Phone)
+                .NotNull().Match(PhoneRegex);
+
+        validator.Property("email", this.Email)
+                .NotNull().Match(EmailRegex);
+
+        validator.Property("password", this.Password)
+                .NotNull().LengthInRange(8, 64);
+
+        validator.Property("roles", this.Roles)
+                .NotNull().CountInRange(0, 4);
     }
 
     static Regex PhoneRegex = new Regex(@"^\+?[0-9]{10,14}$");

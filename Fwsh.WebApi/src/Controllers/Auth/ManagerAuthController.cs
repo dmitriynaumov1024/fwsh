@@ -39,8 +39,11 @@ public class ManagerAuthController : ControllerBase
             return NotFound (new MessageResult("Not found"));
         }
 
-        if (request.Validate() is BadFieldResult badFields) {
-            return BadRequest(badFields);
+        if (request.Validate().State.HasBadFields) {
+            return BadRequest(request.State.BadFields);
+        }
+        if (! request.State.IsValid) {
+            return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
         }
 
         bool phoneAlreadyExists = dataContext.Workers

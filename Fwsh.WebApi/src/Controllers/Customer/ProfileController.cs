@@ -47,8 +47,11 @@ public class ProfileController : ControllerBase
     [HttpPost("update")]
     public IActionResult Update (CustomerUpdateRequest request)
     {
-        if (request.Validate() is BadFieldResult badFields) {
-            return BadRequest(badFields);
+        if (request.Validate().State.HasBadFields) {
+            return BadRequest(request.State.BadFields);
+        }
+        if (! request.State.IsValid) {
+            return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
         }
 
         int id = user.ConfirmedId;

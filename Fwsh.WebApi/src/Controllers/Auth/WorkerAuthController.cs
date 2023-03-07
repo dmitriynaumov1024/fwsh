@@ -33,8 +33,11 @@ public class WorkerAuthController : ControllerBase
     [HttpPost("signup")]
     public IActionResult Signup (WorkerSignupRequest request)
     {
-        if (request.Validate() is BadFieldResult badFields) {
-            return BadRequest(badFields);
+        if (request.Validate().State.HasBadFields) {
+            return BadRequest(request.State.BadFields);
+        }
+        if (! request.State.IsValid) {
+            return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
         }
 
         bool phoneAlreadyExists = dataContext.Workers

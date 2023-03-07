@@ -1,15 +1,15 @@
 namespace Fwsh.WebApi.Requests.Auth;
 
 using Fwsh.WebApi.Requests;
-using Fwsh.WebApi.Results;
+using Fwsh.WebApi.Validation;
 
 public class LoginRequest : Request
 {
     public string Phone { get; set; }
     public string Password { get; set; }
 
-    public override Result Validate()
+    protected override void OnValidation (ObjectValidator validator)
     {
-        return (Result) true;
+        validator.DoNothing();
     }
 }
