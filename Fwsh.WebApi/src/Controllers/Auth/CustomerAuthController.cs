@@ -34,7 +34,7 @@ public class CustomerAuthController : ControllerBase
     public IActionResult Signup (CustomerSignupRequest request)
     {
         if (request.Validate().State.HasBadFields) {
-            return BadRequest(request.State.BadFields);
+            return BadRequest(new BadFieldResult(request.State.BadFields));
         }
         if (! request.State.IsValid) {
             return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
