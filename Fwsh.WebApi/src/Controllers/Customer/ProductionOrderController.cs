@@ -33,13 +33,18 @@ public class ProductionOrderController : ControllerBase
         this.user = user;
     }
 
+    protected IQueryable<ProductionOrder> GetOwnOrders()
+    {
+        return dataContext.ProductionOrders
+            .Include(order => order.Design)
+            .ThenInclude(design => design.Photos)
+            .Where(order => order.CustomerId == user.ConfirmedId);
+    }
+
     [HttpGet("list")]
     public IActionResult List () 
     {
-        var orders = dataContext.ProductionOrders
-            .Include(order => order.Design)
-            .ThenInclude(design => design.Photos)
-            .Where(order => order.CustomerId == user.ConfirmedId)
+        var orders = this.GetOwnOrders()
             .Where(order => order.Status == OrderStatus.Submitted 
                             || order.Status == OrderStatus.Production 
                             || order.Status == OrderStatus.Delayed 
@@ -53,10 +58,7 @@ public class ProductionOrderController : ControllerBase
     [HttpGet("archive")]
     public IActionResult Archive ()
     {
-        var orders = dataContext.ProductionOrders
-            .Include(order => order.Design)
-            .ThenInclude(design => design.Photos)
-            .Where(order => order.CustomerId == user.ConfirmedId)
+        var orders = this.GetOwnOrders()
             .Where(order => order.Status == OrderStatus.ReceivedAndPaid
                             || order.Status == OrderStatus.Rejected 
                             || order.Status == OrderStatus.Impossible
@@ -92,7 +94,7 @@ public class ProductionOrderController : ControllerBase
     public IActionResult Create (ProductionOrderCreationRequest request)
     {
         if (request.Validate().State.HasBadFields) {
-            return BadRequest(request.State.BadFields);
+            return BadRequest(new BadFieldResult(request.State.BadFields));
         }
         if (! request.State.IsValid) {
             return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
@@ -148,7 +150,6 @@ public class ProductionOrderController : ControllerBase
         }
     }
 
-
     [HttpDelete("delete/{id}")]
     public IActionResult Delete (int id)
     {
@@ -158,6 +159,13 @@ public class ProductionOrderController : ControllerBase
 
         if (order == null) {
             return NotFound(new BadFieldResult("id"));
+        }
+
+        bool canSafelyDelete = order.Status == OrderStatus.Submitted 
+                            || order.Status == OrderStatus.Unknown;
+
+        if (! canSafelyDelete) {
+            return BadRequest(new FailResult("Order status does not allow deletion"));
         }
 
         try {
