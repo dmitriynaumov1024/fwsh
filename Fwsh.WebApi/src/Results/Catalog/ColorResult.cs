@@ -12,6 +12,8 @@ public class ColorResult
 
     public ColorResult (Color color)
     {
+        if (color == null) return;
+
         this.Id = color.Id;
         this.Name = color.Name;
         this.RgbCode = color.RgbCode;

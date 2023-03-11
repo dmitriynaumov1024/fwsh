@@ -15,6 +15,8 @@ public class FabricTypeResult
 
     public FabricTypeResult (FabricType fabricType) 
     {
+        if (fabricType == null) return;
+
         this.Id = fabricType.Id;
         this.Name = fabricType.Name;
         this.Description = fabricType.Description;

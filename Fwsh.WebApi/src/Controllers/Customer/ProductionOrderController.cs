@@ -67,6 +67,27 @@ public class ProductionOrderController : ControllerBase
         ));
     }
 
+    [HttpGet("view/{id}")]
+    public IActionResult View (int id) 
+    {
+        var order = dataContext.ProductionOrders
+            .Include(order => order.Fabric.FabricType)
+            .Include(order => order.Fabric.Color)
+            .Include(order => order.DecorMaterial.Color)
+            .Include(order => order.Customer)
+            .Include(order => order.Notifications)
+            .Include(order => order.Design)
+            .ThenInclude(design => design.Photos)
+            .Where(order => order.Id == id && order.CustomerId == user.ConfirmedId)
+            .FirstOrDefault();
+
+        if (order == null) {
+            return NotFound(new BadFieldResult("id"));
+        }
+
+        return Ok ( new ProductionOrderResult(order) );
+    }
+
     [HttpPost("create")]
     public IActionResult Create (ProductionOrderCreationRequest request)
     {
@@ -102,7 +123,7 @@ public class ProductionOrderController : ControllerBase
 
         customer.UpdateDiscountPercent();
 
-        int fixedOrderPrice = (int)(design.Price 
+        int fixedDesignPrice = (int)(design.Price 
             + fabric.PricePerUnit * design.FabricQuantity 
             + (decorMaterial?.PricePerUnit ?? 0) * design.DecorMaterialQuantity);
 
@@ -110,7 +131,7 @@ public class ProductionOrderController : ControllerBase
             Status = OrderStatus.Submitted,
             CustomerId = user.ConfirmedId,
             Quantity = request.Quantity,
-            PricePerOne = fixedOrderPrice.WithDiscountFor(customer),
+            PricePerOne = fixedDesignPrice.WithDiscountFor(customer),
             DesignId = request.DesignId,
             FabricId = request.FabricId,
             DecorMaterialId = request.DecorMaterialId
@@ -131,7 +152,9 @@ public class ProductionOrderController : ControllerBase
     [HttpDelete("delete/{id}")]
     public IActionResult Delete (int id)
     {
-        var order = dataContext.ProductionOrders.Find(id);
+        var order = dataContext.ProductionOrders
+            .Where(order => order.Id == id && order.CustomerId == user.ConfirmedId)
+            .FirstOrDefault();
 
         if (order == null) {
             return NotFound(new BadFieldResult("id"));
