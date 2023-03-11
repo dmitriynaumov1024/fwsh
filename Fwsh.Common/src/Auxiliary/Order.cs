@@ -14,4 +14,6 @@ public abstract class Order
     public DateTime? StartedAt { get; set; }
     public DateTime? FinishedAt { get; set; }
     public DateTime? ReceivedAt { get; set; }
+
+    public virtual Customer Customer { get; set; }
 }
