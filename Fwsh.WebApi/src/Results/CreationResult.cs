@@ -1,9 +1,8 @@
 namespace Fwsh.WebApi.Results;
 
-public class CreationResult : Result
+public class CreationResult : SuccessResult
 {
     public object Id { get; set; }
-    public string Message { get; set; }
 
     public CreationResult () { }
 

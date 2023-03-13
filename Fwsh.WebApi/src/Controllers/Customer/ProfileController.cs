@@ -67,7 +67,7 @@ public class ProfileController : ControllerBase
         storedCustomer.Password = request.NewPassword.QuickHash();
         dataContext.Customers.Update(storedCustomer);
         dataContext.SaveChanges();
-        return Ok(new MessageResult("Profile updated successfully"));
+        return Ok(new SuccessResult("Profile updated successfully"));
     }
 
     [HttpPost("logout")]

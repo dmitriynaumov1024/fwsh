@@ -3,7 +3,7 @@ namespace Fwsh.WebApi.Results;
 using System;
 using System.Collections.Generic;
 
-public class BadFieldResult : Result
+public class BadFieldResult : FailResult
 {
     public List<string> BadFields { get; set; }
 

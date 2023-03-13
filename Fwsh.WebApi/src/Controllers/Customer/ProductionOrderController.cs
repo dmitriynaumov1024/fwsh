@@ -146,7 +146,7 @@ public class ProductionOrderController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest(new MessageResult("Something went wrong"));
+            return BadRequest(new FailResult("Something went wrong"));
         }
     }
 
@@ -175,7 +175,7 @@ public class ProductionOrderController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest(new MessageResult("Something went wrong"));
+            return BadRequest(new FailResult("Something went wrong"));
         }
     }
 }

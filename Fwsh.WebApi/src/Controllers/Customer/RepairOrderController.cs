@@ -116,7 +116,7 @@ public class RepairOrderController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest ( new MessageResult("Something went wrong") );
+            return BadRequest ( new FailResult("Something went wrong") );
         }
     } 
 
@@ -162,6 +162,7 @@ public class RepairOrderController : ControllerBase
     public IActionResult Delete (int id = 0)
     {
         var order = dataContext.RepairOrders
+            .Include(order => order.Photos)
             .Where(order => order.Id == id && order.CustomerId == user.ConfirmedId)
             .FirstOrDefault();
 
@@ -183,7 +184,7 @@ public class RepairOrderController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest(new MessageResult("Something went wrong"));
+            return BadRequest(new FailResult("Something went wrong"));
         }
     }
 }

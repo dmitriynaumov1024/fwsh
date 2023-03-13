@@ -37,7 +37,7 @@ public class WorkerAuthController : ControllerBase
             return BadRequest(new BadFieldResult(request.State.BadFields));
         }
         if (! request.State.IsValid) {
-            return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
+            return BadRequest(new FailResult(request.State.Message ?? "Something went wrong"));
         }
 
         bool phoneAlreadyExists = dataContext.Workers
@@ -71,7 +71,7 @@ public class WorkerAuthController : ControllerBase
         catch (Exception ex) {
             logger.Error(ex.ToString());
         }
-        return BadRequest(new MessageResult("Something went wrong"));
+        return BadRequest(new FailResult("Something went wrong"));
     }
 
     [HttpPost("login")]
@@ -87,7 +87,7 @@ public class WorkerAuthController : ControllerBase
         if (storedWorker.Password == request.Password.QuickHash()) {
             user.ConfirmedId = storedWorker.Id;
             user.ConfirmedRole = UserRole.Worker;
-            return Ok();
+            return Ok(new SuccessResult("Successfully logged in"));
         }
         return BadRequest(new BadFieldResult("password"));
     }

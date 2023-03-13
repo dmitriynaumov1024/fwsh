@@ -84,7 +84,7 @@ public class CustomerAuthController : ControllerBase
         if (storedCustomer.Password == request.Password.QuickHash()) {
             user.ConfirmedId = storedCustomer.Id;
             user.ConfirmedRole = UserRole.Customer;
-            return Ok();
+            return Ok(new SuccessResult("Successfully logged in"));
         }
         return BadRequest(new BadFieldResult("password"));
     }

@@ -96,7 +96,7 @@ public class ManagerAuthController : ControllerBase
         if (storedWorker.Password == request.Password.QuickHash()) {
             user.ConfirmedId = storedWorker.Id;
             user.ConfirmedRole = UserRole.Manager;
-            return Ok();
+            return Ok(new SuccessResult("Successfully logged in"));
         }
 
         return BadRequest(new BadFieldResult("password"));
