@@ -105,17 +105,21 @@ where TResource : Resource
         if (! canCreate) {
             return BadRequest(new FailResult("Not enough rights to create"));
         }
-        if (request.Validate().State.HasBadFields) {
-            return BadRequest(new BadFieldResult(request.State.BadFields));
-        }
-        if (! request.State.IsValid) {
-            return BadRequest(new FailResult(request.State.Message ?? 
-                "Something went wrong while validating creation request"));
-        }
-        TStored newResource = request.Create();
+
         try {
+            if (request.Validate().State.HasBadFields) {
+                return BadRequest(new BadFieldResult(request.State.BadFields));
+            }
+            if (! request.State.IsValid) {
+                return BadRequest(new FailResult(request.State.Message ?? 
+                    "Something went wrong while validating creation request"));
+            }
+
+            TStored newResource = request.Create();
+
             dbSet.Add(newResource);
             dataContext.SaveChanges();
+
             string message = $"Successfully created {typeName}";
             return Ok ( new CreationResult(newResource.Id, message) );
         }
