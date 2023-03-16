@@ -70,6 +70,10 @@ where TResource : Resource
         var existingResource = dbQueryableSet
             .Where(item => item.Id == id)
             .FirstOrDefault();
+
+        if (existingResource == null) {
+            return NotFound ( new BadFieldResult("id") );
+        } 
         
         return Ok ( CreateFullResultFrom(existingResource) );
     }
@@ -80,7 +84,7 @@ where TResource : Resource
         var storedResource = dbSet.Find(id);
 
         if (storedResource == null) {
-            return NotFound(new BadFieldResult("id"));
+            return NotFound ( new BadFieldResult("id") );
         }
 
         try {

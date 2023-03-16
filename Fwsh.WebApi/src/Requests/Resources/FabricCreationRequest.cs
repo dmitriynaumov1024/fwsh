@@ -4,11 +4,11 @@ using Fwsh.Common;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.Validation;
 
-public abstract class FabricCreationRequest : CreationRequest<StoredFabric>
+public abstract class FabricCreationRequest : ResourceCreationRequest<StoredFabric>
 {
     protected override void OnValidation (ObjectValidator validator)
     {
-        validator.DoNothing();
+        base.OnValidation(validator);
     }
 
     public override StoredFabric Create()

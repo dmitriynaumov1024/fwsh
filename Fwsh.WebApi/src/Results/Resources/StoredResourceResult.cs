@@ -29,10 +29,11 @@ where TResource : Resource
         this.Id = resource.Id;
         this.InStock = resource.InStock;
         this.NormalStock = resource.NormalStock;
+        this.SupplierId = resource.SupplierId;
+        this.ExternalId = resource.ExternalId;
 
         if (full) {
             this.Supplier = new SupplierResult(resource.Supplier);
-            this.ExternalId = resource.ExternalId;
             this.RefillPeriodDays = resource.RefillPeriodDays;
             this.LastRefilledAt = resource.LastRefilledAt;
             this.LastCheckedAt = resource.LastCheckedAt;

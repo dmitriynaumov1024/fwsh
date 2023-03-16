@@ -68,6 +68,14 @@ public class PropertyValidator
         return this;
     }
 
+    public PropertyValidator ValueInRange (double min, double max)
+    {
+        if (this.IsValid && this.Value is double number)
+            if (number < min || number > max) this.IsValid = false;
+            
+        return this;
+    }
+
     public PropertyValidator Condition (bool condition)
     {
         if (! condition) this.IsValid = false;

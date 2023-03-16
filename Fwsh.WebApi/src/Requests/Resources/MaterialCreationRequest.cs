@@ -4,11 +4,11 @@ using Fwsh.Common;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.Validation;
 
-public abstract class MaterialCreationRequest : CreationRequest<StoredMaterial>
+public class MaterialCreationRequest : ResourceCreationRequest<StoredMaterial>
 {
     protected override void OnValidation (ObjectValidator validator)
     {
-        validator.DoNothing();
+        base.OnValidation(validator);
     }
     
     public override StoredMaterial Create()
