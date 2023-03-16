@@ -37,6 +37,7 @@ public class RouteGuardMiddleware
             || (path == "customer" && role == UserRole.Customer) 
             || (path == "worker" && role == UserRole.Worker)
             || (path == "manager" && role == UserRole.Manager)
+            || (path == "resources" && role >= UserRole.Worker)
             || (path == "admin" && role == UserRole.Root);
 
         if (allowed) {
