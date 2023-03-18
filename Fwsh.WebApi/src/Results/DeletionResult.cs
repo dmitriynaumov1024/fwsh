@@ -1,9 +1,8 @@
 namespace Fwsh.WebApi.Results;
 
-public class DeletionResult : Result
+public class DeletionResult : SuccessResult
 {
     public object Id { get; set; }
-    public string Message { get; set; }
 
     public DeletionResult () { }
 

@@ -3,7 +3,6 @@ namespace Fwsh.WebApi.Results.Resources;
 using System;
 using System.Collections.Generic;
 using Fwsh.Common;
-using Fwsh.WebApi.Results.Catalog;
 
 public class FabricResult : ResourceResult
 {
@@ -25,7 +24,12 @@ public class FabricResult : ResourceResult
         this.MeasureUnit = fabric.MeasureUnit;
         this.CreatedAt = fabric.CreatedAt;
 
-        this.Color = new ColorResult(fabric.Color);
-        this.FabricType = new FabricTypeResult(fabric.FabricType);
+        if (fabric.Color != null) {
+            this.Color = new ColorResult(fabric.Color);
+        }
+        
+        if (fabric.FabricType != null) {
+            this.FabricType = new FabricTypeResult(fabric.FabricType);
+        }
     }
 }

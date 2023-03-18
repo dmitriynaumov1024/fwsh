@@ -3,7 +3,6 @@ namespace Fwsh.WebApi.Results.Resources;
 using System;
 using System.Collections.Generic;
 using Fwsh.Common;
-using Fwsh.WebApi.Results.Catalog;
 
 public class MaterialResult : ResourceResult
 {
@@ -26,6 +25,8 @@ public class MaterialResult : ResourceResult
         this.MeasureUnit = mat.MeasureUnit;
         this.PhotoUrl = mat.PhotoUrl;
 
-        this.Color = new ColorResult(mat.Color);
+        if (mat.Color != null) {
+            this.Color = new ColorResult(mat.Color);
+        }
     }
 }
