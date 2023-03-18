@@ -53,4 +53,10 @@ public class PartController : ResourceController<int, Part, StoredPart, StoredPa
         return base.OnCreate(request);
     }
 
+    [HttpPost("update/{id}")]
+    public IActionResult Update (int id, PartUpdateRequest request)
+    {
+        return base.OnUpdate(id, request);
+    }
+
 }

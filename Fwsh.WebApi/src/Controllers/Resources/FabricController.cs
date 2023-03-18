@@ -53,4 +53,10 @@ public class FabricController : ResourceController<double, Fabric, StoredFabric,
     {
         return base.OnCreate(request);
     }
+
+    [HttpPost("update/{id}")]
+    public IActionResult Update (int id, FabricUpdateRequest request)
+    {
+        return base.OnUpdate(id, request);
+    }
 }

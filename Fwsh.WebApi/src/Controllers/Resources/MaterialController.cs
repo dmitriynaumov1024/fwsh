@@ -53,4 +53,9 @@ public class MaterialController : ResourceController<double, Material, StoredMat
         return base.OnCreate(request);
     }
 
+    [HttpPost("update/{id}")]
+    public IActionResult Update (int id, MaterialUpdateRequest request)
+    {
+        return base.OnUpdate(id, request);
+    }
 }
