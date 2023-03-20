@@ -87,7 +87,7 @@ public class ManagerAuthController : ControllerBase
             .FirstOrDefault();
         
         bool isManager = storedWorker != null 
-            && storedWorker.Roles.FirstOrDefault(role => role.RoleName == Roles.Management) != null;
+            && storedWorker.Roles.Any(role => role.RoleName == Roles.Management);
 
         if (!isManager) {
             return NotFound(new BadFieldResult("phone"));
