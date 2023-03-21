@@ -19,7 +19,7 @@ public class ProductionOrder : Order
     public virtual ICollection<ProductionNotification> Notifications { get; set; }
     public virtual ICollection<ProductionTask> Tasks { get; set; }
 
-    public int Price => this.PricePerOne * this.Quantity;
+    public int PriceTotal => this.PricePerOne * this.Quantity;
 
     public ProductionOrder() : base()
     {
