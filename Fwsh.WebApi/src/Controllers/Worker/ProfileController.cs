@@ -15,7 +15,6 @@ using Fwsh.Logging;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Requests.Worker;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Worker;
 
 [ApiController]
 [Route("worker/profile")]
@@ -36,15 +35,15 @@ public class ProfileController : ControllerBase
     public IActionResult View ()
     {
         int id = user.ConfirmedId;
-        var storedWorker = dataContext.Workers
+        var worker = dataContext.Workers
             .Include(w => w.Roles)
             .FirstOrDefault(w => w.Id == id);
         
-        if (storedWorker == null) {
+        if (worker == null) {
             return NotFound(new MessageResult($"Can not view own profile."));
         }
 
-        return Ok (new WorkerProfileResult(storedWorker)); 
+        return Ok (new WorkerResult(worker)); 
     }
 
     [HttpPost("update")]

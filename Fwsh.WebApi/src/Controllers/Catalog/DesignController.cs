@@ -14,7 +14,6 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Catalog;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -47,12 +46,12 @@ public class DesignController : ControllerBase
         }
         if (page is int pagenumber) {
             return Ok ( designs.OrderBy(d => d.Id).Paginate (
-                pagenumber, PAGESIZE, design => new MiniDesignResult(design)
+                pagenumber, PAGESIZE, design => new DesignResult(design).Mini()
             ));
         }
         else {
             return Ok ( designs.Listiate (
-                MAXSIZE, design => new MiniDesignResult(design)
+                MAXSIZE, design => new DesignResult(design).Mini()
             ));
         }
     }
@@ -69,7 +68,7 @@ public class DesignController : ControllerBase
             return NotFound(new BadFieldResult("id"));
         }
 
-        return Ok (new DesignResult(design));
+        return Ok (new DesignResult(design).ForCustomer());
 
     }
 
@@ -85,7 +84,7 @@ public class DesignController : ControllerBase
             return NotFound(new BadFieldResult("namekey"));
         }
 
-        return Ok (new DesignResult(design));
+        return Ok (new DesignResult(design).ForCustomer());
     }
 
 }

@@ -1,6 +1,7 @@
-namespace Fwsh.WebApi.Results.Common;
+namespace Fwsh.WebApi.Results;
 
 using System;
+using System.Collections.Generic;
 using Fwsh.Common;
 
 public class OrderResult
@@ -13,7 +14,12 @@ public class OrderResult
     public DateTime? FinishedAt { get; set; }
     public DateTime? ReceivedAt { get; set; }
 
-    public OrderResult(Order order)
+    public CustomerResult Customer { get; set; }
+    public List<NotificationResult> Notifications { get; set; }
+
+    public OrderResult() { }
+
+    public OrderResult (Order order)
     {
         this.Id = order.Id;
         this.CustomerId = order.CustomerId;

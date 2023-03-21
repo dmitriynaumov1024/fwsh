@@ -13,7 +13,6 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Catalog;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -42,6 +41,7 @@ public class FabricTypeController : ControllerBase
         }
 
         var fabricTypes = dataContext.FabricTypes
+            .OrderBy(ftype => ftype.Id)
             .Paginate(page, PAGESIZE, ftype => new FabricTypeResult(ftype));
 
         return Ok(fabricTypes);

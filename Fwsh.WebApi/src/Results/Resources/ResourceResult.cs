@@ -1,9 +1,7 @@
-namespace Fwsh.WebApi.Results.Resources;
+namespace Fwsh.WebApi.Results;
 
 using System;
-using System.Collections.Generic;
 using Fwsh.Common;
-using Fwsh.WebApi.Results;
 
 public class ResourceResult : Result
 {
@@ -12,6 +10,8 @@ public class ResourceResult : Result
     public string Description { get; set; }
     public double PricePerUnit { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    public int DaysSinceCreated => (DateTime.UtcNow - this.CreatedAt).Days;
 
     public ResourceResult () { }
 }

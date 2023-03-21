@@ -13,7 +13,6 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Requests.Customer;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Customer;
 using Fwsh.WebApi.SillyAuth;
 
 [ApiController]
@@ -41,7 +40,7 @@ public class ProfileController : ControllerBase
             return NotFound(new MessageResult($"Can not view own profile."));
         }
 
-        return Ok (new CustomerProfileResult(storedCustomer)); 
+        return Ok (new CustomerResult(storedCustomer)); 
     }
 
     [HttpPost("update")]

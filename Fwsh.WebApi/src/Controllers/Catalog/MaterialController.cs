@@ -14,7 +14,6 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Catalog;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -47,7 +46,7 @@ public class MaterialController : ControllerBase
             .Where(m => m.IsDecorative)
             .OrderBy(m => m.Id);
 
-        return Ok ( materials.Paginate(page, PAGESIZE, m => new DecorMaterialResult(m)) );
+        return Ok ( materials.Paginate(page, PAGESIZE, mat => new MaterialResult(mat)) );
     }
 
 }

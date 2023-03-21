@@ -3,7 +3,7 @@ namespace Fwsh.WebApi.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Fwsh.WebApi.Results.Common;
+using Fwsh.WebApi.Results;
 
 public static class QueryableExtensions
 {

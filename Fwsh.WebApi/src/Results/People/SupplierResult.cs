@@ -1,8 +1,7 @@
-namespace Fwsh.WebApi.Results.Resources;
+namespace Fwsh.WebApi.Results;
 
 using System;
 using Fwsh.Common;
-using Fwsh.WebApi.Results.Common;
 
 public class SupplierResult : PersonResult
 {

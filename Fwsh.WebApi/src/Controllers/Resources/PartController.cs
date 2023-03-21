@@ -15,7 +15,6 @@ using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Requests.Resources;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Resources;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -37,14 +36,9 @@ public class PartController : ResourceController<int, Part, StoredPart, StoredPa
 
     }
 
-    protected override StoredPartResult CreateMiniResultFrom (StoredPart part)
+    protected override IResultBuilder<StoredPartResult> ResultBuilder (StoredPart part)
     {
-        return StoredPartResult.Mini(part);
-    }
-
-    protected override StoredPartResult CreateFullResultFrom (StoredPart part)
-    {
-        return StoredPartResult.Full(part);
+        return new StoredPartResult(part);
     }
 
     [HttpPost("create")]

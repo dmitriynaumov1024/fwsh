@@ -15,7 +15,6 @@ using Fwsh.Logging;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Requests.Worker;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Worker;
 
 [ApiController]
 [Route("manager/profile")]
@@ -44,7 +43,7 @@ public class ProfileController : ControllerBase
             return NotFound(new MessageResult($"Can not view own profile."));
         }
 
-        return Ok (new WorkerProfileResult(manager)); 
+        return Ok (new WorkerResult(manager)); 
     }
 
     [HttpPost("update")]

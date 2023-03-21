@@ -3,6 +3,7 @@ namespace Fwsh.WebApi.Controllers.Customer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,6 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Requests.Customer;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Customer;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -22,6 +22,8 @@ using Fwsh.WebApi.Utils;
 [Route("customer/orders/production")]
 public class ProductionOrderController : ControllerBase
 {
+    const int PAGESIZE = 10;
+
     private FwshDataContext dataContext;
     private Logger logger;
     private FwshUser user;
@@ -33,40 +35,43 @@ public class ProductionOrderController : ControllerBase
         this.user = user;
     }
 
-    protected IQueryable<ProductionOrder> GetOwnOrders()
+    protected IActionResult GetOrderList (int? page, Expression<Func<ProductionOrder, bool>> condition)
     {
-        return dataContext.ProductionOrders
+        if (page == null) {
+            return BadRequest(new BadFieldResult("page"));
+        }
+
+        IQueryable<ProductionOrder> orders = dataContext.ProductionOrders
             .Include(order => order.Design)
-            .ThenInclude(design => design.Photos)
-            .Where(order => order.CustomerId == user.ConfirmedId);
+            .Where(order => order.CustomerId == user.ConfirmedId)
+            .Where(condition);
+
+
+        return Ok ( orders.OrderBy(order => order.Id).Paginate (
+            (int)page, PAGESIZE, order => new ProductionOrderResult(order).Mini()
+        ));
     }
 
     [HttpGet("list")]
-    public IActionResult List () 
+    public IActionResult List (int? page = null)
     {
-        var orders = this.GetOwnOrders()
-            .Where(order => order.Status == OrderStatus.Submitted 
-                            || order.Status == OrderStatus.Production 
-                            || order.Status == OrderStatus.Delayed 
-                            || order.Status == OrderStatus.Finished );
-
-        return Ok ( orders.Listiate (
-            Int32.MaxValue, order => new MiniProductionOrderResult(order)
-        ));
+        return GetOrderList (page, order => 
+            order.Status == OrderStatus.Submitted 
+            || order.Status == OrderStatus.Production 
+            || order.Status == OrderStatus.Delayed 
+            || order.Status == OrderStatus.Finished
+        );
     }
 
     [HttpGet("archive")]
-    public IActionResult Archive ()
+    public IActionResult Archive (int? page = null)
     {
-        var orders = this.GetOwnOrders()
-            .Where(order => order.Status == OrderStatus.ReceivedAndPaid
-                            || order.Status == OrderStatus.Rejected 
-                            || order.Status == OrderStatus.Impossible
-                            || order.Status == OrderStatus.Unknown );
-
-        return Ok ( orders.Listiate (
-            Int32.MaxValue, order => new MiniProductionOrderResult(order)
-        ));
+        return GetOrderList (page, order => 
+            order.Status == OrderStatus.ReceivedAndPaid
+            || order.Status == OrderStatus.Rejected 
+            || order.Status == OrderStatus.Impossible
+            || order.Status == OrderStatus.Unknown
+        );
     }
 
     [HttpGet("view/{id}")]
@@ -87,7 +92,7 @@ public class ProductionOrderController : ControllerBase
             return NotFound(new BadFieldResult("id"));
         }
 
-        return Ok ( new ProductionOrderResult(order) );
+        return Ok ( new ProductionOrderResult(order).ForCustomer() );
     }
 
     [HttpPost("create")]

@@ -1,4 +1,4 @@
-namespace Fwsh.WebApi.Results.Common;
+namespace Fwsh.WebApi.Results;
 
 using System;
 using Fwsh.Common;
@@ -9,6 +9,8 @@ public class NotificationResult
     public string Text { get; set; }
     public bool IsRead { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    public NotificationResult() { }
 
     public NotificationResult (Notification n) 
     {

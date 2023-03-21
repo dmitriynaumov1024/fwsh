@@ -13,7 +13,6 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Catalog;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -41,7 +40,9 @@ public class ColorController : ControllerBase
             return BadRequest(new BadFieldResult("page"));
         }
 
-        var colors = dataContext.Colors.Paginate(page, PAGESIZE);
+        var colors = dataContext.Colors
+            .OrderBy(color => color.Id)
+            .Paginate(page, PAGESIZE, color => new ColorResult(color));
 
         return Ok(colors);
     }

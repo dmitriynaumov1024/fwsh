@@ -3,6 +3,7 @@ namespace Fwsh.WebApi.Controllers.Customer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,6 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Requests.Customer;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Customer;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -22,6 +22,7 @@ using Fwsh.WebApi.Utils;
 [Route("customer/orders/repair")]
 public class RepairOrderController : ControllerBase
 {
+    const int PAGESIZE = 10;
     const int FILE_SIZE_LIMIT = (1 << 21); // 2 Megabytes
 
     private FwshDataContext dataContext;
@@ -35,39 +36,42 @@ public class RepairOrderController : ControllerBase
         this.user = user;
     }
 
-    protected IQueryable<RepairOrder> GetOwnOrders()
+    protected IActionResult GetOrderList (int? page, int? design, Expression<Func<RepairOrder, bool>> condition)
     {
-        return dataContext.RepairOrders
+        if (page == null) {
+            return BadRequest(new BadFieldResult("page"));
+        }
+
+        IQueryable<RepairOrder> orders = dataContext.RepairOrders
             .Include(order => order.Photos)
-            .Where(order => order.CustomerId == user.ConfirmedId);
+            .Where(order => order.CustomerId == user.ConfirmedId)
+            .Where(condition);
+
+        return Ok ( orders.OrderBy(order => order.Id).Paginate (
+            (int)page, PAGESIZE, order => new RepairOrderResult(order).Mini()
+        ));
     }
 
     [HttpGet("list")]
-    public IActionResult List () 
+    public IActionResult List (int? page = null, int? design = null)
     {
-        var orders = this.GetOwnOrders()
-            .Where(order => order.Status == OrderStatus.Submitted 
-                            || order.Status == OrderStatus.Production 
-                            || order.Status == OrderStatus.Delayed 
-                            || order.Status == OrderStatus.Finished );
-
-        return Ok ( orders.Listiate (
-            Int32.MaxValue, order => new MiniRepairOrderResult(order)
-        ));
+        return GetOrderList (page, design, order => 
+            order.Status == OrderStatus.Submitted 
+            || order.Status == OrderStatus.Production 
+            || order.Status == OrderStatus.Delayed 
+            || order.Status == OrderStatus.Finished
+        );
     }
 
     [HttpGet("archive")]
-    public IActionResult Archive ()
+    public IActionResult Archive (int? page = null, int? design = null)
     {
-        var orders = this.GetOwnOrders()
-            .Where(order => order.Status == OrderStatus.ReceivedAndPaid
-                            || order.Status == OrderStatus.Rejected 
-                            || order.Status == OrderStatus.Impossible
-                            || order.Status == OrderStatus.Unknown );
-
-        return Ok ( orders.Listiate (
-            Int32.MaxValue, order => new MiniRepairOrderResult(order)
-        ));
+        return GetOrderList (page, design, order => 
+            order.Status == OrderStatus.ReceivedAndPaid
+            || order.Status == OrderStatus.Rejected 
+            || order.Status == OrderStatus.Impossible
+            || order.Status == OrderStatus.Unknown
+        );
     }
 
     [HttpGet("view/{id}")]
@@ -84,7 +88,7 @@ public class RepairOrderController : ControllerBase
             return NotFound(new BadFieldResult("id"));
         }
 
-        return Ok ( new RepairOrderResult(order) );
+        return Ok ( new RepairOrderResult(order).ForCustomer() );
     }
 
     [HttpPost("create")]

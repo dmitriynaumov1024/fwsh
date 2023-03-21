@@ -15,7 +15,6 @@ using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Requests.Resources;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Resources;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -38,14 +37,9 @@ public class FabricController : ResourceController<double, Fabric, StoredFabric,
 
     }
 
-    protected override StoredFabricResult CreateMiniResultFrom (StoredFabric fabric)
+    protected override IResultBuilder<StoredFabricResult> ResultBuilder (StoredFabric fabric)
     {
-        return StoredFabricResult.Mini(fabric);
-    }
-
-    protected override StoredFabricResult CreateFullResultFrom (StoredFabric fabric)
-    {
-        return StoredFabricResult.Full(fabric);
+        return new StoredFabricResult(fabric);
     }
 
     [HttpPost("create")]

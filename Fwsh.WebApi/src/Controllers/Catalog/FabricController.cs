@@ -14,8 +14,6 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Common;
-using Fwsh.WebApi.Results.Catalog;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 

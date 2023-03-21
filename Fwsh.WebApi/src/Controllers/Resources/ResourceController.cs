@@ -14,7 +14,6 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Resources;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -48,8 +47,7 @@ where TResource : Resource
         this.user = user;
     }
 
-    protected abstract TStoredResult CreateMiniResultFrom (TStored item);
-    protected abstract TStoredResult CreateFullResultFrom (TStored item);
+    protected abstract IResultBuilder<TStoredResult> ResultBuilder (TStored item);
 
     [HttpGet("list")]
     public IActionResult List (int page = -1) 
@@ -59,7 +57,7 @@ where TResource : Resource
         }
 
         var result = dbQueryableSet.OrderBy(r => r.Id)
-            .Paginate(page, PAGESIZE, item => CreateMiniResultFrom(item));
+            .Paginate(page, PAGESIZE, item => ResultBuilder(item).Mini());
 
         return Ok (result);
     }
@@ -75,7 +73,7 @@ where TResource : Resource
             return NotFound ( new BadFieldResult("id") );
         } 
         
-        return Ok ( CreateFullResultFrom(existingResource) );
+        return Ok ( ResultBuilder(existingResource).For(user) );
     }
 
     [HttpPost("set-quantity/{id}")]

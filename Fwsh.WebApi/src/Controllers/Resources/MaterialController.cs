@@ -15,7 +15,6 @@ using Fwsh.Logging;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Requests.Resources;
 using Fwsh.WebApi.Results;
-using Fwsh.WebApi.Results.Resources;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
@@ -37,14 +36,9 @@ public class MaterialController : ResourceController<double, Material, StoredMat
 
     }
 
-    protected override StoredMaterialResult CreateMiniResultFrom (StoredMaterial material)
+    protected override IResultBuilder<StoredMaterialResult> ResultBuilder (StoredMaterial mat)
     {
-        return StoredMaterialResult.Mini(material);
-    }
-
-    protected override StoredMaterialResult CreateFullResultFrom (StoredMaterial material)
-    {
-        return StoredMaterialResult.Full(material);
+        return new StoredMaterialResult(mat);
     }
 
     [HttpPost("create")]
