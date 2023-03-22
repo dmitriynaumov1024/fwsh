@@ -4,5 +4,5 @@ using System;
 
 public class ProductionNotification : Notification 
 {
-    public int OrderId { get; set; }
+    public int ProductionOrderId { get; set; }
 }

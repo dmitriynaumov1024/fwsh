@@ -24,5 +24,5 @@ public class RepairOrder : Order
 
 public class RepairOrderPhoto : Photo 
 {
-    public int OrderId { get; set; }
+    public int RepairOrderId { get; set; }
 }

@@ -4,5 +4,5 @@ using System;
 
 public class RepairNotification : Notification 
 {
-    public int OrderId { get; set; }
+    public int RepairOrderId { get; set; }
 }
