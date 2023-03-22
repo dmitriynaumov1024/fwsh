@@ -40,6 +40,9 @@ public class FwshDataContext : DbContext
     public DbSet<ProductionOrder> ProductionOrders { get; set; }
     public DbSet<RepairOrder> RepairOrders { get; set; }
 
+    public DbSet<ProductionNotification> ProductionNotifications { get; set; }
+    public DbSet<RepairNotification> RepairNotifications { get; set; }
+
     public DbSet<ProductionTask> ProductionTasks { get; set; }
     public DbSet<RepairTask> RepairTasks { get; set; }
 
