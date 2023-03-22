@@ -22,8 +22,6 @@ public class ProductionOrderResult : OrderResult, IResultBuilder<ProductionOrder
     public FabricResult Fabric { get; set; }
     public MaterialResult DecorMaterial { get; set; }
 
-    
-
     public ProductionOrderResult () { }
 
     public ProductionOrderResult (ProductionOrder order)
@@ -33,7 +31,7 @@ public class ProductionOrderResult : OrderResult, IResultBuilder<ProductionOrder
     
     public ProductionOrderResult Mini () 
     {
-        return new ProductionOrderResult() {
+        var result = new ProductionOrderResult() {
             Id = order.Id,
             CustomerId = order.CustomerId,
             Status = order.Status,
@@ -48,13 +46,17 @@ public class ProductionOrderResult : OrderResult, IResultBuilder<ProductionOrder
             FabricId = order.FabricId,
             DecorMaterialId = order.DecorMaterialId
         };
+
+        if (order.Design != null) 
+            result.Design = new DesignResult(order.Design).Mini();
+
+        return result;
     }
 
     public ProductionOrderResult ForCustomer ()
     {
         var result = Mini();
 
-        result.Design = new DesignResult(order.Design).Mini();
         result.Fabric = new FabricResult(order.Fabric);
         result.DecorMaterial = new MaterialResult(order.DecorMaterial);
         
