@@ -193,18 +193,21 @@ public class RepairOrderController : ControllerBase
     }
 
     [HttpGet("read-notifications")]
-    public IActionResult ReadNotifications (int? order = null, int? last = null, bool all = false)
+    public IActionResult ReadNotifications (int? order = null, int? id = null, int? last = null)
     {
         IQueryable<RepairNotification> notifications = 
             dataContext.RepairNotifications.Where(n => n.IsRead == false);
 
         if (order is int orderId) {
             notifications = notifications.Where(n => n.RepairOrderId == orderId);
-            if (last is int lastNotificationId) {
-                notifications = notifications.Where(n => n.Id <= lastNotificationId);    
+            if (id is int notificationId) {
+                notifications = notifications.Where(n => n.Id == notificationId);    
             }
-            else if (! all) {
-                return BadRequest(new BadFieldResult("all", "last"));
+            else if (last is int lastNotificationId) {
+                notifications = notifications.Where(n => n.Id <= lastNotificationId);
+            }
+            else {
+                return BadRequest(new BadFieldResult("id", "last"));
             }
         }
         else {
@@ -216,7 +219,11 @@ public class RepairOrderController : ControllerBase
             foreach (var n in selectedNotifications) n.IsRead = true;
             dataContext.RepairNotifications.UpdateRange(selectedNotifications);
             dataContext.SaveChanges();
-            return Ok (new SuccessResult($"Repair order {order}: Notifications until {last} were marked as read"));
+            return Ok ( new SuccessResult ( 
+                $"Repair order {order}: Notification " 
+                + (id?.ToString() ?? $"until {last}")
+                + " marked as read"
+            ));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
