@@ -187,7 +187,39 @@ public class RepairOrderController : ControllerBase
             return Ok(new DeletionResult(order.Id, "Successfully deleted Production Order"));
         }
         catch (Exception ex) {
-            logger.Error("{0}", ex);
+            logger.Error(ex.ToString());
+            return BadRequest(new FailResult("Something went wrong"));
+        }
+    }
+
+    [HttpGet("read-notifications")]
+    public IActionResult ReadNotifications (int? order = null, int? last = null, bool all = false)
+    {
+        IQueryable<RepairNotification> notifications = 
+            dataContext.RepairNotifications.Where(n => n.IsRead == false);
+
+        if (order is int orderId) {
+            notifications = notifications.Where(n => n.RepairOrderId == orderId);
+            if (last is int lastNotificationId) {
+                notifications = notifications.Where(n => n.Id <= lastNotificationId);    
+            }
+            else if (! all) {
+                return BadRequest(new BadFieldResult("all", "last"));
+            }
+        }
+        else {
+            return BadRequest(new BadFieldResult("order"));
+        }
+        
+        try {
+            var selectedNotifications = notifications.ToList();
+            foreach (var n in selectedNotifications) n.IsRead = true;
+            dataContext.RepairNotifications.UpdateRange(selectedNotifications);
+            dataContext.SaveChanges();
+            return Ok (new SuccessResult($"Repair order {order}: Notifications until {last} were marked as read"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
             return BadRequest(new FailResult("Something went wrong"));
         }
     }

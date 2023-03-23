@@ -122,29 +122,18 @@ public class ProductionOrderController : ControllerBase
     [HttpPost("notify/{id}")]
     public IActionResult Notify (int id, [FromBody] string notificationText)
     {
-        var order = dataContext.ProductionOrders
-            .Include(order => order.Notifications)
-            .Where(order => order.Id == id)
-            .FirstOrDefault();
-
-        if (order == null) {
-            return NotFound(new BadFieldResult("id"));
-        }
-
         var notification = new ProductionNotification() {
+            ProductionOrderId = id,
             Text = notificationText
         };
 
-        order.Notifications.Add (notification);
-
         try {
-            dataContext.Entry(notification).State = EntityState.Added;
+            dataContext.ProductionNotifications.Add(notification);
             dataContext.SaveChanges();
-
             return Ok ( new SuccessResult($"Successfully notified ProductionOrder {id}") );
         }
         catch (Exception ex) {
-            logger.Log(ex.ToString());
+            logger.Error(ex.ToString());
             return BadRequest ( new FailResult($"Something went wrong while trying to notify ProductionOrder {id}") );
         }
     }

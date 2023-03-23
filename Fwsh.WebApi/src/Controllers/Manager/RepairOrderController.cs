@@ -114,30 +114,18 @@ public class RepairOrderController : ControllerBase
     [HttpPost("notify/{id}")]
     public IActionResult Notify (int id, [FromBody] string notificationText)
     {
-        
-        var order = dataContext.RepairOrders
-            .Include(order => order.Notifications)
-            .Where(order => order.Id == id)
-            .FirstOrDefault();
-
-        if (order == null) {
-            return NotFound(new BadFieldResult("id"));
-        }
-
         var notification = new RepairNotification() {
+            RepairOrderId = id,
             Text = notificationText
         };
 
-        order.Notifications.Add (notification);
-
         try {
-            dataContext.Entry(notification).State = EntityState.Added;
+            dataContext.RepairNotifications.Add(notification);
             dataContext.SaveChanges();
-
             return Ok ( new SuccessResult($"Successfully notified RepairOrder {id}") );
         }
         catch (Exception ex) {
-            logger.Log(ex.ToString());
+            logger.Error(ex.ToString());
             return BadRequest ( new FailResult($"Something went wrong while trying to notify RepairOrder {id}") );
         }
     }
