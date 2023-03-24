@@ -12,6 +12,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
@@ -21,7 +22,7 @@ using Fwsh.WebApi.Utils;
 // which is to return list of results but there is inheritance tree
 // and System.Text.Json is 'efficiently' omitting properties of derived types
 //
-public abstract class ResourceController<TCount, TResource, TStored, TStoredResult> : ControllerBase
+public abstract class ResourceController<TCount, TResource, TStored, TStoredResult> : FwshController
 where TStored : StoredResource<TCount, TResource> 
 where TStoredResult : StoredResourceResult<TCount, TResource> 
 where TResource : Resource
@@ -124,7 +125,7 @@ where TResource : Resource
         catch (Exception ex) {
             logger.Error("{0}", ex);
             string message = $"Something went wrong while trying to create {typeName}";
-            return BadRequest ( new FailResult(message) );
+            return ServerError ( new FailResult(message) );
         }
     }
 

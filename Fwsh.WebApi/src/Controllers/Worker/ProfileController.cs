@@ -12,13 +12,14 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Requests.Worker;
 using Fwsh.WebApi.Results;
 
 [ApiController]
 [Route("worker/profile")]
-public class ProfileController : ControllerBase
+public class ProfileController : FwshController
 {
     private FwshDataContext dataContext;
     private Logger logger;
@@ -67,11 +68,16 @@ public class ProfileController : ControllerBase
         if (storedWorker.Password != request.OldPassword.QuickHash()) {
             return BadRequest(new BadFieldResult("oldPassword"));
         }
-
-        storedWorker.Password = request.NewPassword.QuickHash();
-        dataContext.Workers.Update(storedWorker);
-        dataContext.SaveChanges();
-        return Ok(new SuccessResult("Profile updated successfully"));
+        try {
+            storedWorker.Password = request.NewPassword.QuickHash();
+            dataContext.Workers.Update(storedWorker);
+            dataContext.SaveChanges();
+            return Ok(new SuccessResult("Profile updated successfully"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult($"Something went wrong while trying to delete FabricType {id}"));
+        }
     }
 
     [HttpPost("logout")]

@@ -12,6 +12,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests.Resources;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
@@ -19,7 +20,7 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("resources/colors")]
-public class ColorController : ControllerBase
+public class ColorController : FwshController
 {
     const int PAGESIZE = 10;
 
@@ -85,7 +86,7 @@ public class ColorController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest(new FailResult("Failed to create new Color"));
+            return ServerError (new FailResult("Failed to create new Color"));
         }
     }
 
@@ -117,7 +118,7 @@ public class ColorController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest(new FailResult($"Failed to update Color {color.Id}"));
+            return ServerError (new FailResult($"Failed to update Color {color.Id}"));
         }
     }
 
@@ -155,7 +156,7 @@ public class ColorController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest(new FailResult($"Something went wrong while trying to delete Color {id}"));
+            return ServerError(new FailResult($"Something went wrong while trying to delete Color {id}"));
         }
     }
 

@@ -13,6 +13,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests.Customer;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
@@ -20,7 +21,7 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("customer/orders/production")]
-public class ProductionOrderController : ControllerBase
+public class ProductionOrderController : FwshController
 {
     const int PAGESIZE = 10;
 
@@ -89,38 +90,38 @@ public class ProductionOrderController : ControllerBase
             .FirstOrDefault();
 
         if (order == null) {
-            return NotFound(new BadFieldResult("id"));
+            return NotFound (new BadFieldResult("id"));
         }
 
-        return Ok ( new ProductionOrderResult(order).ForCustomer() );
+        return Ok (new ProductionOrderResult(order).ForCustomer());
     }
 
     [HttpPost("create")]
     public IActionResult Create (ProductionOrderCreationRequest request)
     {
         if (request.Validate().State.HasBadFields) {
-            return BadRequest(new BadFieldResult(request.State.BadFields));
+            return BadRequest (new BadFieldResult(request.State.BadFields));
         }
         if (! request.State.IsValid) {
-            return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
+            return BadRequest (new MessageResult(request.State.Message ?? "Something went wrong"));
         }
 
         var design = dataContext.Designs.Find(request.DesignId);
 
         if (design == null) {
-            return BadRequest(new BadFieldResult("designId"));
+            return BadRequest (new BadFieldResult("designId"));
         }
 
         var fabric = dataContext.Fabrics.Find(request.FabricId);
 
         if (fabric == null) {
-            return BadRequest(new BadFieldResult("fabricId"));
+            return BadRequest (new BadFieldResult("fabricId"));
         }
 
         var decorMaterial = dataContext.Materials.Find(request.DecorMaterialId);
 
         if (decorMaterial != null && ! decorMaterial.IsDecorative) {
-            return BadRequest(new BadFieldResult("decorMaterialId"));
+            return BadRequest (new BadFieldResult("decorMaterialId"));
         }
 
         var customer = dataContext.Customers
@@ -147,11 +148,11 @@ public class ProductionOrderController : ControllerBase
         try {
             dataContext.Add(order);
             dataContext.SaveChanges();
-            return Ok(new CreationResult(order.Id, "Successfully created new Production Order"));
+            return Ok (new CreationResult(order.Id, "Successfully created new Production Order"));
         }
         catch (Exception ex) {
-            logger.Error("{0}", ex);
-            return BadRequest(new FailResult("Something went wrong"));
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong"));
         }
     }
 
@@ -163,24 +164,24 @@ public class ProductionOrderController : ControllerBase
             .FirstOrDefault();
 
         if (order == null) {
-            return NotFound(new BadFieldResult("id"));
+            return NotFound (new BadFieldResult("id"));
         }
 
         bool canSafelyDelete = order.Status == OrderStatus.Submitted 
                             || order.Status == OrderStatus.Unknown;
 
         if (! canSafelyDelete) {
-            return BadRequest(new FailResult("Order status does not allow deletion"));
+            return BadRequest (new FailResult("Order status does not allow deletion"));
         }
 
         try {
             dataContext.Remove(order);
             dataContext.SaveChanges();
-            return Ok(new DeletionResult(order.Id, "Successfully deleted Production Order"));
+            return Ok (new DeletionResult(order.Id, "Successfully deleted Production Order"));
         }
         catch (Exception ex) {
-            logger.Error("{0}", ex);
-            return BadRequest(new FailResult("Something went wrong"));
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong"));
         }
     }
 
@@ -199,11 +200,11 @@ public class ProductionOrderController : ControllerBase
                 notifications = notifications.Where(n => n.Id <= lastNotificationId);
             }
             else {
-                return BadRequest(new BadFieldResult("id", "last"));
+                return BadRequest (new BadFieldResult("id", "last"));
             }
         }
         else {
-            return BadRequest(new BadFieldResult("order"));
+            return BadRequest (new BadFieldResult("order"));
         }
         
         try {
@@ -219,7 +220,7 @@ public class ProductionOrderController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return BadRequest(new FailResult("Something went wrong"));
+            return ServerError (new FailResult("Something went wrong"));
         }
     }
 }

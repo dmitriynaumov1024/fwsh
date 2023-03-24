@@ -11,6 +11,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
@@ -18,7 +19,7 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("catalog/fabrictypes")]
-public class FabricTypeController : ControllerBase
+public class FabricTypeController : FwshController
 {
     const int PAGESIZE = 5;
 

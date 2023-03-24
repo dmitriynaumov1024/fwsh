@@ -12,6 +12,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests.Resources;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
@@ -19,7 +20,7 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("resources/fabrictypes")]
-public class FabricTypeController : ControllerBase
+public class FabricTypeController : FwshController
 {
     const int PAGESIZE = 10;
 
@@ -85,7 +86,7 @@ public class FabricTypeController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest(new FailResult("Failed to create new FabricType"));
+            return ServerError(new FailResult("Failed to create new FabricType"));
         }
     }
 
@@ -113,11 +114,11 @@ public class FabricTypeController : ControllerBase
         try {
             dataContext.FabricTypes.Update(fabricType);
             dataContext.SaveChanges();
-            return Ok(new SuccessResult($"Successfully updated FabricType {fabricType.Id}"));
+            return Ok (new SuccessResult($"Successfully updated FabricType {fabricType.Id}"));
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest(new FailResult($"Failed to update FabricType {fabricType.Id}"));
+            return ServerError (new FailResult($"Failed to update FabricType {fabricType.Id}"));
         }
     }
 
@@ -148,7 +149,7 @@ public class FabricTypeController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error("{0}", ex);
-            return BadRequest(new FailResult($"Something went wrong while trying to delete FabricType {id}"));
+            return ServerError(new FailResult($"Something went wrong while trying to delete FabricType {id}"));
         }
     }
 

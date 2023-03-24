@@ -12,6 +12,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
@@ -19,7 +20,7 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("catalog/designs")]
-public class DesignController : ControllerBase
+public class DesignController : FwshController
 {
     const int PAGESIZE = 5;
     const int MAXSIZE = 10;

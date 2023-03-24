@@ -12,13 +12,14 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Requests.Worker;
 using Fwsh.WebApi.Results;
 
 [ApiController]
 [Route("manager/profile")]
-public class ProfileController : ControllerBase
+public class ProfileController : FwshController
 {
     private FwshDataContext dataContext;
     private Logger logger;
@@ -40,7 +41,7 @@ public class ProfileController : ControllerBase
             .FirstOrDefault(w => w.Id == id);
         
         if (manager == null) {
-            return NotFound(new MessageResult($"Can not view own profile."));
+            return NotFound (new MessageResult($"Can not view own profile."));
         }
 
         return Ok (new WorkerResult(manager)); 
@@ -50,10 +51,10 @@ public class ProfileController : ControllerBase
     public IActionResult Update (WorkerUpdateRequest request)
     {
         if (request.Validate().State.HasBadFields) {
-            return BadRequest(new BadFieldResult(request.State.BadFields));
+            return BadRequest (new BadFieldResult(request.State.BadFields));
         }
         if (! request.State.IsValid) {
-            return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
+            return BadRequest (new MessageResult(request.State.Message ?? "Something went wrong"));
         }
 
         int id = user.ConfirmedId;
@@ -62,16 +63,22 @@ public class ProfileController : ControllerBase
             .FirstOrDefault(w => w.Id == id);
 
         if (storedWorker == null) {
-            return NotFound(new MessageResult($"Can not update own profile"));
+            return NotFound (new MessageResult($"Can not update own profile"));
         }
         if (storedWorker.Password != request.OldPassword.QuickHash()) {
-            return BadRequest(new BadFieldResult("oldPassword"));
+            return BadRequest (new BadFieldResult("oldPassword"));
         }
 
-        storedWorker.Password = request.NewPassword.QuickHash();
-        dataContext.Workers.Update(storedWorker);
-        dataContext.SaveChanges();
-        return Ok(new SuccessResult("Profile updated successfully"));
+        try {
+            storedWorker.Password = request.NewPassword.QuickHash();
+            dataContext.Workers.Update(storedWorker);
+            dataContext.SaveChanges();
+            return Ok (new SuccessResult("Profile updated successfully"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong"));
+        }
     }
 
     [HttpPost("logout")]
@@ -79,7 +86,7 @@ public class ProfileController : ControllerBase
     {
         user.Destroy();
 
-        return Ok(new MessageResult("Successfully logged out"));
+        return Ok (new MessageResult("Successfully logged out"));
     }
 
 }

@@ -13,13 +13,14 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("manager/orders/repair")]
-public class RepairOrderController : ControllerBase
+public class RepairOrderController : FwshController
 {
     const int PAGESIZE = 10;
 
@@ -37,7 +38,7 @@ public class RepairOrderController : ControllerBase
     protected IActionResult GetOrderList (int? page, Expression<Func<RepairOrder, bool>> condition)
     {
         if (page == null) {
-            return BadRequest(new BadFieldResult("page"));
+            return BadRequest (new BadFieldResult("page"));
         }
 
         IQueryable<RepairOrder> orders = dataContext.RepairOrders
@@ -82,7 +83,7 @@ public class RepairOrderController : ControllerBase
             .FirstOrDefault();
 
         if (order == null) {
-            return NotFound(new BadFieldResult("id"));
+            return NotFound (new BadFieldResult("id"));
         }
 
         return Ok ( new RepairOrderResult(order).ForManager() );
@@ -100,15 +101,19 @@ public class RepairOrderController : ControllerBase
             .FirstOrDefault();
 
         if (order == null) {
-            return NotFound(new BadFieldResult("id"));
+            return NotFound (new BadFieldResult("id"));
         }
 
-        order.Status = status;
-
-        dataContext.RepairOrders.Update(order);
-        dataContext.SaveChanges();
-
-        return Ok ( new SuccessResult($"Successfully set status '{status}' for RepairOrder {id}") );
+        try {
+            order.Status = status;
+            dataContext.RepairOrders.Update(order);
+            dataContext.SaveChanges();
+            return Ok ( new SuccessResult($"Successfully set status '{status}' for RepairOrder {id}") );
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong"));
+        }
     }
 
     [HttpPost("notify/{id}")]
@@ -126,7 +131,7 @@ public class RepairOrderController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return BadRequest ( new FailResult($"Something went wrong while trying to notify RepairOrder {id}") );
+            return ServerError ( new FailResult($"Something went wrong while trying to notify RepairOrder {id}") );
         }
     }
 }

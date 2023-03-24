@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Fwsh.Utils;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.SillyAuth; 
 using Fwsh.WebApi.Results;
 
 [ApiController]
 [Route("auth/fake-auth")]
-public class FakeAuthController : ControllerBase
+public class FakeAuthController : FwshController
 {
     private FwshUser user;
 

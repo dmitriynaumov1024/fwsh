@@ -12,13 +12,14 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Requests.Auth;
 using Fwsh.WebApi.Results;
 
 [ApiController]
 [Route("auth/manager")]
-public class ManagerAuthController : ControllerBase
+public class ManagerAuthController : FwshController
 {
     private FwshDataContext dataContext;
     private Logger logger;
@@ -74,8 +75,8 @@ public class ManagerAuthController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
+            return ServerError(new MessageResult("Something went wrong"));
         }
-        return BadRequest(new MessageResult("Something went wrong"));
     }
 
     [HttpPost("login")]

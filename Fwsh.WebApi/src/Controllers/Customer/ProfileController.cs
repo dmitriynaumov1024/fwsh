@@ -11,13 +11,14 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests.Customer;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
 
 [ApiController]
 [Route("customer/profile")]
-public class ProfileController : ControllerBase
+public class ProfileController : FwshController
 {
     private FwshDataContext dataContext;
     private Logger logger;
@@ -37,7 +38,7 @@ public class ProfileController : ControllerBase
         var storedCustomer = dataContext.Customers.Find(id);
         
         if (storedCustomer == null) {
-            return NotFound(new MessageResult($"Can not view own profile."));
+            return NotFound (new MessageResult($"Can not view own profile."));
         }
 
         return Ok (new CustomerResult(storedCustomer)); 
@@ -47,26 +48,32 @@ public class ProfileController : ControllerBase
     public IActionResult Update (CustomerUpdateRequest request)
     {
         if (request.Validate().State.HasBadFields) {
-            return BadRequest(new BadFieldResult(request.State.BadFields));
+            return BadRequest (new BadFieldResult(request.State.BadFields));
         }
         if (! request.State.IsValid) {
-            return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
+            return BadRequest (new MessageResult(request.State.Message ?? "Something went wrong"));
         }
 
         int id = user.ConfirmedId;
         var storedCustomer = dataContext.Customers.Find(id);
 
         if (storedCustomer == null) {
-            return NotFound(new MessageResult($"Can not update own profile"));
+            return NotFound (new MessageResult($"Can not update own profile"));
         }
         if (storedCustomer.Password != request.OldPassword.QuickHash()) {
-            return BadRequest(new BadFieldResult("oldPassword"));
+            return BadRequest (new BadFieldResult("oldPassword"));
         }
 
-        storedCustomer.Password = request.NewPassword.QuickHash();
-        dataContext.Customers.Update(storedCustomer);
-        dataContext.SaveChanges();
-        return Ok(new SuccessResult("Profile updated successfully"));
+        try {
+            storedCustomer.Password = request.NewPassword.QuickHash();
+            dataContext.Customers.Update(storedCustomer);
+            dataContext.SaveChanges();
+            return Ok (new SuccessResult("Profile updated successfully"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong"));
+        }
     }
 
     [HttpPost("logout")]
@@ -74,7 +81,7 @@ public class ProfileController : ControllerBase
     {
         user.Destroy();
 
-        return Ok(new MessageResult("Successfully logged out"));
+        return Ok (new MessageResult("Successfully logged out"));
     }
 
 }

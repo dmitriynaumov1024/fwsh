@@ -13,13 +13,14 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("manager/orders/production")]
-public class ProductionOrderController : ControllerBase
+public class ProductionOrderController : FwshController
 {
     const int PAGESIZE = 10;
 
@@ -111,12 +112,16 @@ public class ProductionOrderController : ControllerBase
             return NotFound(new BadFieldResult("id"));
         }
 
-        order.Status = status;
-
-        dataContext.ProductionOrders.Update(order);
-        dataContext.SaveChanges();
-
-        return Ok ( new SuccessResult($"Successfully set status '{status}' for ProductionOrder {id}") );
+        try {
+            order.Status = status;
+            dataContext.ProductionOrders.Update(order);
+            dataContext.SaveChanges();
+            return Ok ( new SuccessResult($"Successfully set status '{status}' for ProductionOrder {id}") );
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Something went wrong"));
+        }
     }
 
     [HttpPost("notify/{id}")]
@@ -134,7 +139,7 @@ public class ProductionOrderController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return BadRequest ( new FailResult($"Something went wrong while trying to notify ProductionOrder {id}") );
+            return ServerError ( new FailResult($"Something went wrong while trying to notify ProductionOrder {id}") );
         }
     }
 

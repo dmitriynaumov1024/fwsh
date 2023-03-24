@@ -13,6 +13,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests.Customer;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
@@ -20,7 +21,7 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("customer/orders/repair")]
-public class RepairOrderController : ControllerBase
+public class RepairOrderController : FwshController
 {
     const int PAGESIZE = 10;
     const int FILE_SIZE_LIMIT = (1 << 21); // 2 Megabytes
@@ -119,8 +120,8 @@ public class RepairOrderController : ControllerBase
             return Ok ( new CreationResult(order.Id, "Successfully created Repair Order") );
         }
         catch (Exception ex) {
-            logger.Error("{0}", ex);
-            return BadRequest ( new FailResult("Something went wrong") );
+            logger.Error(ex.ToString());
+            return ServerError ( new FailResult("Something went wrong") );
         }
     } 
 
@@ -171,24 +172,24 @@ public class RepairOrderController : ControllerBase
             .FirstOrDefault();
 
         if (order == null) {
-            return NotFound(new BadFieldResult("id"));
+            return NotFound (new BadFieldResult("id"));
         }
 
         bool canSafelyDelete = order.Status == OrderStatus.Submitted 
                             || order.Status == OrderStatus.Unknown;
 
         if (! canSafelyDelete) {
-            return BadRequest(new FailResult("Order status does not allow deletion"));
+            return BadRequest (new FailResult("Order status does not allow deletion"));
         }
 
         try {
             dataContext.Remove(order);
             dataContext.SaveChanges();
-            return Ok(new DeletionResult(order.Id, "Successfully deleted Production Order"));
+            return Ok (new DeletionResult(order.Id, "Successfully deleted Production Order"));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return BadRequest(new FailResult("Something went wrong"));
+            return ServerError (new FailResult("Something went wrong"));
         }
     }
 
@@ -207,11 +208,11 @@ public class RepairOrderController : ControllerBase
                 notifications = notifications.Where(n => n.Id <= lastNotificationId);
             }
             else {
-                return BadRequest(new BadFieldResult("id", "last"));
+                return BadRequest (new BadFieldResult("id", "last"));
             }
         }
         else {
-            return BadRequest(new BadFieldResult("order"));
+            return BadRequest (new BadFieldResult("order"));
         }
         
         try {
@@ -227,7 +228,7 @@ public class RepairOrderController : ControllerBase
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return BadRequest(new FailResult("Something went wrong"));
+            return ServerError (new FailResult("Something went wrong"));
         }
     }
 }
