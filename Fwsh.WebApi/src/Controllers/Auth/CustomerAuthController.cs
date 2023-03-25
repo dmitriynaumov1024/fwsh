@@ -20,10 +20,6 @@ using Fwsh.WebApi.Results;
 [Route("auth/customer")]
 public class CustomerAuthController : FwshController
 {
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
     public CustomerAuthController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;

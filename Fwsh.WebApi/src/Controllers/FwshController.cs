@@ -17,8 +17,14 @@ using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
+// This is to be base class for all Fwsh WebAPI controllers 
+//
 public class FwshController : ControllerBase
 {
+    protected FwshDataContext dataContext;
+    protected Logger logger;
+    protected FwshUser user;
+
     public ObjectResult ServerError<T> (T data)
     {
         return new ObjectResult(data) {

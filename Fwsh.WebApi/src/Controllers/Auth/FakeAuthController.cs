@@ -15,8 +15,6 @@ using Fwsh.WebApi.Results;
 [Route("auth/fake-auth")]
 public class FakeAuthController : FwshController
 {
-    private FwshUser user;
-
     public FakeAuthController (FwshUser user)
     {
         this.user = user;

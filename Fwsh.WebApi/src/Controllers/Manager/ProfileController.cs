@@ -21,10 +21,6 @@ using Fwsh.WebApi.Results;
 [Route("manager/profile")]
 public class ProfileController : FwshController
 {
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
     public ProfileController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;

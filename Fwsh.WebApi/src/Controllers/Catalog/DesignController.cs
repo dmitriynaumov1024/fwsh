@@ -25,15 +25,9 @@ public class DesignController : FwshController
     const int PAGESIZE = 5;
     const int MAXSIZE = 10;
 
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
-    public DesignController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    public DesignController (FwshDataContext dataContext)
     {
         this.dataContext = dataContext;
-        this.logger = logger;
-        this.user = user;
     }
 
     [HttpGet("list")]

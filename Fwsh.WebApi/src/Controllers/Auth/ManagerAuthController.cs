@@ -21,10 +21,6 @@ using Fwsh.WebApi.Results;
 [Route("auth/manager")]
 public class ManagerAuthController : FwshController
 {
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
     public ManagerAuthController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;

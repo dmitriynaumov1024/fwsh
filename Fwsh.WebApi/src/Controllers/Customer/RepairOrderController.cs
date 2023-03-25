@@ -26,10 +26,6 @@ public class RepairOrderController : FwshController
     const int PAGESIZE = 10;
     const int FILE_SIZE_LIMIT = (1 << 21); // 2 Megabytes
 
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
     public RepairOrderController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;

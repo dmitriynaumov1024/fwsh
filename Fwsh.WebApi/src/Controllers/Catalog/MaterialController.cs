@@ -24,15 +24,9 @@ public class MaterialController : FwshController
 {
     const int PAGESIZE = 5;
 
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
-    public MaterialController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    public MaterialController (FwshDataContext dataContext)
     {
         this.dataContext = dataContext;
-        this.logger = logger;
-        this.user = user;
     }
 
     [HttpGet("list")]

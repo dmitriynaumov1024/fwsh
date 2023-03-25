@@ -24,10 +24,6 @@ public class FabricTypeController : FwshController
 {
     const int PAGESIZE = 10;
 
-    protected FwshDataContext dataContext;
-    protected Logger logger;
-    protected FwshUser user;
-
     protected virtual bool canCreate => user.ConfirmedRole >= UserRole.Manager;
     protected virtual bool canUpdate => user.ConfirmedRole >= UserRole.Manager;
 

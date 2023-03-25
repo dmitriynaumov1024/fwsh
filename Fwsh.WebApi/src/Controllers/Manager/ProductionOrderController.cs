@@ -24,10 +24,6 @@ public class ProductionOrderController : FwshController
 {
     const int PAGESIZE = 10;
 
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
     public ProductionOrderController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;

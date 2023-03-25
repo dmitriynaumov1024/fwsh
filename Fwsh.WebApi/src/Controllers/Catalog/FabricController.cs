@@ -25,15 +25,9 @@ public class FabricController : FwshController
     const int PAGESIZE = 5;
     const int MAXSIZE = 10;
 
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
-    public FabricController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    public FabricController (FwshDataContext dataContext)
     {
         this.dataContext = dataContext;
-        this.logger = logger;
-        this.user = user;
     }
 
     [HttpGet("list")]

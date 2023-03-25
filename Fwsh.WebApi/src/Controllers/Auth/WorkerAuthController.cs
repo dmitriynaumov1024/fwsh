@@ -20,10 +20,6 @@ using Fwsh.WebApi.Results;
 [Route("auth/worker")]
 public class WorkerAuthController : FwshController
 {
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
     public WorkerAuthController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;

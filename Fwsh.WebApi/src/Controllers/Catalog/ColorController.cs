@@ -23,15 +23,9 @@ public class ColorController : FwshController
 {
     const int PAGESIZE = 5;
 
-    private FwshDataContext dataContext;
-    private Logger logger;
-    private FwshUser user;
-
-    public ColorController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    public ColorController (FwshDataContext dataContext)
     {
         this.dataContext = dataContext;
-        this.logger = logger;
-        this.user = user;
     }
 
     [HttpGet("list")]

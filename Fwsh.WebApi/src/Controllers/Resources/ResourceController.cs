@@ -31,10 +31,6 @@ where TResource : Resource
 
     protected string typeName = typeof(TStored).Name;
 
-    protected FwshDataContext dataContext;
-    protected Logger logger;
-    protected FwshUser user;
-
     protected abstract DbSet<TStored> dbSet { get; }
     protected abstract IQueryable<TStored> dbQueryableSet { get; }
 
