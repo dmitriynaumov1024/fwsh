@@ -14,6 +14,7 @@ using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests;
+using Fwsh.WebApi.Requests.Resources;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
@@ -95,7 +96,7 @@ where TResource : Resource
         }
     }
 
-    public IActionResult OnCreate (CreationRequest<TStored> request)
+    public IActionResult OnCreate (ResourceCreationRequest<TStored> request)
     {
         if (! canCreate) {
             return BadRequest(new FailResult("Not enough rights to create"));
@@ -125,7 +126,7 @@ where TResource : Resource
         }
     }
 
-    public IActionResult OnUpdate (int id, UpdateRequest<TStored> request)
+    public IActionResult OnUpdate (int id, ResourceUpdateRequest<TStored> request)
     {
         if (! canUpdate) {
             return BadRequest(new FailResult("Not enough rights to create"));

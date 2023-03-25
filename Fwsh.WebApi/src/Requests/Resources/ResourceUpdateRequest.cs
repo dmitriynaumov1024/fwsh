@@ -4,7 +4,7 @@ using Fwsh.Common;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.Validation;
 
-public abstract class ResourceUpdateRequest<TStored> : UpdateRequest<TStored>
+public abstract class ResourceUpdateRequest<TStored> : Request, UpdateRequest<TStored>
 where TStored : class
 {
     public string Name { get; set; }
@@ -54,4 +54,6 @@ where TStored : class
             stored.Item.PricePerUnit = this.PricePerUnit;
         }
     }
+
+    public abstract void ApplyTo (TStored stored);
 }

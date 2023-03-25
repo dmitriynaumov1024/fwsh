@@ -5,7 +5,7 @@ using System;
 using Fwsh.Common;
 using Fwsh.WebApi.Validation;
 
-public class FabricTypeRequest : Request
+public class FabricTypeRequest : Request, CreationRequest<FabricType>, UpdateRequest<FabricType>
 {
     public string Name { get; set; }
     public string Description { get; set; }

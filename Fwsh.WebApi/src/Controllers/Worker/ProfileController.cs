@@ -54,25 +54,25 @@ public class ProfileController : FwshController
         }
 
         int id = user.ConfirmedId;
-        var storedWorker = dataContext.Workers
+        var worker = dataContext.Workers
             .Include(w => w.Roles)
             .FirstOrDefault(w => w.Id == id);
 
-        if (storedWorker == null) {
+        if (worker == null) {
             return NotFound(new MessageResult($"Can not update own profile"));
         }
-        if (storedWorker.Password != request.OldPassword.QuickHash()) {
+        if (worker.Password != request.OldPassword.QuickHash()) {
             return BadRequest(new BadFieldResult("oldPassword"));
         }
         try {
-            storedWorker.Password = request.NewPassword.QuickHash();
-            dataContext.Workers.Update(storedWorker);
+            request.ApplyTo(worker);
+            dataContext.Workers.Update(worker);
             dataContext.SaveChanges();
             return Ok(new SuccessResult("Profile updated successfully"));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return ServerError(new FailResult($"Something went wrong while trying to delete FabricType {id}"));
+            return ServerError(new FailResult($"Something went wrong while trying to update profile"));
         }
     }
 

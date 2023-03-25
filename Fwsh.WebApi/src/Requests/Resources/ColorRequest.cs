@@ -6,7 +6,7 @@ using Fwsh.Common;
 using Fwsh.WebApi.Validation;
 using System.Text.RegularExpressions;
 
-public class ColorRequest : Request
+public class ColorRequest : Request, CreationRequest<Color>, UpdateRequest<Color>
 {
     public string Name { get; set; }
     public string RgbCode { get; set; }

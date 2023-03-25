@@ -31,13 +31,13 @@ public class ProfileController : FwshController
     public IActionResult View ()
     {
         int id = user.ConfirmedId;
-        var storedCustomer = dataContext.Customers.Find(id);
+        var customer = dataContext.Customers.Find(id);
         
-        if (storedCustomer == null) {
+        if (customer == null) {
             return NotFound (new MessageResult($"Can not view own profile."));
         }
 
-        return Ok (new CustomerResult(storedCustomer)); 
+        return Ok (new CustomerResult(customer)); 
     }
 
     [HttpPost("update")]
@@ -51,24 +51,24 @@ public class ProfileController : FwshController
         }
 
         int id = user.ConfirmedId;
-        var storedCustomer = dataContext.Customers.Find(id);
+        var customer = dataContext.Customers.Find(id);
 
-        if (storedCustomer == null) {
+        if (customer == null) {
             return NotFound (new MessageResult($"Can not update own profile"));
         }
-        if (storedCustomer.Password != request.OldPassword.QuickHash()) {
+        if (customer.Password != request.OldPassword.QuickHash()) {
             return BadRequest (new BadFieldResult("oldPassword"));
         }
 
         try {
-            storedCustomer.Password = request.NewPassword.QuickHash();
-            dataContext.Customers.Update(storedCustomer);
+            request.ApplyTo(customer);
+            dataContext.Customers.Update(customer);
             dataContext.SaveChanges();
             return Ok (new SuccessResult("Profile updated successfully"));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return ServerError (new FailResult("Something went wrong"));
+            return ServerError (new FailResult("Something went wrong while trying to update profile"));
         }
     }
 

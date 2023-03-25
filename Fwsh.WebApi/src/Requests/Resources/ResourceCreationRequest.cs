@@ -4,7 +4,7 @@ using Fwsh.Common;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.Validation;
 
-public abstract class ResourceCreationRequest<TStored> : CreationRequest<TStored>
+public abstract class ResourceCreationRequest<TStored> : Request, CreationRequest<TStored>
 where TStored: class
 {
     public string Name { get; set; }
@@ -39,4 +39,6 @@ where TStored: class
         validator.Property("refillPeriodDays", this.RefillPeriodDays)
                 .ValueInRange(2, 365);
     }
+
+    public abstract TStored Create();
 }

@@ -3,8 +3,8 @@ namespace Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.Validation;
 
-public abstract class UpdateRequest<TEntity> : Request 
+public interface UpdateRequest<TEntity>
 where TEntity : class
 {
-    public abstract void ApplyTo (TEntity entity);
+    void ApplyTo (TEntity entity);
 }

@@ -54,20 +54,20 @@ public class ProfileController : FwshController
         }
 
         int id = user.ConfirmedId;
-        var storedWorker = dataContext.Workers
+        var manager = dataContext.Workers
             .Include(w => w.Roles)
             .FirstOrDefault(w => w.Id == id);
 
-        if (storedWorker == null) {
+        if (manager == null) {
             return NotFound (new MessageResult($"Can not update own profile"));
         }
-        if (storedWorker.Password != request.OldPassword.QuickHash()) {
+        if (manager.Password != request.OldPassword.QuickHash()) {
             return BadRequest (new BadFieldResult("oldPassword"));
         }
 
         try {
-            storedWorker.Password = request.NewPassword.QuickHash();
-            dataContext.Workers.Update(storedWorker);
+            request.ApplyTo(manager);
+            dataContext.Workers.Update(manager);
             dataContext.SaveChanges();
             return Ok (new SuccessResult("Profile updated successfully"));
         }

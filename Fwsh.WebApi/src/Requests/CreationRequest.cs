@@ -3,8 +3,8 @@ namespace Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.Validation;
 
-public abstract class CreationRequest<TEntity> : Request 
+public interface CreationRequest<TEntity>
 where TEntity : class
 {
-    public abstract TEntity Create();
+    TEntity Create();
 }
