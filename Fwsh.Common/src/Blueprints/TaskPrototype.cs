@@ -16,9 +16,11 @@ public class TaskPrototype
     public string Description { get; set; }
     public string InstructionUrl { get; set; }
 
-    public ICollection<TaskPart> Parts { get; set; }
-    public ICollection<TaskMaterial> Materials { get; set; }
-    public ICollection<TaskFabric> Fabrics { get; set; }
+    public virtual Design Design { get; set; }
+
+    public virtual ICollection<TaskPart> Parts { get; set; }
+    public virtual ICollection<TaskMaterial> Materials { get; set; }
+    public virtual ICollection<TaskFabric> Fabrics { get; set; }
 
     public TaskPrototype()
     {
