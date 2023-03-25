@@ -19,4 +19,5 @@ public class RepairTask
     public DateTime? FinishedAt { get; set; }
 
     public virtual RepairOrder Order { get; set; }
+    public virtual Worker Worker { get; set; }
 }

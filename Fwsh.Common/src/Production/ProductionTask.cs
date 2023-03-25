@@ -18,4 +18,5 @@ public class ProductionTask
 
     public virtual TaskPrototype Prototype { get; set; }
     public virtual ProductionOrder Order { get; set; }
+    public virtual Worker Worker { get; set; }
 }
