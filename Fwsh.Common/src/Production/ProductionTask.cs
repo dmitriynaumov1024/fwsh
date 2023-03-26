@@ -8,7 +8,7 @@ public class ProductionTask
     public int Id { get; set; }
     public int OrderId { get; set; }
     public int PrototypeId { get; set; }
-    public int WorkerId { get; set; }
+    public int? WorkerId { get; set; }
     
     public string Status { get; set; }
 

@@ -7,7 +7,7 @@ public class RepairTask
 {
     public int Id { get; set; }
     public int OrderId { get; set; }
-    public int WorkerId { get; set; }
+    public int? WorkerId { get; set; }
     
     public string RoleName { get; set; }
     public int Payment { get; set; }
