@@ -168,6 +168,55 @@ public class ProductionTaskController : FwshController
         return Ok(new ProductionTaskResult(task).ForManager());
     }
 
+    [HttpPost("create")]
+    public IActionResult Create (int? order = null)
+    {
+        if (order == null) {
+            return BadRequest(new BadFieldResult("order"));
+        }
+
+        int orderId = (int)order;
+
+        var prodOrder = dataContext.ProductionOrders
+            .Include(order => order.Design.TaskPrototypes)
+            .FirstOrDefault(order => order.Id == orderId);
+
+        if (prodOrder == null) {
+            return BadRequest(new BadFieldResult("order"));
+        }
+
+        if (prodOrder.Status != OrderStatus.Submitted) {
+            return BadRequest(new FailResult($"Can not create tasks for Production Order {orderId}"));
+        } 
+
+        var tasks = Enumerable.Range(0, prodOrder.Quantity)
+            .SelectMany (_ => prodOrder.Design.TaskPrototypes
+                .Select (tp => new ProductionTask() {
+                    Status = TaskStatus.Unknown,
+                    OrderId = prodOrder.Id,
+                    PrototypeId = tp.Id,
+                    WorkerId = null
+                })
+            );
+
+        try {
+            dataContext.ProductionTasks.AddRange(tasks);
+            prodOrder.Status = OrderStatus.Delayed;
+            dataContext.ProductionOrders.Update(prodOrder);
+            dataContext.SaveChanges();
+            return Ok ( new CreationResult (
+                dataContext.ProductionTasks
+                    .Where(t => t.OrderId == orderId)
+                    .Select(t => t.Id).ToList(), 
+                $"Successfully created Production Tasks for Order {orderId}"
+            ));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Something went wrong while trying to create Production Tasks"));
+        }
+    }
+
     [HttpPost("set-status/{id}")]
     public IActionResult SetStatus (int id, [FromBody] string status)
     {
@@ -196,8 +245,12 @@ public class ProductionTaskController : FwshController
     }
 
     [HttpPost("assign/{id}")]
-    public IActionResult Assign (int id, int worker)
+    public IActionResult Assign (int id, int? worker = null)
     {
+        if (worker == null || dataContext.Workers.FirstOrDefault(w => w.Id == worker) == null) {
+            return BadRequest(new BadFieldResult("worker"));
+        }
+
         var task = dataContext.ProductionTasks
             .FirstOrDefault(t => t.Id == id);
 
@@ -215,6 +268,7 @@ public class ProductionTaskController : FwshController
 
         try {
             task.WorkerId = worker;
+            task.Status = TaskStatus.Assigned;
             dataContext.ProductionTasks.Update(task);
             dataContext.SaveChanges();
             return Ok (new SuccessResult($"Successfully assigned Production Task {id} to worker {worker}"));
@@ -222,6 +276,38 @@ public class ProductionTaskController : FwshController
         catch (Exception ex) {
             logger.Error(ex.ToString());
             return ServerError (new FailResult("Something went wrong while trying to assign Production Task"));
+        }
+    }
+
+    [HttpPost("assign-many")]
+    public IActionResult AssignMany (int? order = null, int? prototype = null, int? worker = null)
+    {
+        if (worker == null || dataContext.Workers.FirstOrDefault(w => w.Id == worker) == null) {
+            return BadRequest(new BadFieldResult("worker"));
+        }
+
+        var tasks = dataContext.ProductionTasks
+            .Where(task => task.OrderId == order 
+                        && task.PrototypeId == prototype)
+            .Where(task => task.Status == TaskStatus.Unknown 
+                        || task.Status == TaskStatus.Assigned 
+                        || task.Status == TaskStatus.Rejected)
+            .ToList();
+
+        foreach (var task in tasks) {
+            task.WorkerId = worker;
+            task.Status = TaskStatus.Assigned;
+        }
+
+        try {
+            dataContext.ProductionTasks.UpdateRange(tasks);
+            dataContext.SaveChanges();
+            var ids = String.Join(", ", tasks.OrderBy(task => task.Id).Select(task => task.Id));
+            return Ok (new SuccessResult($"Successfully assigned Production Tasks {ids} to Worker {worker}"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong while trying to assign Production Tasks"));
         }
     }
 }

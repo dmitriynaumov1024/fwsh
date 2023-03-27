@@ -14,6 +14,7 @@ public class TaskPrototypeResult : Result, IResultBuilder<TaskPrototypeResult>
     public int DesignId { get; set; }
     public string DesignType { get; set; }
     public string DesignName { get; set; }
+    public int Precedence { get; set; }
     public string RoleName { get; set; }
     public int Payment { get; set; }
     public string Description { get; set; }
@@ -40,8 +41,9 @@ public class TaskPrototypeResult : Result, IResultBuilder<TaskPrototypeResult>
             DesignId = task.DesignId,
             DesignType = task.Design?.Type,
             DesignName = task.Design?.DisplayName,
-            Payment = task.Payment,
+            Precedence = task.Precedence,
             RoleName = task.RoleName,
+            Payment = task.Payment,
             Description = task.Description
         };
     }
@@ -58,8 +60,9 @@ public class TaskPrototypeResult : Result, IResultBuilder<TaskPrototypeResult>
             DesignId = task.DesignId,
             DesignType = task.Design?.Type,
             DesignName = task.Design?.DisplayName,
-            Payment = task.Payment,
+            Precedence = task.Precedence,
             RoleName = task.RoleName,
+            Payment = task.Payment,
             Description = task.Description,
             InstructionUrl = task.InstructionUrl,
             Parts = task.Parts.ToList(),

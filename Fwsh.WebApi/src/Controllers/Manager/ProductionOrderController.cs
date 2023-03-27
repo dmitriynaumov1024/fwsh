@@ -136,49 +136,6 @@ public class ProductionOrderController : FwshController
         }
     }
 
-    [HttpPost("create-tasks/{id}")]
-    public IActionResult CreateTasks (int id)
-    {
-        var order = dataContext.ProductionOrders
-            .Include(order => order.Design.TaskPrototypes)
-            .FirstOrDefault(order => order.Id == id);
-
-        if (order == null) {
-            return BadRequest(new BadFieldResult("id"));
-        }
-
-        if (order.Status != OrderStatus.Submitted) {
-            return BadRequest(new FailResult($"Can not create tasks for Production Order {id}"));
-        } 
-
-        var tasks = Enumerable.Range(0, order.Quantity)
-            .SelectMany (_ => order.Design.TaskPrototypes
-                .Select (tp => new ProductionTask() {
-                    Status = TaskStatus.Unknown,
-                    OrderId = order.Id,
-                    PrototypeId = tp.Id,
-                    WorkerId = null
-                })
-            );
-
-        try {
-            dataContext.ProductionTasks.AddRange(tasks);
-            order.Status = OrderStatus.Delayed;
-            dataContext.ProductionOrders.Update(order);
-            dataContext.SaveChanges();
-            return Ok ( new CreationResult (
-                dataContext.ProductionTasks
-                    .Where(t => t.OrderId == id)
-                    .Select(t => t.Id).ToList(), 
-                $"Successfully created Production Tasks for Order {id}"
-            ));
-        }
-        catch (Exception ex) {
-            logger.Error(ex.ToString());
-            return ServerError(new FailResult("Something went wrong while trying to create Production Tasks"));
-        }
-    }
-
     [HttpGet("preview-tasks/{id}")]
     public IActionResult PreviewTasks (int id)
     {
