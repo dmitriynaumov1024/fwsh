@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Fwsh.Common;
 
-public class ColorResult
+public class ColorResult : Result
 {
     public int Id { get; set; }
     public string Name { get; set; }

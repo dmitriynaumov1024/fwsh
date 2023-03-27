@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Fwsh.Common;
 
-public class DesignResult : IResultBuilder<DesignResult>
+public class DesignResult : Result, IResultBuilder<DesignResult>
 {
     private Design design { get; set; }
 

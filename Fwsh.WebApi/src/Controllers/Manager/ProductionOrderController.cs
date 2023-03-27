@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -83,8 +82,7 @@ public class ProductionOrderController : FwshController
             .Include(order => order.Notifications)
             .Include(order => order.Design)
             .ThenInclude(design => design.Photos)
-            .Where(order => order.Id == id)
-            .FirstOrDefault();
+            .FirstOrDefault(order => order.Id == id);
 
         if (order == null) {
             return NotFound(new BadFieldResult("id"));
@@ -101,8 +99,7 @@ public class ProductionOrderController : FwshController
         }
 
         var order = dataContext.ProductionOrders
-            .Where(order => order.Id == id)
-            .FirstOrDefault();
+            .FirstOrDefault(order => order.Id == id);
 
         if (order == null) {
             return NotFound(new BadFieldResult("id"));
@@ -139,4 +136,83 @@ public class ProductionOrderController : FwshController
         }
     }
 
+    [HttpPost("create-tasks/{id}")]
+    public IActionResult CreateTasks (int id)
+    {
+        var order = dataContext.ProductionOrders
+            .Include(order => order.Design.TaskPrototypes)
+            .FirstOrDefault(order => order.Id == id);
+
+        if (order == null) {
+            return BadRequest(new BadFieldResult("id"));
+        }
+
+        if (order.Status != OrderStatus.Submitted) {
+            return BadRequest(new FailResult($"Can not create tasks for Production Order {id}"));
+        } 
+
+        var tasks = Enumerable.Range(0, order.Quantity)
+            .SelectMany (_ => order.Design.TaskPrototypes
+                .Select (tp => new ProductionTask() {
+                    Status = TaskStatus.Unknown,
+                    OrderId = order.Id,
+                    PrototypeId = tp.Id,
+                    WorkerId = null
+                })
+            );
+
+        try {
+            dataContext.ProductionTasks.AddRange(tasks);
+            order.Status = OrderStatus.Delayed;
+            dataContext.ProductionOrders.Update(order);
+            dataContext.SaveChanges();
+            return Ok ( new CreationResult (
+                tasks.Select(t => t.Id).ToList(), 
+                $"Successfully created Production Tasks for Order {id}"
+            ));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Something went wrong while trying to create Production Tasks"));
+        }
+    }
+
+    [HttpGet("preview-tasks/{id}")]
+    public IActionResult PreviewTasks (int id)
+    {
+        var order = dataContext.ProductionOrders
+            .Include(order => order.Design.TaskPrototypes)
+            .FirstOrDefault(order => order.Id == id);
+
+        if (order == null) {
+            return BadRequest(new BadFieldResult("id"));
+        }
+
+        if (order.Status != OrderStatus.Submitted) {
+            return BadRequest(new FailResult($"Can not create tasks for Production Order {id}"));
+        } 
+
+        var tasks = Enumerable.Range(0, order.Quantity)
+            .SelectMany (_ => order.Design.TaskPrototypes
+                .Select (tp => new ProductionTask() {
+                    Status = TaskStatus.Unknown,
+                    OrderId = order.Id,
+                    PrototypeId = tp.Id,
+                    WorkerId = null,
+                    Prototype = tp
+                })
+            )
+            .ToArray();
+
+        // tasks[0].WorkerId = 1;
+        // tasks[0].Status = TaskStatus.Assigned;
+        // tasks[5].WorkerId = 1;
+        // tasks[5].Status = TaskStatus.Working;
+
+        var groupedTasks = tasks
+            .GroupBy(t => new { PrototypeId = t.PrototypeId, WorkerId = t.WorkerId })
+            .Select(g => new MultiProductionTaskResult(g).Mini());
+
+        return Ok(groupedTasks);
+    }
 }

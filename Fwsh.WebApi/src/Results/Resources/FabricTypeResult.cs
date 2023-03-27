@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 using Fwsh.Common;
 
-public class FabricTypeResult
+public class FabricTypeResult : Result
 {
     public int Id { get; set; }
     public string Name { get; set; } 
