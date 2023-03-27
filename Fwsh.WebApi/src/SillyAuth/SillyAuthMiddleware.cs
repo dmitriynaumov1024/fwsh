@@ -67,7 +67,7 @@ public class SillyAuthMiddleware
 
         await next(context);
 
-        logger.Log($"Auth token: {key} {user.Token}");
+        // logger.Log($"Auth token: {key} {user.Token}");
 
         if (storedUser.ConfirmedId == user.ConfirmedId) {
             logger.Log($"ConfirmedId: {user.ConfirmedId}");
