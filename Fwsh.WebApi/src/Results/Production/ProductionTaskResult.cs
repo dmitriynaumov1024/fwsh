@@ -17,6 +17,10 @@ public class ProductionTaskResult : Result, IResultBuilder<ProductionTaskResult>
     public int? WorkerId { get; set; }
     public string Status { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+    public DateTime? StartedAt { get; set; }
+    public DateTime? FinishedAt { get; set; }
+
     public ProductionOrderResult Order { get; set; }
     public TaskPrototypeResult Prototype { get; set; }
     public WorkerResult Worker { get; set; }
@@ -36,7 +40,10 @@ public class ProductionTaskResult : Result, IResultBuilder<ProductionTaskResult>
             OrderId = task.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
-            Status = task.Status
+            Status = task.Status,
+            CreatedAt = task.CreatedAt,
+            StartedAt = task.StartedAt,
+            FinishedAt = task.FinishedAt
         };
 
         if (task.Prototype != null && !rbcontext.Contains(task.Prototype)) {
@@ -59,7 +66,10 @@ public class ProductionTaskResult : Result, IResultBuilder<ProductionTaskResult>
             OrderId = task.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
-            Status = task.Status
+            Status = task.Status,
+            CreatedAt = task.CreatedAt,
+            StartedAt = task.StartedAt,
+            FinishedAt = task.FinishedAt
         };
 
         if (task.Order != null) 

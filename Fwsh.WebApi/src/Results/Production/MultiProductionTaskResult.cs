@@ -16,6 +16,7 @@ public class MultiProductionTaskResult : Result, IResultBuilder<MultiProductionT
     public int OrderId { get; set; }
     public int PrototypeId { get; set; }
     public int? WorkerId { get; set; }
+    public IEnumerable<int> Ids { get; set; }
     public IEnumerable<string> Status { get; set; }
 
     public ProductionOrderResult Order { get; set; }
@@ -38,6 +39,7 @@ public class MultiProductionTaskResult : Result, IResultBuilder<MultiProductionT
             OrderId = task.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
+            Ids = tasks.Select(t => t.Id).ToList(),
             Status = new HashSet<string>(tasks.Select(t => t.Status))
         };
 
@@ -62,6 +64,7 @@ public class MultiProductionTaskResult : Result, IResultBuilder<MultiProductionT
             OrderId = task.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
+            Ids = tasks.Select(t => t.Id).ToList(),
             Status = new HashSet<string>(tasks.Select(t => t.Status))
         };
 
