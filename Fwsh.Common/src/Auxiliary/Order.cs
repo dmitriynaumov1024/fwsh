@@ -16,4 +16,22 @@ public abstract class Order
     public DateTime? ReceivedAt { get; set; }
 
     public virtual Customer Customer { get; set; }
+
+    public virtual bool TrySetStatus (string status)
+    {
+        if (! OrderStatus.Contains(status)) return false;
+
+        this.Status = status;
+
+        if (status == OrderStatus.Working) 
+            this.StartedAt ??= DateTime.UtcNow;
+
+        if (status == OrderStatus.Finished) 
+            this.FinishedAt ??= DateTime.UtcNow;
+
+        if (status == OrderStatus.ReceivedAndPaid) 
+            this.ReceivedAt ??= DateTime.UtcNow;
+
+        return true;
+    }
 }

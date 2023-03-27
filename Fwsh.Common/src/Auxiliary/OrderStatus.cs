@@ -9,7 +9,7 @@ public static class OrderStatus
         Unknown = "unknown",
         Submitted = "submitted",
         Delayed = "delayed",
-        Production = "production",
+        Working = "working",
         Finished = "finished",
         ReceivedAndPaid = "receivedpaid",
         Rejected = "rejected",
@@ -17,7 +17,7 @@ public static class OrderStatus
 
     public static readonly List<string> KnownValues = new List<string> 
     {
-        Unknown, Submitted, Delayed, Production, Finished, 
+        Unknown, Submitted, Delayed, Working, Finished, 
         ReceivedAndPaid, Rejected, Impossible
     };
 
