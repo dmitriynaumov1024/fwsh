@@ -167,7 +167,9 @@ public class ProductionOrderController : FwshController
             dataContext.ProductionOrders.Update(order);
             dataContext.SaveChanges();
             return Ok ( new CreationResult (
-                tasks.Select(t => t.Id).ToList(), 
+                dataContext.ProductionTasks
+                    .Where(t => t.OrderId == id)
+                    .Select(t => t.Id).ToList(), 
                 $"Successfully created Production Tasks for Order {id}"
             ));
         }

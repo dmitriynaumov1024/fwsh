@@ -44,6 +44,9 @@ public class MultiProductionTaskResult : Result, IResultBuilder<MultiProductionT
         if (task.Prototype != null) 
             result.Prototype = new TaskPrototypeResult(task.Prototype).Mini();
 
+        if (task.Worker != null)
+            result.Worker = new WorkerResult(task.Worker);
+
         return result;
     }
 

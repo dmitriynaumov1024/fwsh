@@ -31,7 +31,7 @@ public class ProductionTaskController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int? page = null, int? design = null, int? order = null)
+    public IActionResult List (int? page = null, int? design = null, int? order = null, int? worker = null)
     {
         IQueryable<ProductionTask> tasks = dataContext.ProductionTasks
             .Include(t => t.Order.Design)
@@ -50,6 +50,10 @@ public class ProductionTaskController : FwshController
             tasks = tasks.Where(t => t.OrderId == orderId);
         }
 
+        if (worker is int workerId) {
+            tasks = tasks.Where(t => t.WorkerId == workerId);
+        }
+
         var groupedTasks = tasks.ToList()
             .GroupBy(t => new { OrderId = t.OrderId, PrototypeId = t.PrototypeId, WorkerId = t.WorkerId })
             .Select(g => new MultiProductionTaskResult(g).Mini());
@@ -58,7 +62,7 @@ public class ProductionTaskController : FwshController
     }
 
     [HttpGet("archive")]
-    public IActionResult Archive (int? page = null, int? design = null, int? order = null)
+    public IActionResult Archive (int? page = null, int? design = null, int? order = null, int? worker = null)
     {
         IQueryable<ProductionTask> tasks = dataContext.ProductionTasks
             .Include(t => t.Order.Design)
@@ -73,6 +77,10 @@ public class ProductionTaskController : FwshController
 
         if (order is int orderId) {
             tasks = tasks.Where(t => t.OrderId == orderId);
+        }
+
+        if (worker is int workerId) {
+            tasks = tasks.Where(t => t.WorkerId == workerId);
         }
 
         if (page is int pagenumber) {
@@ -94,6 +102,53 @@ public class ProductionTaskController : FwshController
         }
     }
 
+    [HttpGet("count")]
+    public IActionResult Count (string groupby = null)
+    {
+        if (groupby == null) {
+            return BadRequest(new BadFieldResult("groupby"));
+        }
+
+        groupby = groupby.ToLower();
+
+        IQueryable<ProductionTask> tasks = dataContext.ProductionTasks
+            .Include(t => t.Order.Customer)
+            .Include(t => t.Order.Design)
+            .Include(t => t.Worker)
+            .Where(t => t.Status == TaskStatus.Unknown
+                     || t.Status == TaskStatus.Rejected
+                     || t.Status == TaskStatus.Assigned 
+                     || t.Status == TaskStatus.Working);
+
+        if (groupby == "customer") return Ok (new {
+            Key = groupby,
+            Items = tasks.GroupBy(t => t.Order.CustomerId)
+                .Select(g => new { Key = g.First().Order.Customer, Count = g.Count() }).ToList()
+                .Select(g => new { Key = new CustomerResult(g.Key), Count = g.Count })
+        });
+
+        if (groupby == "worker") return Ok (new {
+            Key = groupby,
+            Items = tasks.GroupBy(t => t.WorkerId)
+                .Select(g => new { Key = g.First().Worker, Count = g.Count() }).ToList()
+                .Select(g => new { Key = (g.Key == null) ? null : new WorkerResult(g.Key), Count = g.Count })
+        });
+
+        if (groupby == "design") return Ok (new {
+            Key = groupby,
+            Items = tasks.GroupBy(t => t.Order.Design.DisplayName)
+                .Select(g => new { Key = g.Key, Count = g.Count() })
+        });
+
+        if (groupby == "status") return Ok (new {
+            Key = groupby, 
+            Items = tasks.GroupBy(t => t.Status)
+                .Select(g => new { Key = g.Key, Count = g.Count() })
+        });
+
+        return BadRequest(new BadFieldResult("groupby"));
+    } 
+
     [HttpGet("view/{id}")]
     public IActionResult View (int id)
     {
@@ -113,4 +168,60 @@ public class ProductionTaskController : FwshController
         return Ok(new ProductionTaskResult(task).ForManager());
     }
 
+    [HttpPost("set-status/{id}")]
+    public IActionResult SetStatus (int id, [FromBody] string status)
+    {
+        var task = dataContext.ProductionTasks
+            .FirstOrDefault(t => t.Id == id);
+
+        if (task == null) {
+            return NotFound(new BadFieldResult("id")); 
+        }
+
+        if (! TaskStatus.Contains(status)) {
+            return BadRequest(new BadFieldResult("status"));
+        }
+
+        if (status != task.Status) try {
+            task.Status = status;
+            dataContext.ProductionTasks.Update(task);
+            dataContext.SaveChanges();
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Something went wrong while trying to set status for Production Task"));
+        }
+
+        return Ok (new SuccessResult($"Successfully set status '{status}' for Production Task {id}"));
+    }
+
+    [HttpPost("assign/{id}")]
+    public IActionResult Assign (int id, int worker)
+    {
+        var task = dataContext.ProductionTasks
+            .FirstOrDefault(t => t.Id == id);
+
+        if (task == null) {
+            return NotFound(new BadFieldResult("id")); 
+        }
+
+        bool canAssign = task.Status == TaskStatus.Unknown 
+                        || task.Status == TaskStatus.Assigned 
+                        || task.Status == TaskStatus.Rejected;
+
+        if (! canAssign) {
+            return BadRequest(new FailResult($"Can not assign Production Task {id} because of status '{task.Status}'"));
+        }
+
+        try {
+            task.WorkerId = worker;
+            dataContext.ProductionTasks.Update(task);
+            dataContext.SaveChanges();
+            return Ok (new SuccessResult($"Successfully assigned Production Task {id} to worker {worker}"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong while trying to assign Production Task"));
+        }
+    }
 }
