@@ -54,7 +54,7 @@ public class RepairOrderController : FwshController
     {
         return GetOrderList (page, design, order => 
             order.Status == OrderStatus.Submitted 
-            || order.Status == OrderStatus.Production 
+            || order.Status == OrderStatus.Working 
             || order.Status == OrderStatus.Delayed 
             || order.Status == OrderStatus.Finished
         );

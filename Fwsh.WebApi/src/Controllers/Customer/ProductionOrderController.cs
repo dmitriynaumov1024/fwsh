@@ -54,7 +54,7 @@ public class ProductionOrderController : FwshController
     {
         return GetOrderList (page, order => 
             order.Status == OrderStatus.Submitted 
-            || order.Status == OrderStatus.Production 
+            || order.Status == OrderStatus.Working 
             || order.Status == OrderStatus.Delayed 
             || order.Status == OrderStatus.Finished
         );
