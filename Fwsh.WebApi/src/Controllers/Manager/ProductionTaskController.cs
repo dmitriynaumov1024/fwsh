@@ -37,10 +37,9 @@ public class ProductionTaskController : FwshController
             .Include(t => t.Order.Design)
             .Include(t => t.Prototype)
             .Include(t => t.Worker)
-            .Where(t => t.Status == TaskStatus.Unknown
-                     || t.Status == TaskStatus.Rejected
-                     || t.Status == TaskStatus.Assigned 
-                     || t.Status == TaskStatus.Working);
+            .Where(t => t.Order.Status == OrderStatus.Submitted 
+                     || t.Order.Status == OrderStatus.Working 
+                     || t.Order.Status == OrderStatus.Delayed );
 
         if (design is int designId) {
             tasks = tasks.Where(t => t.Order.DesignId == designId);
@@ -68,8 +67,10 @@ public class ProductionTaskController : FwshController
             .Include(t => t.Order.Design)
             .Include(t => t.Prototype)
             .Include(t => t.Worker)
-            .Where(t => t.Status == TaskStatus.Finished
-                     || t.Status == TaskStatus.Impossible);
+            .Where(t => t.Order.Status == OrderStatus.ReceivedAndPaid
+                     || t.Order.Status == OrderStatus.Rejected
+                     || t.Order.Status == OrderStatus.Impossible
+                     || t.Order.Status == OrderStatus.Finished );
 
         if (design is int designId) {
             tasks = tasks.Where(t => t.Order.DesignId == designId);
@@ -115,10 +116,9 @@ public class ProductionTaskController : FwshController
             .Include(t => t.Order.Customer)
             .Include(t => t.Order.Design)
             .Include(t => t.Worker)
-            .Where(t => t.Status == TaskStatus.Unknown
-                     || t.Status == TaskStatus.Rejected
-                     || t.Status == TaskStatus.Assigned 
-                     || t.Status == TaskStatus.Working);
+            .Where(t => t.Order.Status == OrderStatus.Submitted 
+                     || t.Order.Status == OrderStatus.Working 
+                     || t.Order.Status == OrderStatus.Delayed );
 
         if (groupby == "customer") return Ok (new {
             Key = groupby,
@@ -221,6 +221,7 @@ public class ProductionTaskController : FwshController
     public IActionResult SetStatus (int id, [FromBody] string status)
     {
         var task = dataContext.ProductionTasks
+            .Include(task => task.Order.Tasks)
             .FirstOrDefault(t => t.Id == id);
 
         if (task == null) {
@@ -231,8 +232,14 @@ public class ProductionTaskController : FwshController
             return BadRequest(new BadFieldResult("status"));
         }
 
+        bool canChangeStatus = 
+               task.Order.Status == OrderStatus.Delayed
+            || task.Order.Status == OrderStatus.Working
+            || task.Order.Status == OrderStatus.Finished
+                && (DateTime.UtcNow - (DateTime)task.Order.FinishedAt).Minutes < 10; 
+
         if (status != task.Status) try {
-            task.Status = status;
+            task.TrySetStatus(status);
             dataContext.ProductionTasks.Update(task);
             dataContext.SaveChanges();
         }

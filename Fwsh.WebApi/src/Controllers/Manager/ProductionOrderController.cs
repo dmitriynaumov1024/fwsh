@@ -54,7 +54,7 @@ public class ProductionOrderController : FwshController
     {
         return GetOrderList (page, design, order => 
             order.Status == OrderStatus.Submitted 
-            || order.Status == OrderStatus.Production 
+            || order.Status == OrderStatus.Working 
             || order.Status == OrderStatus.Delayed 
             || order.Status == OrderStatus.Finished
         );
@@ -94,19 +94,17 @@ public class ProductionOrderController : FwshController
     [HttpPost("set-status/{id}")]
     public IActionResult SetStatus (int id, [FromBody] string status)
     {
-        if (! OrderStatus.Contains(status)) {
+        if (! OrderStatus.Contains(status)) 
             return BadRequest(new BadFieldResult("status"));
-        }
 
         var order = dataContext.ProductionOrders
             .FirstOrDefault(order => order.Id == id);
 
-        if (order == null) {
+        if (order == null) 
             return NotFound(new BadFieldResult("id"));
-        }
 
         try {
-            order.Status = status;
+            order.TrySetStatus(status);
             dataContext.ProductionOrders.Update(order);
             dataContext.SaveChanges();
             return Ok ( new SuccessResult($"Successfully set status '{status}' for ProductionOrder {id}") );

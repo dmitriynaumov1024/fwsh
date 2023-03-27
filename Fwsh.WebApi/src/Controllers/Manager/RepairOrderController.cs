@@ -51,7 +51,7 @@ public class RepairOrderController : FwshController
     {
         return GetOrderList (page, order => 
             order.Status == OrderStatus.Submitted 
-            || order.Status == OrderStatus.Production
+            || order.Status == OrderStatus.Working
             || order.Status == OrderStatus.Delayed 
             || order.Status == OrderStatus.Finished
         );
@@ -101,7 +101,7 @@ public class RepairOrderController : FwshController
         }
 
         try {
-            order.Status = status;
+            order.TrySetStatus(status);
             dataContext.RepairOrders.Update(order);
             dataContext.SaveChanges();
             return Ok ( new SuccessResult($"Successfully set status '{status}' for RepairOrder {id}") );
