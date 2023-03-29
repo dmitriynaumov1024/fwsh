@@ -39,7 +39,8 @@ public class ProductionTaskController : FwshController
             .Include(t => t.Worker)
             .Where(t => t.Order.Status == OrderStatus.Submitted 
                      || t.Order.Status == OrderStatus.Working 
-                     || t.Order.Status == OrderStatus.Delayed );
+                     || t.Order.Status == OrderStatus.Delayed
+                     || t.Order.Status == OrderStatus.Finished );
 
         if (design is int designId) {
             tasks = tasks.Where(t => t.Order.DesignId == designId);
@@ -69,8 +70,7 @@ public class ProductionTaskController : FwshController
             .Include(t => t.Worker)
             .Where(t => t.Order.Status == OrderStatus.ReceivedAndPaid
                      || t.Order.Status == OrderStatus.Rejected
-                     || t.Order.Status == OrderStatus.Impossible
-                     || t.Order.Status == OrderStatus.Finished );
+                     || t.Order.Status == OrderStatus.Impossible );
 
         if (design is int designId) {
             tasks = tasks.Where(t => t.Order.DesignId == designId);
