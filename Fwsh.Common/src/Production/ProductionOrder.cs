@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class ProductionOrder : Order
 {
     public int DesignId { get; set; }
-    public int DecorMaterialId { get; set; }
+    public int? DecorMaterialId { get; set; }
     public int FabricId { get; set; }
 
     public int PricePerOne { get; set; }
