@@ -89,7 +89,7 @@ public class RepairOrderController : FwshController
     }
 
     [HttpPost("create")]
-    public IActionResult Create (RepairOrderCreationRequest request)
+    public IActionResult Create (RepairOrderRequest request)
     {
         if (request.Validate().State.HasBadFields) {
             return BadRequest(new BadFieldResult(request.State.BadFields));
@@ -99,18 +99,11 @@ public class RepairOrderController : FwshController
         }
 
         var order = new RepairOrder() {
-            CustomerId = user.ConfirmedId,
-            Description = request.Description
+            CustomerId = user.ConfirmedId
         };
 
-        for (int i=0; i<request.PhotoCount; i++) {
-            order.Photos.Add(new RepairOrderPhoto() {
-                // don't care about order id, it shall be set automatically
-                Position = i,
-                Url = ""
-            });
-        }
         try {
+            request.ApplyTo(order);
             dataContext.RepairOrders.Add(order);
             dataContext.SaveChanges();
             return Ok ( new CreationResult(order.Id, "Successfully created Repair Order") );
@@ -120,6 +113,67 @@ public class RepairOrderController : FwshController
             return ServerError ( new FailResult("Something went wrong") );
         }
     } 
+
+    [HttpPost("update/{id}")]
+    public IActionResult Update (int id, RepairOrderRequest request)
+    {
+        if (request.Validate().State.HasBadFields) {
+            return BadRequest(new BadFieldResult(request.State.BadFields));
+        }
+        if (! request.State.IsValid) {
+            return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
+        }
+
+        var order = dataContext.RepairOrders
+            .Include(order => order.Photos)
+            .FirstOrDefault(order => order.Id == id && order.CustomerId == user.ConfirmedId);
+
+        if (order == null) {
+            return NotFound(new BadFieldResult("id"));
+        }
+
+        bool canUpdate = order.Status == OrderStatus.Unknown;
+
+        if (! canUpdate) {
+            return BadRequest(new FailResult($"Can not update Repair Order {id} because of its status '{order.Status}'"));
+        }
+
+        try {
+            request.ApplyTo(order);
+            dataContext.RepairOrders.Update(order);
+            dataContext.SaveChanges();
+            return Ok (new SuccessResult($"Successfully updated Repair Order {id}"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong while trying to update Repair Order"));
+        }
+    }
+
+    [HttpPost("confirm-submit/{id}")]
+    public IActionResult ConfirmSubmit (int id)
+    {
+        var order = dataContext.RepairOrders
+            .FirstOrDefault(order => order.Id == id && order.CustomerId == user.ConfirmedId);
+
+        if (order == null) {
+            return NotFound(new BadFieldResult("id"));
+        }
+
+        if (order.Status == OrderStatus.Unknown) {
+            order.Status = OrderStatus.Submitted;
+            dataContext.RepairOrders.Update(order);
+            dataContext.SaveChanges();
+            return Ok ( new SuccessResult (
+                $"Successfully confirmed submission of Repair Order {id}"
+            ));
+        }
+        else {
+            return BadRequest ( new FailResult (
+                $"Can not confirm submission of Repair Order {id} with status {order.Status}"
+            ));
+        }
+    }
 
     [HttpPost("attach-photos/{orderid}")]
     public IActionResult AttachPhotos (int orderid)
@@ -151,8 +205,6 @@ public class RepairOrderController : FwshController
             orderPhoto.Url = $"repair-{order.Id}-{orderPhoto.Position}-{Guid.NewGuid()}.{ext}"; 
         }
 
-        order.Status = OrderStatus.Submitted;
-
         dataContext.RepairOrders.Update(order);
         dataContext.SaveChanges();
 
@@ -181,7 +233,7 @@ public class RepairOrderController : FwshController
         try {
             dataContext.Remove(order);
             dataContext.SaveChanges();
-            return Ok (new DeletionResult(order.Id, "Successfully deleted Production Order"));
+            return Ok (new DeletionResult(order.Id, "Successfully deleted Repair Order"));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
@@ -189,11 +241,14 @@ public class RepairOrderController : FwshController
         }
     }
 
-    [HttpGet("read-notifications")]
+    [HttpPost("read-notifications")]
     public IActionResult ReadNotifications (int? order = null, int? id = null, int? last = null)
     {
-        IQueryable<RepairNotification> notifications = 
-            dataContext.RepairNotifications.Where(n => n.IsRead == false);
+        IQueryable<RepairNotification> notifications = dataContext.RepairOrders
+            .Include(n => n.Notifications)
+            .Where(order => order.CustomerId == user.ConfirmedId)
+            .SelectMany(order => order.Notifications)
+            .Where(n => n.IsRead == false);
 
         if (order is int orderId) {
             notifications = notifications.Where(n => n.RepairOrderId == orderId);

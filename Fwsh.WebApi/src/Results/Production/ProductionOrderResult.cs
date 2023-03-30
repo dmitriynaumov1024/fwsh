@@ -16,7 +16,7 @@ public class ProductionOrderResult : OrderResult, IResultBuilder<ProductionOrder
 
     public int DesignId { get; set; }
     public int FabricId { get; set; }
-    public int DecorMaterialId { get; set; }
+    public int? DecorMaterialId { get; set; }
 
     public DesignResult Design { get; set; }
     public FabricResult Fabric { get; set; }
@@ -57,8 +57,11 @@ public class ProductionOrderResult : OrderResult, IResultBuilder<ProductionOrder
     {
         var result = Mini();
 
-        result.Fabric = new FabricResult(order.Fabric);
-        result.DecorMaterial = new MaterialResult(order.DecorMaterial);
+        if (order.Fabric != null) 
+            result.Fabric = new FabricResult(order.Fabric);
+        
+        if (order.DecorMaterial != null)
+            result.DecorMaterial = new MaterialResult(order.DecorMaterial);
         
         result.Notifications = order.Notifications
             .OrderBy(n => n.Id)

@@ -93,7 +93,60 @@ public class ProductionOrderController : FwshController
     }
 
     [HttpPost("create")]
-    public IActionResult Create (ProductionOrderCreationRequest request)
+    public IActionResult Create (ProductionOrderRequest request)
+    {
+        var order = new ProductionOrder() {
+            Status = OrderStatus.Unknown,
+            CustomerId = user.ConfirmedId
+        };
+
+        var result = this.OnApplyRequest(order, request);
+
+        if (result != null) return result;
+
+        try {
+            dataContext.Add(order);
+            dataContext.SaveChanges();
+            return Ok (new CreationResult(order.Id, "Successfully created new Production Order"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong while trying to create Production Order"));
+        }
+    }
+
+    [HttpPost("update/{id}")]
+    public IActionResult Update (int id, ProductionOrderRequest request)
+    {
+        var order = dataContext.ProductionOrders
+            .FirstOrDefault(order => order.Id == id && order.CustomerId == user.ConfirmedId);
+
+        if (order == null) {
+            return NotFound(new BadFieldResult("id"));
+        }
+
+        bool canUpdate = order.Status == OrderStatus.Unknown;
+
+        if (! canUpdate) {
+            return BadRequest(new FailResult($"Can not update Production Order {id} with status '{order.Status}'"));
+        }
+
+        var result = this.OnApplyRequest(order, request);
+
+        if (result != null) return result;
+
+        try {
+            dataContext.Update(order);
+            dataContext.SaveChanges();
+            return Ok (new SuccessResult($"Successfully updated Production Order {id}"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong while trying to update Production Order"));
+        }
+    }
+
+    protected IActionResult OnApplyRequest (ProductionOrder order, ProductionOrderRequest request)
     {
         if (request.Validate().State.HasBadFields) {
             return BadRequest (new BadFieldResult(request.State.BadFields));
@@ -114,16 +167,19 @@ public class ProductionOrderController : FwshController
             return BadRequest (new BadFieldResult("fabricId"));
         }
 
-        var decorMaterial = dataContext.Materials.Find(request.DecorMaterialId);
+        var decorMaterial = dataContext.Materials
+            .FirstOrDefault(m => m.IsDecorative && m.Id == request.DecorMaterialId);
 
+        if (decorMaterial == null && design.DecorMaterialQuantity > 0) {
+            return BadRequest (new BadFieldResult("decorMaterialId"));
+        }
         if (decorMaterial != null && ! decorMaterial.IsDecorative) {
             return BadRequest (new BadFieldResult("decorMaterialId"));
         }
 
         var customer = dataContext.Customers
             .Include(customer => customer.ProductionOrders)
-            .Where(customer => customer.Id == user.ConfirmedId)
-            .FirstOrDefault();
+            .FirstOrDefault(customer => customer.Id == user.ConfirmedId);
 
         customer.UpdateDiscountPercent();
 
@@ -131,24 +187,36 @@ public class ProductionOrderController : FwshController
             + fabric.PricePerUnit * design.FabricQuantity 
             + (decorMaterial?.PricePerUnit ?? 0) * design.DecorMaterialQuantity);
 
-        var order = new ProductionOrder() {
-            Status = OrderStatus.Submitted,
-            CustomerId = user.ConfirmedId,
-            Quantity = request.Quantity,
-            PricePerOne = fixedDesignPrice.WithDiscountFor(customer),
-            DesignId = request.DesignId,
-            FabricId = request.FabricId,
-            DecorMaterialId = request.DecorMaterialId
-        };
+        request.ApplyTo(order);
 
-        try {
-            dataContext.Add(order);
-            dataContext.SaveChanges();
-            return Ok (new CreationResult(order.Id, "Successfully created new Production Order"));
+        order.DecorMaterialId = decorMaterial?.Id;
+        order.PricePerOne = fixedDesignPrice.WithDiscountFor(customer);
+
+        return null; // null means nothing gone wrong
+    }
+
+    [HttpPost("confirm-submit/{id}")]
+    public IActionResult ConfirmSubmit (int id)
+    {
+        var order = dataContext.ProductionOrders
+            .FirstOrDefault(order => order.Id == id && order.CustomerId == user.ConfirmedId);
+
+        if (order == null) {
+            return NotFound(new BadFieldResult("id"));
         }
-        catch (Exception ex) {
-            logger.Error(ex.ToString());
-            return ServerError (new FailResult("Something went wrong"));
+
+        if (order.Status == OrderStatus.Unknown) {
+            order.Status = OrderStatus.Submitted;
+            dataContext.ProductionOrders.Update(order);
+            dataContext.SaveChanges();
+            return Ok ( new SuccessResult (
+                $"Successfully confirmed submission of Production Order {id}"
+            ));
+        }
+        else {
+            return BadRequest ( new FailResult (
+                $"Can not confirm submission of Production Order {id} with status {order.Status}"
+            ));
         }
     }
 
@@ -181,11 +249,14 @@ public class ProductionOrderController : FwshController
         }
     }
 
-    [HttpGet("read-notifications")]
+    [HttpPost("read-notifications")]
     public IActionResult ReadNotifications (int? order = null, int? id = null, int? last = null)
     {
-        IQueryable<ProductionNotification> notifications = 
-            dataContext.ProductionNotifications.Where(n => n.IsRead == false);
+        IQueryable<ProductionNotification> notifications = dataContext.ProductionOrders
+            .Include(n => n.Notifications)
+            .Where(order => order.CustomerId == user.ConfirmedId)
+            .SelectMany(order => order.Notifications)
+            .Where(n => n.IsRead == false);
 
         if (order is int orderId) {
             notifications = notifications.Where(n => n.ProductionOrderId == orderId);
