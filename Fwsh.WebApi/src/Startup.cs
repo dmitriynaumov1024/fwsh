@@ -18,6 +18,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.FileStorage;
 using Fwsh.WebApi.Logging;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.RouteGuard;
@@ -29,7 +30,8 @@ public class Startup
         services.AddSingleton<Logger, ConsoleLogger>();
         services.AddDbContext<FwshDataContext, FwshDataContextPostgres>(ServiceLifetime.Scoped);
         services.AddSingleton<FwshUserStorage, FwshUserStorageInMemory>();
-        // services.AddSingleton<UniformCrudProvider>();
+        services.AddSingleton<FileStorageProvider>(new PhysicalFileStorageProvider("./var/files"));
+
         services.AddRouting();
         services.AddControllers();
 
