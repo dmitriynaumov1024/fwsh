@@ -1,0 +1,64 @@
+.width-container {
+  width: 360px;
+  margin: auto;
+}
+
+@media screen and (min-width: 490px) {
+  .width-container {
+    width: 480px;
+  }
+}
+
+@media screen and (min-width: 760px) {
+  .width-container {
+    width: 720px;
+  }
+}
+
+@media screen and (min-width: 2000px) {
+  .width-container {
+    width: 1080px;
+  }
+}
+
+.card, .card-high {
+  border-bottom: 2px solid var(--color-back-1);
+}
+
+@media screen and (min-width: 760px) 
+{
+  .card {
+    background-color: var(--color-back-0);
+    border: var(--border);
+  }
+  .card-high {
+    background-color: var(--color-back-0);
+    border: var(--border);
+    box-shadow: var(--shadow);
+  }
+}
+
+.flex-stripe {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.flex-gallery {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+
+.flex-gallery>* {
+  margin-right: 4px;
+  margin-left: 4px;
+}

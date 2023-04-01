@@ -1,0 +1,9 @@
+{
+  "name": "Frontend",
+  "workspaces": [
+    "Common", 
+    "Customer",
+    "Manager",
+    "Worker"
+  ]
+}

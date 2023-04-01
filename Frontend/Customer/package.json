@@ -1,0 +1,19 @@
+{
+  "name": "CustomersPanel",
+  "version": "1.0.0",
+  "author": "Dmitriy Naumov",
+  "scripts": {
+    "dev": "vite --port 5000 --host",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "Common": "^1.0.0",
+    "vue": "^3.2.38",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.3",
+    "vite": "^3.0.9"
+  }
+}
