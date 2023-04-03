@@ -90,3 +90,11 @@
   row-gap: 1rem;
 }
 
+/* fixed height*/
+.height-1 {
+  min-height: 1rem;
+}
+
+.height-2 {
+  min-height: 2rem;
+}
