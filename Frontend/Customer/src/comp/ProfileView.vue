@@ -7,25 +7,41 @@
             Log out
         </button>
     </div>
+    <table class="kvtable stripes margin-bottom-1">
+        <tr>
+            <td>Surname</td>
+            <td>{{profile.surname}}</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{profile.name}}</td>
+        </tr>
+        <tr>
+            <td>Patronym</td>
+            <td>{{profile.patronym}}</td>
+        </tr>
+        <tr v-if="profile.orgName">
+            <td>Org. name</td>
+            <td>{{profile.orgName}}</td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td>{{profile.phone}}</td>
+        </tr>
+        <tr>
+            <td>E-mail</td>
+            <td>{{profile.email}}</td>
+        </tr>
+        <tr>
+            <td>Discount percent</td>
+            <td>{{profile.discountPercent}}%</td>
+        </tr>
+        <tr>
+            <td>Signup date</td>
+            <td>{{toDateString(profile.createdAt)}}</td>
+        </tr>
+    </table>
     <div class="margin-bottom-1">
-        <span>Surname: {{profile.surname}}</span>
-    </div>
-    <div class="margin-bottom-1">
-        <span>Name: {{profile.name}}</span>
-    </div>
-    <div class="margin-bottom-1">
-        <span>Patronym: {{profile.patronym}}</span>
-    </div>
-    <div class="margin-bottom-1" v-if="profile.orgName">
-        <span>Org. name: {{profile.orgName}}</span>
-    </div>
-    <div class="margin-bottom-1">
-        <span>Phone: {{profile.phone}}</span>
-    </div>
-    <div class="margin-bottom-1">
-        <span>E-mail: {{profile.email}}</span>
-    </div>
-    <div class="pad-1">
         <span class="text-error" v-if="errorMessage">{{errorMessage}}</span>
     </div>
 </div>
@@ -64,17 +80,34 @@ const props = {
 
 function logoutButtonClick() {
     setTimeout(()=> {
-        this.$emit("logout")
+        this.$emit("click-logout")
     }, 200)
+}
+
+let dateFormat = Intl?.DateTimeFormata ? new Intl.DateTimeFormat("uk-UA", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+})
+: ({
+    format(date) {
+        return date.toDateString()
+    }
+})
+
+function toDateString (date) {
+    date = new Date(date)
+    return dateFormat.format(date)
 }
 
 export default {
     props,
     methods: {
-        logoutButtonClick
+        logoutButtonClick,
+        toDateString
     },
     emits: [
-        "logout"
+        "click-logout"
     ]
 }
 

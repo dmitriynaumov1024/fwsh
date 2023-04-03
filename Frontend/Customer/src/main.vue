@@ -1,16 +1,19 @@
 <template>
-    <div class="width-container pad-1 margin-bottom-2">
-        <h1>Furniture workshop</h1>
-    </div>
-    <ProfilePage />
+<HeaderLayout />
+<MainLayout />
+<FooterLayout />
 </template>
 
 <script>
-import ProfilePage from "@/pages/ProfilePage.vue"
+import HeaderLayout from "@/layout/Header.vue"
+import MainLayout from "@/layout/Main.vue"
+import FooterLayout from "@/layout/Footer.vue"
 
 export default {
     components: {
-        ProfilePage
+        HeaderLayout,
+        MainLayout,
+        FooterLayout
     }
 }
 </script>
