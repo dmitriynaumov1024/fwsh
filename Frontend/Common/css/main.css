@@ -1,7 +1,23 @@
-.top-stripe {
+#app-root {
+  --reserved-for-footer: 6.5rem;
+  min-height: 100vh;
+  padding-bottom: var(--reserved-for-footer); 
+}
+
+#app-root>.header {
+  position: sticky; top: 0; z-index: 9;
   background-color: var(--color-back-0);
-  border-bottom: 1px solid var(--color-back-2);
-  box-shadow: 0 1px 10px var(--color-back-2);
+  border-bottom: var(--border);
+  box-shadow: 0 4px 24px rgba(0,0,0, 0.05);
+}
+
+#app-root>.footer {
+  background-color: var(--color-back-2);
+  color: var(--color-fore-2);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: var(--reserved-for-footer);
 }
 
 .line-h {
@@ -15,11 +31,13 @@
 }
 
 /* More important things */
+
 .block {
   display: block;
   width: 100%;
 }
 
+/* margins */
 .margin-bottom-05 {
   margin-bottom: 0.5rem;
 }
@@ -33,6 +51,7 @@
   margin-bottom: 2rem;
 }
 
+/* padding */
 .pad-025 {
   padding: 0.25rem;
 }
@@ -60,3 +79,14 @@
 .pad-h-1 {
   padding: 0 1rem;
 }
+
+.pad-05-1 {
+  padding: 0.5rem 1rem;
+}
+
+/* flex spacing */
+.flex-spacing-1 {
+  column-gap: 1rem;
+  row-gap: 1rem;
+}
+

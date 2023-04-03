@@ -50,6 +50,22 @@
   border-color: var(--color-accent-focus);
 }
 
+.button-inline, .link {
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--color-accent);
+  background-color: transparent;
+  transition-duration: 0.2s;
+}
+
+.button-inline:hover, .link:hover {
+  color: var(--color-accent-hover);
+}
+
+.button-inline:active, .link:active {
+  color: var(--color-accent-focus);
+}
+
 .button-block {
   display: block;
   max-width: 100%;

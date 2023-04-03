@@ -1,5 +1,6 @@
 .width-container {
   width: 360px;
+  max-width: 100%;
   margin: auto;
 }
 
@@ -38,6 +39,13 @@
   }
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
 .flex-stripe {
   display: flex;
   flex-direction: row;
@@ -55,10 +63,4 @@
   align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: wrap;
-  row-gap: 12px;
-}
-
-.flex-gallery>* {
-  margin-right: 4px;
-  margin-left: 4px;
 }
