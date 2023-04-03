@@ -7,7 +7,7 @@
             Log out
         </button>
     </div>
-    <table class="kvtable stripes margin-bottom-1">
+    <table v-if="profile.id" class="kvtable stripes margin-bottom-1">
         <tr>
             <td>Surname</td>
             <td>{{profile.surname}}</td>

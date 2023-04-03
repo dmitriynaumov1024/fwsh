@@ -1,7 +1,9 @@
 <template>
 <div>
     <template v-for="item of items">
-        <component :is="view" v-bind="bind.call ? bind(item) : bind" />
+        <component :is="view" 
+            v-bind="bind.call ? bind(item) : bind" 
+            @click="()=>$emit('click-item', item)" />
     </template>
 </div>
 </template>
@@ -25,6 +27,9 @@ const props = {
 }
 
 export default {
-    props
+    props,
+    emits: [
+        "click-item"
+    ]
 }
 </script>
