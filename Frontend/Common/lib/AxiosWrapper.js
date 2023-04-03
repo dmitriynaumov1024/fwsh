@@ -52,4 +52,4 @@ function AxiosWrapper ({ id = "shared", baseUrl } = options) {
     }
 }
 
-export default AxiosWrapper
+export { AxiosWrapper }

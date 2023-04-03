@@ -5,13 +5,11 @@ import "./css/colors.css"
 import "./css/containers.css"
 import "./css/buttons.css"
 import "./css/inputs.css"
+import "./css/tables.css"
+import "./css/icons.css"
 import "./css/text.css"
 import "./css/main.css"
 
-import AxiosWrapper from "./lib/AxiosWrapper.js"
-import AxiosWrapperPlugin from "./lib/AxiosWrapperPlugin.js"
-
-export {
-    AxiosWrapper,
-    AxiosWrapperPlugin
-}
+export { AxiosWrapper } from "./lib/AxiosWrapper.js"
+export { AxiosWrapperPlugin } from "./lib/AxiosWrapperPlugin.js"
+export { LocalStoragePlugin } from "./lib/LocalStoragePlugin.js"

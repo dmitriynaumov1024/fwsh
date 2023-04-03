@@ -1,7 +1,7 @@
-import AxiosWrapper from "./AxiosWrapper.js"
+import { AxiosWrapper } from "./AxiosWrapper.js"
 
-export default {
-    install(app, wrapperId, baseUrl) {
+export const AxiosWrapperPlugin = {
+    install (app, wrapperId, baseUrl) {
         app.config.globalProperties.$axios = AxiosWrapper({ id: wrapperId, baseUrl: baseUrl })
     }
 }
