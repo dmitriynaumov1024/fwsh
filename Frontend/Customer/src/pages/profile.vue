@@ -3,7 +3,9 @@
     :profile="profile" 
     :badFields="profile.badFields"
     :errorMessage="profile.errorMessage" 
-    @click-logout="profileLogout" />
+    @click-logout="profileLogout" 
+    @click-production-orders="goToProductionOrders" 
+    @click-repair-orders="goToRepairOrders" />
 </template>
 
 <script>
@@ -70,6 +72,14 @@ function profileLogout () {
     })
 }
 
+function goToProductionOrders () {
+    this.$router.push("/orders/production/list?page=0")
+}
+
+function goToRepairOrders () {
+    this.$router.push("/orders/repair/list?page=0")
+}
+
 export default {
     data,
     mounted,
@@ -79,7 +89,9 @@ export default {
     },
     methods: {
         fetchProfile,
-        profileLogout
+        profileLogout,
+        goToProductionOrders,
+        goToRepairOrders
     },
     components: {
         ProfileView

@@ -2,26 +2,30 @@
 <header class="header">
     <div class="width-container">
         <div class="flex-stripe pad-05">
-            <router-link to="/" class="link"><h1>Furniture workshop</h1></router-link>
+            <FwshIcon class="icon-2" />
+            <router-link to="/" class="link"><h2>workshop</h2></router-link>
             <span class="flex-grow"></span>
             <MenuIcon class="icon-2" :active="headerMenuExpanded" @click="menuIconClick" />
         </div>
-        <div v-if="headerMenuExpanded" class="flex-stripe pad-h-05 flex-spacing-1 margin-bottom-1">
-            <router-link to="/catalog/designs/list?page=0" class="link">Catalog</router-link>
+        <nav v-if="headerMenuExpanded" 
+            class="flex-stripe pad-05 flex-spacing-1 margin-bottom-05" 
+            style="border-top: 2px solid var(--color-back-1)">
+            <router-link to="/catalog/designs/list?page=0" class="top-navbar-link">Catalog</router-link>
             <template v-if="loggedIn">
-                <router-link to="/profile" class="link">Profile</router-link>
+                <router-link to="/profile" class="top-navbar-link">Profile</router-link>
             </template>
             <template v-else>
-                <router-link to="/login" class="link">Log in</router-link>
-                <router-link to="/signup" class="link">Sign up</router-link>
+                <router-link to="/login" class="top-navbar-link">Log in</router-link>
+                <router-link to="/signup" class="top-navbar-link">Sign up</router-link>
             </template>
             <span class="flex-grow"></span>
-        </div>
+        </nav>
     </div>
 </header>
 </template>
 
 <script>
+import FwshIcon from "@/comp/icons/Fwsh.vue" 
 import MenuIcon from "@/comp/icons/Menu.vue"
 
 function data() {
@@ -50,6 +54,7 @@ export default {
         menuIconClick
     },
     components: {
+        FwshIcon,
         MenuIcon
     }
 }

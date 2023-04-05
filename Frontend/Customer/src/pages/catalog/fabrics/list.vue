@@ -6,11 +6,7 @@
         :bind="item => ({ design: item })"
         @click-previous="goToPrevious"
         @click-next="goToNext"
-        @click-item="goToItem">
-        <template #title>
-            <h2>Design catalog &ndash; Page {{ page }}</h2>
-        </template>
-    </Pagination>
+        @click-item="goToItem" />
 </div>
 </template>
 

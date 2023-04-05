@@ -3,6 +3,10 @@ import login from "@/pages/login.vue"
 import signup from "@/pages/signup.vue"
 import profile from "@/pages/profile.vue"
 import designList from "@/pages/catalog/designs/list.vue" 
+import fabricList from "@/pages/catalog/fabrics/list.vue"
+import productionOrderList from "@/pages/orders/production/list.vue"
+import repairOrderList from "@/pages/orders/repair/list.vue"
+import productionOrderView from "@/pages/orders/production/view.vue"
 
 import error404 from "@/pages/error404.vue" 
 
@@ -32,7 +36,27 @@ const routes = [
     {
         path: "/catalog/designs/list",
         component: designList,
-        props: route => ({ page: route.query.page })
+        props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/catalog/fabrics/list",
+        component: fabricList,
+        props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/orders/production/:tab(list|archive)",
+        component: productionOrderList,
+        props: ({ params, query }) => ({ tab: params.tab, page: Number(query.page) })
+    },
+    {
+        path: "/orders/production/view/:id",
+        component: productionOrderView,
+        props: ({ params }) => ({ id: Number(params.id) })
+    },
+    {
+        path: "/orders/repair/:tab(list|archive)",
+        component: repairOrderList,
+        props: ({ params, query }) => ({ tab: params.tab, page: Number(query.page) })
     },
     {
         path: "/:garbage(.*)",

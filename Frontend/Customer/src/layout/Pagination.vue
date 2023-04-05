@@ -1,5 +1,6 @@
 <template>
 <div>
+    <slot name="title"></slot>
     <div :class="classPagination">
         <template v-for="item of items">
             <component :is="view" 

@@ -1,5 +1,6 @@
 <template>
 <div>
+    <slot name="title"></slot>
     <template v-for="item of items">
         <component :is="view" 
             v-bind="bind.call ? bind(item) : bind" 

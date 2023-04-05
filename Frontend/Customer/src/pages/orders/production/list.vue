@@ -2,13 +2,13 @@
 <div class="width-container card pad-1 margin-bottom-1">
     <Pagination v-if="items?.length"
         :page="page" :previous="previous" :next="next"
-        :items="items" :view="$options.components.DesignView"
-        :bind="item => ({ design: item })"
+        :items="items" :view="$options.components.ProductionOrderView"
+        :bind="item => ({ order: item })"
         @click-previous="goToPrevious"
-        @click-next="goToNext"
+        @click-next="goToNext" 
         @click-item="goToItem">
         <template #title>
-            <h2>Design catalog &ndash; Page {{ page }}</h2>
+            <h2>My production order {{ tab }} &ndash; Page {{ page }}</h2>
         </template>
     </Pagination>
 </div>
@@ -16,9 +16,10 @@
 
 <script>
 import Pagination from "@/layout/Pagination.vue"
-import DesignView from "@/comp/mini/DesignView.vue"
+import ProductionOrderView from "@/comp/mini/ProductionOrderView.vue"
 
 const props = {
+    tab: String,
     page: Number
 }
 
@@ -32,21 +33,22 @@ function data() {
 
 function goToPrevious() {
     if (this.previous != null)
-        this.$router.push(`/catalog/designs/list?page=${this.previous}`)
+        this.$router.push(`/orders/production/${this.tab}?page=${this.previous}`)
 }
 
 function goToNext() {
     if (this.next != null)
-        this.$router.push(`/catalog/designs/list?page=${this.next}`)
+        this.$router.push(`/orders/production/${this.tab}?page=${this.next}`)
 }
 
 function goToItem(item) {
-    console.log("Should go to " + item.id)
+    if (item?.id)
+        this.$router.push(`/orders/production/view/${item.id}`)
 }
 
 function mounted() {
     this.$axios.get({
-        url: "/catalog/designs/list",
+        url: `/customer/orders/production/${this.tab}`,
         params: { page: this.page }
     })
     .then(({ status, data: response }) => {
@@ -70,7 +72,7 @@ export default {
     },
     components: {
         Pagination,
-        DesignView
+        ProductionOrderView
     }
 }
 </script>

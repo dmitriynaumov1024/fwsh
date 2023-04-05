@@ -48,7 +48,7 @@
 <div class="width-container card pad-1 margin-bottom-1">
     <div class="flex-stripe">
         <h3 class="flex-grow">My production orders</h3>
-        <button class="button button-primary">
+        <button class="button button-primary" @click="()=>$emit('click-production-orders')">
             Details
         </button>
     </div>
@@ -56,7 +56,7 @@
 <div class="width-container card pad-1 margin-bottom-1">
     <div class="flex-stripe">
         <h3 class="flex-grow">My repair orders</h3>
-        <button class="button button-primary">
+        <button class="button button-primary" @click="()=>$emit('click-repair-orders')">
             Details
         </button>
     </div>
@@ -79,12 +79,12 @@ const props = {
 }
 
 function logoutButtonClick() {
-    setTimeout(()=> {
+    setTimeout(() => {
         this.$emit("click-logout")
     }, 200)
 }
 
-let dateFormat = Intl?.DateTimeFormata ? new Intl.DateTimeFormat("uk-UA", {
+let dateFormat = Intl?.DateTimeFormat ? new Intl.DateTimeFormat("uk-UA", {
     day: "numeric",
     month: "long",
     year: "numeric"
@@ -107,7 +107,9 @@ export default {
         toDateString
     },
     emits: [
-        "click-logout"
+        "click-logout",
+        "click-production-orders",
+        "click-repair-orders"
     ]
 }
 
