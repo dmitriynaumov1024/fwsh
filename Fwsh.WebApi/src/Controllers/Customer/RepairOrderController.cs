@@ -33,7 +33,7 @@ public class RepairOrderController : FwshController
         this.user = user;
     }
 
-    protected IActionResult GetOrderList (int? page, int? design, Expression<Func<RepairOrder, bool>> condition)
+    protected IActionResult GetOrderList (int? page, Expression<Func<RepairOrder, bool>> condition)
     {
         if (page == null) {
             return BadRequest(new BadFieldResult("page"));
@@ -50,10 +50,11 @@ public class RepairOrderController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int? page = null, int? design = null)
+    public IActionResult List (int? page = null)
     {
-        return GetOrderList (page, design, order => 
-            order.Status == OrderStatus.Submitted 
+        return GetOrderList (page, order => 
+               order.Status == OrderStatus.Unknown
+            || order.Status == OrderStatus.Submitted 
             || order.Status == OrderStatus.Working 
             || order.Status == OrderStatus.Delayed 
             || order.Status == OrderStatus.Finished
@@ -61,13 +62,12 @@ public class RepairOrderController : FwshController
     }
 
     [HttpGet("archive")]
-    public IActionResult Archive (int? page = null, int? design = null)
+    public IActionResult Archive (int? page = null)
     {
-        return GetOrderList (page, design, order => 
-            order.Status == OrderStatus.ReceivedAndPaid
+        return GetOrderList (page, order => 
+               order.Status == OrderStatus.ReceivedAndPaid
             || order.Status == OrderStatus.Rejected 
             || order.Status == OrderStatus.Impossible
-            || order.Status == OrderStatus.Unknown
         );
     }
 

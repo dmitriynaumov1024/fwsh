@@ -43,7 +43,6 @@ public class ProductionOrderController : FwshController
             .Where(order => order.CustomerId == user.ConfirmedId)
             .Where(condition);
 
-
         return Ok ( orders.OrderBy(order => order.Id).Paginate (
             (int)page, PAGESIZE, order => new ProductionOrderResult(order).Mini()
         ));
@@ -53,7 +52,8 @@ public class ProductionOrderController : FwshController
     public IActionResult List (int? page = null)
     {
         return GetOrderList (page, order => 
-            order.Status == OrderStatus.Submitted 
+               order.Status == OrderStatus.Unknown
+            || order.Status == OrderStatus.Submitted 
             || order.Status == OrderStatus.Working 
             || order.Status == OrderStatus.Delayed 
             || order.Status == OrderStatus.Finished
@@ -64,10 +64,9 @@ public class ProductionOrderController : FwshController
     public IActionResult Archive (int? page = null)
     {
         return GetOrderList (page, order => 
-            order.Status == OrderStatus.ReceivedAndPaid
+               order.Status == OrderStatus.ReceivedAndPaid
             || order.Status == OrderStatus.Rejected 
             || order.Status == OrderStatus.Impossible
-            || order.Status == OrderStatus.Unknown
         );
     }
 
