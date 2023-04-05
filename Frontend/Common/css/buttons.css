@@ -50,12 +50,16 @@
   border-color: var(--color-accent-focus);
 }
 
-.button-inline, .link {
+.button-inline, .link, .top-navbar-link {
   font-weight: bold;
   text-decoration: none;
   color: var(--color-accent);
   background-color: transparent;
   transition-duration: 0.2s;
+}
+
+.top-navbar-link.top-navbar-link {
+  color: var(--color-fore-0);
 }
 
 .button-inline:hover, .link:hover {
