@@ -6,12 +6,9 @@
 </div>
 </template>
 
-<script>
-const props = {
+<script setup>
+const props = defineProps({
     order: Object
-}
+})
 
-export default {
-    props
-}
 </script>

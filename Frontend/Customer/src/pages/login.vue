@@ -3,67 +3,49 @@
     :badFields="login.badFields" 
     :errorMessage="login.errorMessage" 
     @click-login="loginSubmit"
-    @click-signup="gotoSignup" />
+    @click-signup="goToSignup" />
 </template>
 
-<script>
+<script setup>
+import { arrayToDict } from "Common"
+import { useRouter } from "vue-router"
+import { ref, reactive, inject } from "vue"
 import LoginView from "@/comp/LoginView.vue"
 
-function data() {
-    return {
-        login: { }
-    }
-}
+let login = reactive({ })
 
-function arrayToDict (array) {
-    let result = { }
-    if (array.constructor == Array) 
-        for (const key of array) result[key] = true
-    return result 
-}
+const router = useRouter()
+const axios = inject("axios")
 
 function loginSubmit ({ phone, password } = data) {
-    this.$axios.post({
+    axios.post({
         url: "/auth/customer/login",
-        data: {
-            phone,
-            password
-        }
+        data: { phone, password }
     })
     .then(({ status, data: response } = axiosresponse) => {
         if (response.success) {
-            this.login.errorMessage = undefined
-            this.$router.replace("/profile")
+            login.errorMessage = undefined
+            login.badFields = undefined
+            setTimeout(() => router.replace("/profile"), 200)
         }
         else {
             if ((response.badFields instanceof Array) && response.badFields.length) { 
-                this.login.badFields = arrayToDict(response.badFields)
-                this.login.errorMessage = response.message ?? `Seems like ${response.badFields[0]} is incorrect`
+                login.badFields = arrayToDict(response.badFields)
+                login.errorMessage = response.message ?? `Seems like ${response.badFields[0]} is incorrect`
             }
             else {
-                this.login.errorMessage = response.message ?? "Something went wrong"
+                login.errorMessage = response.message ?? "Something went wrong"
             }
         }
     })
     .catch(error => {
         console.error(error)
-        this.login.errorMessage = "Something went wrong. See console for details"
+        login.errorMessage = "Something went wrong. See console for details"
     })
 }
 
-function gotoSignup() {
-    this.$router.replace("/signup")
-}
-
-export default {
-    data,
-    methods: {
-        loginSubmit,
-        gotoSignup
-    },
-    components: {
-        LoginView
-    }
+function goToSignup() {
+    setTimeout(() => router.replace("/profile"), 200)
 }
 
 </script>

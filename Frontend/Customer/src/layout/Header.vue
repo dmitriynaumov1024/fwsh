@@ -10,13 +10,13 @@
         <nav v-if="headerMenuExpanded" 
             class="flex-stripe pad-05 flex-spacing-1 margin-bottom-05" 
             style="border-top: 2px solid var(--color-back-1)">
-            <router-link to="/catalog/designs/list?page=0" class="top-navbar-link">Catalog</router-link>
-            <template v-if="loggedIn">
-                <router-link to="/profile" class="top-navbar-link">Profile</router-link>
+            <router-link to="/catalog/designs/list?page=0" class="top-navbar-link">{{ locale.header.nav.catalog }}</router-link>
+            <template v-if="storage.profile?.id">
+                <router-link to="/profile" class="top-navbar-link">{{ locale.header.nav.profile }}</router-link>
             </template>
             <template v-else>
-                <router-link to="/login" class="top-navbar-link">Log in</router-link>
-                <router-link to="/signup" class="top-navbar-link">Sign up</router-link>
+                <router-link to="/login" class="top-navbar-link">{{ locale.header.nav.login }}</router-link>
+                <router-link to="/signup" class="top-navbar-link">{{ locale.header.nav.signup }}</router-link>
             </template>
             <span class="flex-grow"></span>
         </nav>
@@ -24,38 +24,18 @@
 </header>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, inject } from "vue"
 import FwshIcon from "@/comp/icons/Fwsh.vue" 
 import MenuIcon from "@/comp/icons/Menu.vue"
 
-function data() {
-    return {
-        headerMenuExpanded: false,
-        storage: this.$storage
-    }
-}
+let headerMenuExpanded = ref(false)
 
-const loggedIn = {
-    get() {
-        return !!(this.storage.profile?.id)
-    }
-}
+let storage = inject("storage")
+let locale = inject("locale")
 
 function menuIconClick() {
-    this.headerMenuExpanded = !(this.headerMenuExpanded)
+    headerMenuExpanded.value = !(headerMenuExpanded.value)
 }
 
-export default {
-    data,
-    computed: {
-        loggedIn
-    },
-    methods: {
-        menuIconClick
-    },
-    components: {
-        FwshIcon,
-        MenuIcon
-    }
-}
 </script>

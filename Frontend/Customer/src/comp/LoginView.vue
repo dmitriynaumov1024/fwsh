@@ -6,12 +6,12 @@
     <div class="fancy-input margin-bottom-1">
         <label for="input-phone">Phone number</label>
         <input id="input-phone" type="text" 
-            v-model="phone" :invalid="!!badFields.phone" />
+            v-model="login.phone" :invalid="!!badFields.phone" />
     </div>
     <div class="fancy-input margin-bottom-1">
         <label for="input-password">Password</label>
         <input id="input-password" type="password" 
-            v-model="password" :invalid="!!badFields.password" /> 
+            v-model="login.password" :invalid="!!badFields.password" /> 
     </div>
     <div class="margin-bottom-1">
         <span class="text-error">{{errorMessage}}&ensp;</span>
@@ -21,18 +21,18 @@
         Log in
     </div>
     <div class="text-center">
-        <span>Have no account yet? &ensp;</span>
-        <button class="button button-inline" 
-            @click="signupButtonClick">
+        <span>Have no account yet?&ensp;</span>
+        <button class="button button-inline" @click="signupButtonClick">
             Sign up
         </button>
     </div>
 </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, inject } from "vue"
 
-const props = {
+const props = defineProps({
     badFields: {
         type: Object,
         default: { }
@@ -40,36 +40,24 @@ const props = {
     errorMessage: {
         type: String
     }
-}
+})
 
-function data() {
-    return {
-        phone: "",
-        password: ""
-    }
-}
+const emit = defineEmits([
+    "click-login",
+    "click-signup"
+])
+
+const login = reactive({
+    phone: "",
+    password: ""
+})
 
 function loginButtonClick() {
-    setTimeout(() => this.$emit("click-login", { 
-        phone: this.phone, 
-        password: this.password
-    }), 200)
+    setTimeout(() => emit("click-login", login), 200)
 }
 
 function signupButtonClick() {
-    setTimeout(() => this.$emit("click-signup"), 200)
+    setTimeout(() => emit("click-signup"), 200)
 }
 
-export default {
-    props,
-    data,
-    methods: {
-        loginButtonClick,
-        signupButtonClick
-    },
-    emits: [
-        "click-login",
-        "click-signup"
-    ]
-}
 </script>

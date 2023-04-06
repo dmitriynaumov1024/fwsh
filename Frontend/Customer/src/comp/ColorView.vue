@@ -8,15 +8,12 @@
 </div>
 </template>
 
-<script>
-const props = {
+<script setup>
+const props = defineProps({
     color: {
         type: Object,
         required: true
     }
-}
+})
 
-export default {
-    props
-}
 </script>

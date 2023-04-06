@@ -5,12 +5,9 @@
 </div>
 </template>
 
-<script>
-const props = {
+<script setup>
+const props = defineProps({
     path: String
-}
+})
 
-export default {
-    props
-}
 </script>

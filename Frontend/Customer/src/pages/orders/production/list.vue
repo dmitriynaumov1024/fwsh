@@ -1,8 +1,8 @@
 <template>
 <div class="width-container card pad-1 margin-bottom-1">
-    <Pagination v-if="items?.length"
-        :page="page" :previous="previous" :next="next"
-        :items="items" :view="$options.components.ProductionOrderView"
+    <Pagination v-if="data.items?.length"
+        :page="props.page" :previous="data.previous" :next="data.next"
+        :items="data.items" :view="ProductionOrderView"
         :bind="item => ({ order: item })"
         @click-previous="goToPrevious"
         @click-next="goToNext" 
@@ -14,65 +14,53 @@
 </div>
 </template>
 
-<script>
+<script setup>
+import { useRouter } from "vue-router"
+import { reactive, inject, computed, onMounted } from "vue"
 import Pagination from "@/layout/Pagination.vue"
 import ProductionOrderView from "@/comp/mini/ProductionOrderView.vue"
 
-const props = {
+const router = useRouter()
+
+const props = defineProps({
     tab: String,
     page: Number
-}
+})
 
-function data() {
-    return {
-        previous: null,
-        next: null,
-        items: [ ]
-    }
-}
+const data = reactive({
+    previous: null,
+    next: null,
+    items: [ ]
+})
 
 function goToPrevious() {
-    if (this.previous != null)
-        this.$router.push(`/orders/production/${this.tab}?page=${this.previous}`)
+    if (data.previous != null)
+        router.push(`/orders/production/${props.tab}?page=${data.previous}`)
 }
 
 function goToNext() {
-    if (this.next != null)
-        this.$router.push(`/orders/production/${this.tab}?page=${this.next}`)
+    if (data.next != null)
+        router.push(`/orders/production/${props.tab}?page=${data.next}`)
 }
 
 function goToItem(item) {
     if (item?.id)
-        this.$router.push(`/orders/production/view/${item.id}`)
+        router.push(`/orders/production/view/${item.id}`)
 }
 
 function mounted() {
-    this.$axios.get({
-        url: `/customer/orders/production/${this.tab}`,
-        params: { page: this.page }
+    axios.get({
+        url: `/customer/orders/production/${props.tab}`,
+        params: { page: props.page }
     })
     .then(({ status, data: response }) => {
-        this.items = response.items
-        this.previous = response.previous
-        this.next = response.next
+        data.items = response.items
+        data.previous = response.previous
+        data.next = response.next
     })
     .catch(error => {
         console.error(error)
     })
 }
 
-export default {
-    props,
-    data,
-    mounted,
-    methods: {
-        goToPrevious,
-        goToNext,
-        goToItem
-    },
-    components: {
-        Pagination,
-        ProductionOrderView
-    }
-}
 </script>

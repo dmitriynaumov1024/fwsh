@@ -7,10 +7,8 @@
 </svg>
 </template>
 
-<script>
-export default {
-    props: {
-        active: Boolean
-    }
-}
+<script setup>
+const props = defineProps({
+    active: Boolean
+})
 </script>

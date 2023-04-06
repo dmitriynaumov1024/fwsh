@@ -23,8 +23,8 @@
 </div>
 </template>
 
-<script>
-const props = {
+<script setup>
+const props = defineProps({
     page: {
         type: Number
     },
@@ -51,14 +51,12 @@ const props = {
     classPagination: {
         type: String
     }
-}
+})
 
-export default {
-    props,
-    emits: [
-        "click-item",
-        "click-previous",
-        "click-next"
-    ]
-}
+const emit = defineEmits([
+    "click-item",
+    "click-previous",
+    "click-next"
+])
+
 </script>

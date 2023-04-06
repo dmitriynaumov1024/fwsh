@@ -9,8 +9,8 @@
 </div>
 </template>
 
-<script>
-const props = {
+<script setup>
+const props = defineProps({
     items: {
         type: Array,
         default: [ ],
@@ -25,12 +25,10 @@ const props = {
         type: undefined,
         default: (item) => ({ })
     }
-}
+})
 
-export default {
-    props,
-    emits: [
-        "click-item"
-    ]
-}
+const emit = defineEmits([
+    "click-item"
+])
+
 </script>
