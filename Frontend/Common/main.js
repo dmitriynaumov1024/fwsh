@@ -10,7 +10,12 @@ import "./css/icons.css"
 import "./css/text.css"
 import "./css/main.css"
 
-export { AxiosWrapper } from "./lib/AxiosWrapper.js"
-export { AxiosWrapperPlugin } from "./lib/AxiosWrapperPlugin.js"
-export { LocalStoragePlugin } from "./lib/LocalStoragePlugin.js"
 export { createDateFormat } from "./lib/createDateFormat.js"
+
+export { useAxiosWrapper } from "./lib/useAxiosWrapper.js"
+export { useLocalStorage } from "./lib/useLocalStorage.js"
+export { useLocale } from "./lib/useLocale.js"
+
+export { arrayToDict } from "./lib/utils.js"
+
+// I guess I have no other option
