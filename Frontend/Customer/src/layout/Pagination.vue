@@ -14,7 +14,7 @@
             &lt;
         </button>
         <span class="flex-grow text-center">
-            Page {{page}}
+            {{locale.common.page}} {{page}}
         </span>
         <button class="button button-secondary" @click="()=> $emit('click-next')">
             &gt;
@@ -24,6 +24,10 @@
 </template>
 
 <script setup>
+import { inject } from "vue"
+
+const locale = inject("locale")
+
 const props = defineProps({
     page: {
         type: Number

@@ -11,6 +11,8 @@ export default {
         confirm: "Підтвердити",
         cancel: "Скасувати",
         delete: "Видалити",
+        signup: "Зареєструватися",
+        login: "Увійти",
         logout: "Вийти",
         details: "Докладніше"
     },
@@ -18,6 +20,9 @@ export default {
         list: "Список",
         archive: "Архів",
         page: "Сторінка",
+        pleaseTryAgain: "Будь ласка, спробуйте ще раз",
+        somethingWrong: "Виникла проблема",
+        seeConsole: "Дивіться детальний опис проблеми в консолі", 
     },
     header: {
         nav: {
@@ -26,6 +31,18 @@ export default {
             login: "Вхід",
             signup: "Реєстрація" 
         }
+    },
+    login: {
+        welcomeBack: "Ласкаво просимо!",
+        haveNoAccount: "Немає облікового запису?"
+    },
+    signup: {
+        title: "Реєстрація",
+        success: "Реєстрація пройшла успішно!",
+        successDescription: "Ваш обліковий запис покупця був щойно створений. Тепер Ви можете увійти в систему та замовити меблі!",
+        goToLogin: "Увійти в обл.запис",
+        iAmOrganization: "Я представляю організацію",
+        alreadyHaveAccount: "Вже маєте обліковий запис?"
     },
     profile: {
         myProfile: "Мій профіль",
@@ -36,7 +53,7 @@ export default {
         patronym: "По батькові",
         phone: "Телефон",
         email: "E-mail",
-        orgName: "Організація",
+        orgName: "Назва організації",
         discount: "Знижка",
         createdAt: "Дата реєстрації",
         password: "Пароль",

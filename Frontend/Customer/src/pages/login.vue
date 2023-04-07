@@ -45,7 +45,7 @@ function loginSubmit ({ phone, password } = data) {
 }
 
 function goToSignup() {
-    setTimeout(() => router.replace("/profile"), 200)
+    setTimeout(() => router.replace("/signup"), 200)
 }
 
 </script>

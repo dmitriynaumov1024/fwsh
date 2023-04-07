@@ -1,14 +1,19 @@
 <template>
-<div class="pad-05">
-    <p><b>{{ order.design?.displayName }}</b></p>
-    <p>Status: {{ order.status }}</p>
-    <p>{{ order.pricePerOne }} &#8372; x {{ order.quantity }} = <b>{{ order.priceTotal }} &#8372;</b></p>
+<div class="card pad-1 margin-bottom-1">
+    <p><b>{{order.design?.displayName ?? ("Design #"+order.designId)}}</b></p>
+    <p>{{locale.order.status}}: {{locale.status[order.status] ?? order.status}}</p>
+    <p>{{locale.productionOrder.priceTotal}}: 
+        {{order.pricePerOne}} &#8372; x {{order.quantity}} = <b>{{order.priceTotal}} &#8372;</b></p>
 </div>
 </template>
 
 <script setup>
+import { inject } from "vue"
+
 const props = defineProps({
     order: Object
 })
+
+const locale = inject("locale")
 
 </script>

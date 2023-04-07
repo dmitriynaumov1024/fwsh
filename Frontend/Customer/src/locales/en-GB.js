@@ -11,6 +11,8 @@ export default {
         confirm: "Confirm",
         cancel: "Cancel",
         delete: "Delete",
+        signup: "Sign up",
+        login: "Log in",
         logout: "Log out",
         details: "Details"
     },
@@ -18,6 +20,9 @@ export default {
         list: "List",
         archive: "Archive",
         page: "Page",
+        pleaseTryAgain: "Please try again",
+        somethingWrong: "Something went wrong",
+        seeConsole: "See console for problem details", 
     },
     header: {
         nav: {
@@ -26,6 +31,18 @@ export default {
             login: "Log in",
             signup: "Sign up" 
         }
+    },
+    login: {
+        welcomeBack: "Welcome back!",
+        haveNoAccount: "Have no account yet?"
+    },
+    signup: {
+        title: "Create account",
+        success: "Success!",
+        successDescription: "Your account was created. Now you can log in and get the job done!",
+        goToLogin: "Go to login",
+        iAmOrganization: "I am representing organization",
+        alreadyHaveAccount: "Already have account?"
     },
     profile: {
         myProfile: "My profile",

@@ -15,6 +15,7 @@ import SignupView from "@/comp/SignupView.vue"
 
 const router = useRouter()
 const axios = inject("axios")
+const locale = inject("locale")
 
 const signup = reactive({ })
 
@@ -31,6 +32,10 @@ function signupSubmit (data) {
             signup.badFields = arrayToDict(response.badFields)
             signup.errorMessage = response.message
         }
+    })
+    .catch(error => {
+        signup.errorMessage = `${locale.value.common.somethingWrong}. ${locale.value.common.seeConsole}`
+        console.error(error)
     })
 }
 

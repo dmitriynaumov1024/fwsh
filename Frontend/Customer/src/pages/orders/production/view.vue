@@ -6,8 +6,10 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from "vue" 
+import { reactive, inject, onMounted } from "vue" 
 import ProductionOrderView from "@/comp/ProductionOrderView.vue"
+
+const axios = inject("axios")
 
 const props = defineProps({
     id: Number

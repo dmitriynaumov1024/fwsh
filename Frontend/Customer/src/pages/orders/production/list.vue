@@ -1,17 +1,19 @@
 <template>
-<div class="width-container card pad-1 margin-bottom-1">
-    <Pagination v-if="data.items?.length"
-        :page="props.page" :previous="data.previous" :next="data.next"
-        :items="data.items" :view="ProductionOrderView"
-        :bind="item => ({ order: item })"
-        @click-previous="goToPrevious"
-        @click-next="goToNext" 
-        @click-item="goToItem">
-        <template #title>
-            <h2>My production order {{ tab }} &ndash; Page {{ page }}</h2>
-        </template>
-    </Pagination>
-</div>
+<Pagination v-if="data.items?.length"
+    :page="props.page" :previous="data.previous" :next="data.next"
+    :items="data.items" :view="ProductionOrderView"
+    :bind="item => ({ order: item })"
+    @click-previous="goToPrevious"
+    @click-next="goToNext" 
+    @click-item="goToItem"
+    class="width-container pad-05">
+    <template #title>
+        <h2 class="margin-bottom-1">
+            {{locale.productionOrder.plural}} &ndash; {{ locale.common[tab] }} 
+            &ndash; {{locale.common.page}} {{ page }}
+        </h2>
+    </template>
+</Pagination>
 </template>
 
 <script setup>
@@ -21,6 +23,8 @@ import Pagination from "@/layout/Pagination.vue"
 import ProductionOrderView from "@/comp/mini/ProductionOrderView.vue"
 
 const router = useRouter()
+const axios = inject("axios")
+const locale = inject("locale")
 
 const props = defineProps({
     tab: String,
@@ -48,7 +52,7 @@ function goToItem(item) {
         router.push(`/orders/production/view/${item.id}`)
 }
 
-function mounted() {
+onMounted(() => {
     axios.get({
         url: `/customer/orders/production/${props.tab}`,
         params: { page: props.page }
@@ -61,6 +65,6 @@ function mounted() {
     .catch(error => {
         console.error(error)
     })
-}
+})
 
 </script>

@@ -1,62 +1,65 @@
 <template>
 <div v-if="success" class="width-container card pad-1 margin-bottom-2">
-    <h2 class="margin-bottom-1">Success!</h2>
+    <h2 class="margin-bottom-1">{{locale.signup.success}}</h2>
     <p class="margin-bottom-2">
-        Your account was created. Now you can log in and get the job done!
+        {{locale.signup.successDescription}}
     </p>
     <div class="button button-block button-primary pad-05 margin-bottom-1"
         @click="loginButtonClick">
-        Go to login
+        {{locale.signup.goToLogin}}
     </div>
 </div>
 <div v-else class="width-container card pad-1 margin-bottom-2">
-    <h2>Create account</h2>
+    <h2>{{locale.signup.title}}</h2>
     <div class="fancy-input margin-bottom-1">
-        <label for="input-surname">Surname</label>
+        <label for="input-surname">{{locale.profile.surname}}</label>
         <input id="input-surname" type="text" 
             v-model="data.surname" :invalid="!!badFields.surname" />
     </div>
     <div class="fancy-input margin-bottom-1">
-        <label for="input-name">Name</label>
+        <label for="input-name">{{locale.profile.name}}</label>
         <input id="input-name" type="text" 
             v-model="data.name" :invalid="!!badFields.name" />
     </div>
     <div class="fancy-input margin-bottom-1">
-        <label for="input-patronym">Patronym</label>
+        <label for="input-patronym">{{locale.profile.patronym}}</label>
         <input id="input-patronym" type="text" 
             v-model="data.patronym" :invalid="!!badFields.patronym" />
     </div>
     <div class="margin-bottom-1" @click="toggleOrg">
-        I am representing organization
+        <Checkbox :checked="data.isOrganization">{{locale.signup.iAmOrganization}}</Checkbox>
     </div>
     <div v-if="data.isOrganization" class="fancy-input margin-bottom-1">
-        <label for="input-orgName">Org. name</label>
+        <label for="input-orgName">{{locale.profile.orgName}}</label>
         <input id="input-orgName" type="text" 
             v-model="data.orgName" :invalid="!!badFields.orgName" />
     </div>
     <div class="fancy-input margin-bottom-1">
-        <label for="input-phone">Phone number</label>
+        <label for="input-phone">{{locale.profile.phone}}</label>
         <input id="input-phone" type="text" 
             v-model="data.phone" :invalid="!!badFields.phone" />
     </div>
     <div class="fancy-input margin-bottom-1">
-        <label for="input-email">E-mail</label>
+        <label for="input-email">{{locale.profile.email}}</label>
         <input id="input-email" type="text" 
             v-model="data.email" :invalid="!!badFields.email" />
     </div>
     <div class="fancy-input margin-bottom-1">
-        <label for="input-password">Password</label>
+        <label for="input-password">{{locale.profile.password}}</label>
         <input id="input-password" type="password" 
             v-model="data.password" :invalid="!!badFields.password" />
     </div>
+    <div class="margin-bottom-1">
+        <span class="text-error">{{errorMessage}}&ensp;</span>
+    </div>
     <div class="button button-block button-primary pad-05 margin-bottom-1"
         @click="signupButtonClick">
-        Sign up
+        {{locale.action.signup}}
     </div>
     <div class="text-center">
-        <span>Already have account?&ensp;</span>
+        <span>{{locale.signup.alreadyHaveAccount}}&ensp;</span>
         <button class="button button-inline" @click="loginButtonClick">
-            Log in
+            {{locale.action.login}}
         </button>
     </div>
 </div>
@@ -64,6 +67,9 @@
 
 <script setup>
 import { ref, reactive, inject } from "vue"
+import Checkbox from "@/comp/ctrl/Checkbox.vue"
+
+const locale = inject("locale")
 
 const props = defineProps({
     success: Boolean,

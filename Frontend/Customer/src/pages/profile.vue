@@ -17,7 +17,7 @@ const router = useRouter()
 const axios = inject("axios")
 const storage = inject("storage")
 
-const profile = computed(() => storage.profile)
+const profile = computed(() => storage.tmp?.profile)
 
 onMounted(() => { 
     axios.get({
@@ -25,11 +25,10 @@ onMounted(() => {
     })
     .then(({ status, data: response } = axiosresponse) => {
         if (status < 299 && response.id) {
-            console.log(storage)
-            storage.profile = response
+            storage.tmp.profile = response
         }
         else {
-            storage.profile = { errorMessage: response.message ?? "Something went wrong" }
+            storage.tmp.profile = { errorMessage: response.message ?? "Something went wrong" }
             router.replace("/login")
         }
     })
@@ -40,7 +39,7 @@ function profileLogout () {
         "url": "/auth/customer/logout"
     })
     .then(_ => {
-        storage.profile = { }
+        storage.tmp.profile = { }
         router.push("/")
     })
 }

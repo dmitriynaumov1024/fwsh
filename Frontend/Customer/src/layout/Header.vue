@@ -5,13 +5,13 @@
             <FwshIcon class="icon-2" />
             <router-link to="/" class="link"><h2>workshop</h2></router-link>
             <span class="flex-grow"></span>
-            <MenuIcon class="icon-2" :active="headerMenuExpanded" @click="menuIconClick" />
+            <MenuButton class="icon-2" :active="headerMenuExpanded" @click="menuButtonClick" />
         </div>
         <nav v-if="headerMenuExpanded" 
             class="flex-stripe pad-05 flex-spacing-1 margin-bottom-05" 
             style="border-top: 2px solid var(--color-back-1)">
             <router-link to="/catalog/designs/list?page=0" class="top-navbar-link">{{ locale.header.nav.catalog }}</router-link>
-            <template v-if="storage.profile?.id">
+            <template v-if="profile?.id">
                 <router-link to="/profile" class="top-navbar-link">{{ locale.header.nav.profile }}</router-link>
             </template>
             <template v-else>
@@ -27,14 +27,16 @@
 <script setup>
 import { ref, computed, inject } from "vue"
 import FwshIcon from "@/comp/icons/Fwsh.vue" 
-import MenuIcon from "@/comp/icons/Menu.vue"
+import MenuButton from "@/comp/ctrl/Menu.vue"
 
 let headerMenuExpanded = ref(false)
 
-let storage = inject("storage")
-let locale = inject("locale")
+const storage = inject("storage")
+const locale = inject("locale")
 
-function menuIconClick() {
+const profile = computed(() => storage.tmp?.profile)
+
+function menuButtonClick() {
     headerMenuExpanded.value = !(headerMenuExpanded.value)
 }
 

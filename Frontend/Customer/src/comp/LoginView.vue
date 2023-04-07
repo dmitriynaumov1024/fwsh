@@ -1,15 +1,15 @@
 <template>
 <div class="width-container card pad-1 margin-bottom-2">
     <h2 class="margin-bottom-1">
-        Welcome back!
+        {{locale.login.welcomeBack}}
     </h2>
     <div class="fancy-input margin-bottom-1">
-        <label for="input-phone">Phone number</label>
+        <label for="input-phone">{{locale.profile.phone}}</label>
         <input id="input-phone" type="text" 
             v-model="login.phone" :invalid="!!badFields.phone" />
     </div>
     <div class="fancy-input margin-bottom-1">
-        <label for="input-password">Password</label>
+        <label for="input-password">{{locale.profile.password}}</label>
         <input id="input-password" type="password" 
             v-model="login.password" :invalid="!!badFields.password" /> 
     </div>
@@ -18,12 +18,12 @@
     </div>
     <div class="button button-block button-primary pad-05 margin-bottom-1"
         @click="loginButtonClick">
-        Log in
+        {{locale.action.login}}
     </div>
     <div class="text-center">
-        <span>Have no account yet?&ensp;</span>
+        <span>{{locale.login.haveNoAccount}}&ensp;</span>
         <button class="button button-inline" @click="signupButtonClick">
-            Sign up
+            {{locale.action.signup}}
         </button>
     </div>
 </div>
@@ -31,6 +31,8 @@
 
 <script setup>
 import { ref, reactive, inject } from "vue"
+
+const locale = inject("locale")
 
 const props = defineProps({
     badFields: {
