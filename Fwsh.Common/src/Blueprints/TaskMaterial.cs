@@ -6,7 +6,7 @@ public class TaskMaterial : TaskResourceUsage<double, Material>
 {
     // some Materials, like Fabrics, can also be determined by order 
     public int? MaterialId { get; set; }
-    public bool DeterminedByOrder => this.Item == null && this.MaterialId == null;
+    public bool DeterminedByOrder => this.MaterialId == null;
 
     public override int CalculateResourcePrice()
     {

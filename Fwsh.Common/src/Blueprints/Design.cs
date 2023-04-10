@@ -8,12 +8,13 @@ public class Design
 {
     public int Id { get; set; }
 
-    public string NameKey { get; set; }
-
     public string Type { get; set; } = FurnitureTypes.Unknown;
 
+    public string NameKey { get; set; }
     public string DisplayName { get; set; }
     public string Description { get; set; }
+
+    public bool IsVisible { get; set; }
 
     public bool IsTransformable { get; set; }
     public Dimensions DimCompact { get; set; }
