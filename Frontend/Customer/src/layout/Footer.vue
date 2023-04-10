@@ -1,6 +1,6 @@
 <template>
 <footer class="footer">
-    <div class="width-container pad-1">
+    <div class="width-container pad-1-05">
         <p>Furniture workshop 
             <span v-for="locale in locales" 
                 @click="() => selectLocale(locale.key)">
@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { useLocale } from "Common"
+import { useLocale } from "@common"
 
 const { locales, selectLocale } = useLocale()
 

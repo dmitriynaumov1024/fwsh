@@ -1,5 +1,5 @@
 <template>
-<div class="card pad-1 margin-bottom-1">
+<div>
     <p><b>{{order.design?.displayName ?? ("Design #"+order.designId)}}</b></p>
     <p>{{locale.order.status}}: {{locale.status[order.status] ?? order.status}}</p>
     <p>{{locale.productionOrder.priceTotal}}: 

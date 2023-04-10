@@ -1,72 +1,79 @@
 <template>
-<div class="width-container card pad-1 margin-bottom-1">
-    <Pagination v-if="items?.length"
-        :page="page" :previous="previous" :next="next"
-        :items="items" :view="$options.components.DesignView"
-        :bind="item => ({ design: item })"
-        @click-previous="goToPrevious"
-        @click-next="goToNext"
-        @click-item="goToItem" />
+<Bread :crumbs="[
+    { href: '/', text: 'fwsh' },
+    { href: '/catalog', text: 'Catalog' }
+    ]" last="Fabrics" />
+<Pagination v-if="data.items?.length"
+    :page="props.page" :previous="data.previous" :next="data.next"
+    :items="data.items" :view="FabricView"
+    :bind="item => ({ fabric: item })"
+    @click-previous="goToPrevious"
+    @click-next="goToNext"
+    @click-item="goToItem"
+    class="width-container pad-05 margin-bottom-1"
+    class-item="card pad-1 margin-bottom-1">
+    <template #title>
+        <h2 class="margin-bottom-1">
+            Fabric catalog &ndash; {{locale.common.page}} {{props.page}}
+        </h2>
+    </template>
+</Pagination>
+<div v-else class="width-container card pad-1 margin-bottom-1">
+    <h2>Something went wrong.</h2>
+    <p>{{data.message}}</p>
 </div>
 </template>
 
-<script>
+<script setup>
+import { useRouter } from "vue-router"
+import { reactive, inject, watch } from "vue"
 import Pagination from "@/layout/Pagination.vue"
-import DesignView from "@/comp/mini/DesignView.vue"
+import FabricView from "@/comp/mini/FabricView.vue"
+import Bread from "@/layout/Bread.vue"
 
-const props = {
+const router = useRouter()
+const locale = inject("locale")
+const axios = inject("axios")
+
+const props = defineProps({
     page: Number
-}
+})
 
-function data() {
-    return {
-        previous: null,
-        next: null,
-        items: [ ]
-    }
-}
+const data = reactive({
+    previous: null,
+    next: null,
+    items: [ ]
+})
+
+watch(() => props.page, getFabrics, { immediate: true })
 
 function goToPrevious() {
-    if (this.previous != null)
-        this.$router.push(`/catalog/designs/list?page=${this.previous}`)
+    if (data.previous != null)
+        router.push(`/catalog/fabrics/list?page=${data.previous}`)
 }
 
 function goToNext() {
-    if (this.next != null)
-        this.$router.push(`/catalog/designs/list?page=${this.next}`)
+    if (data.next != null)
+        router.push(`/catalog/fabrics/list?page=${data.next}`)
 }
 
 function goToItem(item) {
     console.log("Should go to " + item.id)
 }
 
-function mounted() {
-    this.$axios.get({
-        url: "/catalog/designs/list",
-        params: { page: this.page }
+async function getFabrics() {
+    axios.get({
+        url: "/catalog/fabrics/list",
+        params: { page: props.page }
     })
     .then(({ status, data: response }) => {
-        this.items = response.items
-        this.previous = response.previous
-        this.next = response.next
+        data.items = response.items
+        data.previous = response.previous
+        data.next = response.next
     })
     .catch(error => {
         console.error(error)
     })
 }
 
-export default {
-    props,
-    data,
-    mounted,
-    methods: {
-        goToPrevious,
-        goToNext,
-        goToItem
-    },
-    components: {
-        Pagination,
-        DesignView
-    }
-}
 </script>

@@ -1,17 +1,15 @@
 <template>
 <div>
-    <p><b>{{design.displayName}}</b></p>
-    <p>{{design.type}}</p>
-    <p>{{design.price}} &#8372;</p>
+    <p><b>{{fabric.name}}</b></p>
+    <p>{{fabric.pricePerUnit}} &#8372;</p>
 </div>
 </template>
 
 <script setup>
 const props = defineProps({
-    design: {
+    fabric: {
         type: Object,
         default: { }
     }
 })
-
 </script>

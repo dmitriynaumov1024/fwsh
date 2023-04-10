@@ -1,4 +1,4 @@
-import { createDateFormat } from "Common"
+import { createDateFormat } from "@common"
 
 const dateFormat = createDateFormat("en-GB")
 

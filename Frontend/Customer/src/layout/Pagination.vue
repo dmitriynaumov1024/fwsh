@@ -4,6 +4,7 @@
     <div :class="classPagination">
         <template v-for="item of items">
             <component :is="view" 
+                :class="classItem"
                 v-bind="bind.call ? bind(item) : bind" 
                 @click="()=>$emit('click-item', item)" />
         </template>
@@ -53,6 +54,9 @@ const props = defineProps({
         default: (item) => ({ })
     },
     classPagination: {
+        type: String
+    },
+    classItem: {
         type: String
     }
 })

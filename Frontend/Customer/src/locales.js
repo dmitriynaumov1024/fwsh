@@ -1,4 +1,4 @@
-import { useLocale } from "Common"
+import { useLocale } from "@common"
 import en_GB from "@/locales/en-GB.js"
 import uk_UA from "@/locales/uk-UA.js"
 

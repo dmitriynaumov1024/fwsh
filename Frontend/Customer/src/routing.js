@@ -1,6 +1,7 @@
 import index from "@/pages/index.vue"
 import login from "@/pages/login.vue"
 import signup from "@/pages/signup.vue"
+import catalog from "@/pages/catalog/index.vue"
 import profile from "@/pages/profile.vue"
 import designList from "@/pages/catalog/designs/list.vue" 
 import fabricList from "@/pages/catalog/fabrics/list.vue"
@@ -32,6 +33,10 @@ const routes = [
     {
         path: "/profile",
         component: profile
+    },
+    {
+        path: "/catalog",
+        component: catalog
     },
     {
         path: "/catalog/designs/list",

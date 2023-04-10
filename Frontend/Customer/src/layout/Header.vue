@@ -10,7 +10,7 @@
         <nav v-if="headerMenuExpanded" 
             class="flex-stripe pad-05 flex-spacing-1 margin-bottom-05" 
             style="border-top: 2px solid var(--color-back-1)">
-            <router-link to="/catalog/designs/list?page=0" class="top-navbar-link">{{ locale.header.nav.catalog }}</router-link>
+            <router-link to="/catalog" class="top-navbar-link">{{ locale.header.nav.catalog }}</router-link>
             <template v-if="profile?.id">
                 <router-link to="/profile" class="top-navbar-link">{{ locale.header.nav.profile }}</router-link>
             </template>

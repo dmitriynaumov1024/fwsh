@@ -6,11 +6,12 @@
     @click-previous="goToPrevious"
     @click-next="goToNext" 
     @click-item="goToItem"
-    class="width-container pad-05">
+    class="width-container pad-05 margin-bottom-1"
+    class-item="card pad-1 margin-bottom-1">
     <template #title>
         <h2 class="margin-bottom-1">
-            {{locale.productionOrder.plural}} &ndash; {{ locale.common[tab] }} 
-            &ndash; {{locale.common.page}} {{ page }}
+            {{locale.productionOrder.plural}} &ndash; {{locale.common[tab]}} 
+            &ndash; {{locale.common.page}} {{props.page}}
         </h2>
     </template>
 </Pagination>
@@ -18,7 +19,7 @@
 
 <script setup>
 import { useRouter } from "vue-router"
-import { reactive, inject, computed, onMounted } from "vue"
+import { reactive, inject, watch } from "vue"
 import Pagination from "@/layout/Pagination.vue"
 import ProductionOrderView from "@/comp/mini/ProductionOrderView.vue"
 
@@ -37,6 +38,8 @@ const data = reactive({
     items: [ ]
 })
 
+watch(() => props, getOrders, { immediate: true })
+
 function goToPrevious() {
     if (data.previous != null)
         router.push(`/orders/production/${props.tab}?page=${data.previous}`)
@@ -52,7 +55,7 @@ function goToItem(item) {
         router.push(`/orders/production/view/${item.id}`)
 }
 
-onMounted(() => {
+function getOrders() {
     axios.get({
         url: `/customer/orders/production/${props.tab}`,
         params: { page: props.page }
@@ -65,6 +68,6 @@ onMounted(() => {
     .catch(error => {
         console.error(error)
     })
-})
+}
 
 </script>

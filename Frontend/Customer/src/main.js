@@ -1,5 +1,5 @@
 import { createApp, reactive, ref, provide } from "vue"
-import App from "./main.vue"
+import App from "@/layout/App.vue"
 
 let app = createApp(App)
 
@@ -16,7 +16,7 @@ app.use(router)
 import { setupLocales } from "./locales.js"
 setupLocales({ select: "en-GB" })
 
-import { useAxiosWrapper, useLocalStorage, useLocale } from "Common"
+import { useAxiosWrapper, useLocalStorage, useLocale } from "@common"
 
 let axios = useAxiosWrapper("customer", "http://192.168.0.107:4000")
 let storage = useLocalStorage("customer", { 
@@ -40,4 +40,4 @@ app.provide("storage", storage)
 
 app.mount("#app-root")
 
-import "Common/stylesheets"
+import "@common/stylesheets"
