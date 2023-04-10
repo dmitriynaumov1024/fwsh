@@ -57,10 +57,18 @@
   flex-grow: 1;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .flex-gallery {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: wrap;
+}
+
+.border-bottom {
+  border-bottom: var(--border);
 }

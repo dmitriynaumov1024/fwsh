@@ -1,5 +1,5 @@
 #app-root {
-  --reserved-for-footer: 6.5rem;
+  --reserved-for-footer: 7.0rem;
   min-height: 100vh;
   padding-bottom: var(--reserved-for-footer); 
 }
@@ -20,6 +20,10 @@
   height: var(--reserved-for-footer);
 }
 
+#bread {
+  min-height: 1rem;
+}
+
 .line-h {
   display: block;
   height: 1px;
@@ -35,6 +39,11 @@
 .block {
   display: block;
   width: 100%;
+}
+
+.hidden {
+  width: 0px;
+  height: 0px;
 }
 
 /* margins */
@@ -82,6 +91,10 @@
 
 .pad-05-1 {
   padding: 0.5rem 1rem;
+}
+
+.pad-1-05 {
+  padding: 1rem 0.5rem;
 }
 
 /* flex spacing */

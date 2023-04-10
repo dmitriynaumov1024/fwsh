@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: Arimo, Arial, sans-serif;
+  font-family: Arimo, Arial, "Droid Sans", sans-serif;
   font-size: 16px;
   line-height: 1.5;
   color: var(--color-fore-0);
@@ -13,24 +13,4 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.width-container {
-  width: 100%;
-  margin: auto;
-}
-
-@media screen and (min-width: 740px) 
-{
-  .width-container {
-    width: 720px;
-  }
-}
-
-.pad-05 {
-  padding: 0.5rem;
-}
-
-.pad-1 {
-  padding: 1.0rem;
 }
