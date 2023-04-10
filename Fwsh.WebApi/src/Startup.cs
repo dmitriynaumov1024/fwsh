@@ -33,7 +33,7 @@ public class Startup
         services.AddSingleton<FileStorageProvider>(new PhysicalFileStorageProvider("./var/files"));
 
         services.AddRouting();
-        services.AddControllers();
+        services.AddControllers().AddControllersAsServices();
 
         // services.AddDistributedMemoryCache();
         // services.AddSession();
@@ -50,25 +50,9 @@ public class Startup
         var dataContext = serviceProvider.GetService<FwshDataContext>();
         var logger = serviceProvider.GetService<Logger>();
 
-        var designs = dataContext.Designs
-            .Include(d => d.TaskPrototypes).ThenInclude(t => t.Parts).ThenInclude(p => p.Item)
-            .Include(d => d.TaskPrototypes).ThenInclude(t => t.Materials).ThenInclude(m => m.Item)
-            .Include(d => d.TaskPrototypes).ThenInclude(t => t.Fabrics).ThenInclude(f => f.Item)
-            .ToList();
-
-        foreach (var design in designs) {
-            design.UpdatePrice();
-            design.UpdateResourceQuantities();
-            dataContext.Designs.Update(design);
-        }
-
-        try {
-            dataContext.SaveChanges();
-            logger.Log("Successfully updated price of {0} designs", designs.Count);
-        }
-        catch (Exception ex) {
-            logger.Error("{0}", ex);
-        }
+        var controller = serviceProvider
+            .GetService<Fwsh.WebApi.Controllers.Manager.DesignController>();
+        controller.Recalculate();
 
         serviceScope.Dispose();
         serviceProvider.Dispose();

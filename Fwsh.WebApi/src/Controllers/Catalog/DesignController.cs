@@ -34,7 +34,8 @@ public class DesignController : FwshController
     public IActionResult List (int? page = null, string type = null) 
     {
         IQueryable<Design> designs = dataContext.Designs
-            .Include(d => d.Photos);
+            .Include(d => d.Photos)
+            .Where(d => d.IsVisible);
 
         if (type != null) {
             designs = designs.Where(d => d.Type == type);
@@ -56,7 +57,7 @@ public class DesignController : FwshController
     {
         Design design = dataContext.Designs
             .Include(d => d.Photos)
-            .Where(d => d.Id == id)
+            .Where(d => d.IsVisible && d.Id == id)
             .FirstOrDefault();
 
         if (design == null) {
@@ -72,7 +73,7 @@ public class DesignController : FwshController
     {
         Design design = dataContext.Designs
             .Include(d => d.Photos)
-            .Where(d => d.NameKey == namekey)
+            .Where(d => d.IsVisible && d.NameKey == namekey)
             .FirstOrDefault();
 
         if (design == null) {

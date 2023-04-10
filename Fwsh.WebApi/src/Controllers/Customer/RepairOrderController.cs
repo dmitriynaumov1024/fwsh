@@ -13,6 +13,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
+using Fwsh.WebApi.FileStorage;
 using Fwsh.WebApi.Controllers;
 using Fwsh.WebApi.Requests.Customer;
 using Fwsh.WebApi.Results;
@@ -24,13 +25,17 @@ using Fwsh.WebApi.Utils;
 public class RepairOrderController : FwshController
 {
     const int PAGESIZE = 10;
+    const int MAX_PHOTOS = 8;
     const int FILE_SIZE_LIMIT = (1 << 21); // 2 Megabytes
 
-    public RepairOrderController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    protected FileStorageProvider storage;
+
+    public RepairOrderController (FwshDataContext dataContext, Logger logger, FwshUser user, FileStorageProvider storage)
     {
         this.dataContext = dataContext;
         this.logger = logger;
         this.user = user;
+        this.storage = storage;
     }
 
     protected IActionResult GetOrderList (int? page, Expression<Func<RepairOrder, bool>> condition)
@@ -175,40 +180,44 @@ public class RepairOrderController : FwshController
         }
     }
 
-    [HttpPost("attach-photos/{orderid}")]
-    public IActionResult AttachPhotos (int orderid)
+    [HttpPost("attach-photos/{orderId}")]
+    public IActionResult AttachPhotos (int orderId)
     {
         var order = dataContext.RepairOrders
             .Include(order => order.Photos)
-            .Where(order => order.Id == orderid && order.CustomerId == user.ConfirmedId)
+            .Where(order => order.Id == orderId && order.CustomerId == user.ConfirmedId)
             .FirstOrDefault();
 
         if (order == null) {
-            return NotFound (new BadFieldResult("orderid"));
+            return NotFound (new BadFieldResult("orderId"));
         }
 
-        var requestPhotos = this.Request.Form.Files.ToList(); 
+        var requestPhotos = this.Request.Form.Files.ToList();
 
-        if (requestPhotos.Count != order.Photos.Count
-            || requestPhotos.Any(photo => photo.Length >= FILE_SIZE_LIMIT)) {
-            return BadRequest (new BadFieldResult("photos"));
-        }
-
-        var orderPhotos = order.Photos.OrderBy(p => p.Position);
-
-        foreach (var (photo, orderPhoto) in requestPhotos.Zip(orderPhotos)) {
-            // TODO implement later
+        int count = 0, pos = order.Photos.Max(p => p.Position) + 1;
+        foreach (var photo in requestPhotos) {
+            if (order.Photos.Count >= MAX_PHOTOS) break;
             string ext = photo.FileName.Split('.').LastOrDefault();
-            if (ext == null) {
-                return BadRequest (new BadFieldResult("photos"));
+            string url = $"repair-order-{order.Id}-{pos}-{Guid.NewGuid()}.{ext}"; 
+            if (storage.TrySave(photo.OpenReadStream(), url)) {
+                order.Photos.Add(new RepairOrderPhoto { 
+                    Url = url, 
+                    Position = pos 
+                });
+                count += 1;
+                pos += 1;
             }
-            orderPhoto.Url = $"repair-{order.Id}-{orderPhoto.Position}-{Guid.NewGuid()}.{ext}"; 
         }
 
-        dataContext.RepairOrders.Update(order);
-        dataContext.SaveChanges();
-
-        return Ok (new SuccessResult($"Successfully attached photos to {order.Id}"));
+        try {
+            dataContext.RepairOrders.Update(order);
+            dataContext.SaveChanges();
+            return Ok(new SuccessResult($"Successfully attached {count} photos to Repair Order {orderId}"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError("Something went wrong while trying to attach photos to Repair Order");
+        }
     }
 
     [HttpDelete("delete/{id}")]

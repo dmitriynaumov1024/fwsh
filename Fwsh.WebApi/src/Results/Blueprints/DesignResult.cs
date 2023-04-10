@@ -14,6 +14,7 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
     public string Type { get; set; }
     public string DisplayName { get; set; }
     public string Description { get; set; }
+    public bool IsVisible { get; set; }
 
     public bool IsTransformable { get; set; }
     public Dimensions DimCompact { get; set; }
@@ -46,6 +47,7 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
             NameKey = design.NameKey,
             Type = design.Type,
             DisplayName = design.DisplayName,
+            IsVisible = design.IsVisible,
             Price = design.Price,
             CreatedAt = design.CreatedAt,
             PhotoUrls = new List<string> {
@@ -64,6 +66,7 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
             Price = design.Price,
             CreatedAt = design.CreatedAt,
             Description = design.Description,
+            IsVisible = design.IsVisible,
             IsTransformable = design.IsTransformable,
             DimCompact = design.DimCompact,
             DimExpanded = design.DimExpanded,
@@ -75,7 +78,10 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
 
     public DesignResult ForWorker () 
     {
-        return this.ForCustomer();
+        var result = this.ForCustomer();
+        result.FabricQuantity = design.FabricQuantity;
+        result.DecorMaterialQuantity = design.DecorMaterialQuantity;
+        return result;
     }
 
     public DesignResult ForManager ()
