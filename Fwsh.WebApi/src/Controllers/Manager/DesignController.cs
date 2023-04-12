@@ -214,7 +214,7 @@ public class DesignController : FwshController
     }
 
     [HttpPost("delete-photos/{designId}")]
-    public IActionResult DeletePhotos (int designId, [FromBody] string[] urls)
+    public IActionResult DeletePhotos (int designId, [FromBody] IList<string> urls)
     {
         Design design = dataContext.Designs
             .Include(d => d.Photos)
@@ -263,6 +263,14 @@ public class DesignController : FwshController
 
         if (! canDelete) {
             return BadRequest(new FailResult($"Can not delete Design {id} because of dependent production orders"));
+        }
+
+        foreach (var photo in design.Photos) {
+            if (photo.Url != null) storage.TryDelete(photo.Url);
+        }
+
+        foreach (var task in design.TaskPrototypes) {
+            if (task.InstructionUrl != null) storage.TryDelete(task.InstructionUrl);
         }
 
         try {

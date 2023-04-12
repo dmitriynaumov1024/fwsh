@@ -239,6 +239,10 @@ public class RepairOrderController : FwshController
             return BadRequest (new FailResult("Order status does not allow deletion"));
         }
 
+        foreach (var photo in order.Photos) {
+            if (photo.Url != null) storage.TryDelete(photo.Url);
+        }
+
         try {
             dataContext.Remove(order);
             dataContext.SaveChanges();
