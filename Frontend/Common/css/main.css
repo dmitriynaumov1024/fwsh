@@ -8,12 +8,12 @@
   position: sticky; top: 0; z-index: 9;
   background-color: var(--color-back-0);
   border-bottom: var(--border);
-  box-shadow: 0 4px 24px rgba(0,0,0, 0.05);
 }
 
 #app-root>.footer {
   background-color: var(--color-back-2);
   color: var(--color-fore-2);
+  border-top: var(--border);
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -22,6 +22,10 @@
 
 #bread {
   min-height: 1rem;
+}
+
+#bread .link {
+  color: var(--color-fore-1);
 }
 
 .line-h {

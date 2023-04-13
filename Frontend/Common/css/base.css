@@ -9,7 +9,7 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: var(--color-fore-0);
-  background-color: var(--color-back-0); 
+  background-color: var(--color-back-1); 
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
