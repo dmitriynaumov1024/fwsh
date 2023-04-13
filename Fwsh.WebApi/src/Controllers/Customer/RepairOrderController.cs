@@ -165,17 +165,21 @@ public class RepairOrderController : FwshController
             return NotFound(new BadFieldResult("id"));
         }
 
-        if (order.Status == OrderStatus.Unknown) {
+        bool canSubmit = order.Status == OrderStatus.Unknown;
+
+        try {
             order.Status = OrderStatus.Submitted;
             dataContext.RepairOrders.Update(order);
+            dataContext.RepairOrderEvents.Add(new RepairOrderEvent(order));
             dataContext.SaveChanges();
             return Ok ( new SuccessResult (
                 $"Successfully confirmed submission of Repair Order {id}"
             ));
         }
-        else {
-            return BadRequest ( new FailResult (
-                $"Can not confirm submission of Repair Order {id} with status {order.Status}"
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError ( new FailResult (
+                $"Something went wrong while trying to confirm submission of Production Order {id}"
             ));
         }
     }

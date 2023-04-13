@@ -198,23 +198,34 @@ public class ProductionOrderController : FwshController
     public IActionResult ConfirmSubmit (int id)
     {
         var order = dataContext.ProductionOrders
+            .Include(order => order.Fabric)
             .FirstOrDefault(order => order.Id == id && order.CustomerId == user.ConfirmedId);
 
         if (order == null) {
             return NotFound(new BadFieldResult("id"));
         }
 
-        if (order.Status == OrderStatus.Unknown) {
+        bool canSubmit = order.Status == OrderStatus.Unknown;
+
+        if (! canSubmit) {
+            return BadRequest ( new FailResult (
+                $"Can not confirm submission of Production Order {id} with status {order.Status}"
+            ));
+        }
+
+        try {
             order.Status = OrderStatus.Submitted;
             dataContext.ProductionOrders.Update(order);
+            dataContext.ProductionOrderEvents.Add(new ProductionOrderEvent(order));
             dataContext.SaveChanges();
             return Ok ( new SuccessResult (
                 $"Successfully confirmed submission of Production Order {id}"
             ));
         }
-        else {
-            return BadRequest ( new FailResult (
-                $"Can not confirm submission of Production Order {id} with status {order.Status}"
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError ( new FailResult (
+                $"Something went wrong while trying to confirm submission of Production Order {id}"
             ));
         }
     }

@@ -60,6 +60,10 @@ public class CustomerAuthController : FwshController
             dataContext.Customers.Add(storedCustomer);
             dataContext.SaveChanges();
             int id = storedCustomer.Id;
+            Task.Run(() => {
+                dataContext.SignupEvents.Add(new SignupEvent { CustomerId = id });
+                dataContext.SaveChanges();
+            });
             return Ok(new CreationResult(id, $"Successfully created {id}"));
         }
         catch (Exception ex) {
