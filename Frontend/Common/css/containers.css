@@ -23,7 +23,7 @@
 }
 
 .card, .card-high {
-  border-bottom: 2px solid var(--color-back-1);
+  border-bottom: var(--border);
 }
 
 @media screen and (min-width: 760px) 
@@ -71,4 +71,8 @@
 
 .border-bottom {
   border-bottom: var(--border);
+}
+
+.default-pagination {
+  min-height: 50vh;
 }

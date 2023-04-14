@@ -50,6 +50,19 @@
   height: 0px;
 }
 
+.transparent {
+  opacity: 0%;
+}
+
+.opacity-50 {
+  opacity: 50%; 
+}
+
+.disabled.disabled {
+  opacity: 25%;
+  pointer-events: none;
+}
+
 /* margins */
 .margin-bottom-05 {
   margin-bottom: 0.5rem;

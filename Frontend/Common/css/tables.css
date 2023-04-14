@@ -37,6 +37,10 @@ table.kvtable tr>td {
   }
 }
 
+table.stripes tr:nth-child(2n) {
+  background-color: var(--color-back-0);  
+}
+
 table.stripes tr:nth-child(2n-1) {
   background-color: var(--color-back-1);
 }
