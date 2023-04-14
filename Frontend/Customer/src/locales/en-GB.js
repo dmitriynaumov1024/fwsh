@@ -5,6 +5,10 @@ const dateFormat = createDateFormat("en-GB")
 export default {
     key: "en-GB",
     displayName: "English",
+    yesNo: {
+        [true]: "Yes",
+        [false]: "No"
+    },
     action: {
         edit: "Edit",
         save: "Save",
@@ -17,12 +21,14 @@ export default {
         details: "Details"
     },
     common: {
+        catalog: "Catalog",
         list: "List",
         archive: "Archive",
         page: "Page",
         pleaseTryAgain: "Please try again",
         somethingWrong: "Something went wrong",
         seeConsole: "See console for problem details", 
+        loading: "Loading! Please wait...",
     },
     header: {
         nav: {
@@ -88,9 +94,13 @@ export default {
     productionOrder: {
         single: "Production order",
         plural: "Production orders",
+        details: "Order details",
         quantity: "Quantity",
         pricePerOne: "Price per one",
         priceTotal: "Price total",
+        design: "Design",
+        fabric: "Fabric",
+        decorMaterial: "Decor. material"
     },
     repairOrder: {
         single: "Repair order",
@@ -98,6 +108,23 @@ export default {
         price: "Price",
         prepayment: "Prepayment",
         description: "Description"
+    },
+    fabric: {
+        catalog: "Fabric catalog",
+        single: "Fabric",
+        plural: "Fabrics"
+    },
+    design: {
+        catalog: "Design catalog",
+        single: "Design",
+        plural: "Designs",
+        displayName: "Name",
+        type: "Type",
+        price: "Price",
+        isTransformable: "Transformable",
+        dimCompact: "Compact dimensions (WxLxH)",
+        dimExpanded: "Expanded dimensions (WxLxH)",
+        createdAt: "Created at"
     },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)
@@ -108,5 +135,9 @@ export default {
     formatDate (date) {
         date = new Date(date)
         return dateFormat.format(date)
+    },
+    formatDateTime (date) {
+        date = new Date(date)
+        return dateFormat.format(date) + " " + date.toLocaleTimeString(this.key)
     }
 }

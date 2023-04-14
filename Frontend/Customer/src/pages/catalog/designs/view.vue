@@ -1,5 +1,5 @@
 <template>
-<ProductionOrderView v-if="data.order?.id" :order="data.order" @click-design="goToDesign" />
+<DesignView v-if="data.design" :design="data.design" />
 <div v-else-if="data.error" class="width-container text-center pad-1">
     <p>{{locale.common.somethingWrong}}. {{locale.common.seeConsole}}</p>
 </div>
@@ -11,7 +11,7 @@
 <script setup>
 import { useRouter } from "vue-router" 
 import { reactive, inject, watch } from "vue" 
-import ProductionOrderView from "@/comp/ProductionOrderView.vue"
+import DesignView from "@/comp/DesignView.vue"
 
 const router = useRouter()
 
@@ -23,29 +23,22 @@ const props = defineProps({
 })
 
 const data = reactive({
-    order: null
+    design: null
 })
 
-watch(() => props.id, getOrder, { immediate: true })
+watch(() => props.id, getDesign, { immediate: true })
 
-function goToDesign () {
-    setTimeout(() => {
-        router.push(`/catalog/designs/view/${data.order.design.id}`)
-    }, 200)
-}
-
-function getOrder () {
+function getDesign () {
     axios.get({
-        url: `/customer/orders/production/view/${props.id}`
+        url: `/catalog/designs/view/${props.id}`
     })
     .then(({ status, data: response }) => {
         if (response.id) {
-            data.order = response
+            data.design = response
         }
     })
     .catch(error => {
-        console.log("Something went wrong")
+        
     })
 }
-
 </script>

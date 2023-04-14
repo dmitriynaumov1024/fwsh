@@ -23,7 +23,7 @@ let storage = useLocalStorage("customer", {
     created() {
         this.tmp = { }
         axios.get({
-            url: "/manager/profile/view"
+            url: "/customer/profile/view"
         })
         .then(({ status, data: response } = axiosresponse) => {
             if (status < 299 && response.id) {

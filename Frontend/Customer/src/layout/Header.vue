@@ -29,7 +29,7 @@ import { ref, computed, inject } from "vue"
 import FwshIcon from "@/comp/icons/Fwsh.vue" 
 import MenuButton from "@/comp/ctrl/Menu.vue"
 
-let headerMenuExpanded = ref(false)
+let headerMenuExpanded = ref(true)
 
 const storage = inject("storage")
 const locale = inject("locale")

@@ -1,15 +1,15 @@
 <template>
 <Bread :crumbs="[{href: '/', text: 'fwsh'}]" 
-    last="Catalog" />
+    :last="locale.common.catalog" />
 <div class="width-container pad-05 margin-bottom-1">
-    <h2 class="margin-bottom-1">Catalog</h2>
+    <h2 class="margin-bottom-1">{{locale.common.catalog}}</h2>
     <router-link to="/catalog/designs/list?page=0" 
         class="button button-secondary button-block pad-1 margin-bottom-1 text-center">
-        Furniture
+        {{locale.design.plural}}
     </router-link>
     <router-link to="/catalog/fabrics/list?page=0" 
         class="button button-secondary button-block pad-1 margin-bottom-1 text-center">
-        Fabrics
+        {{locale.fabric.plural}}
     </router-link>
     <router-link to="#" 
         class="button button-secondary button-block pad-1 margin-bottom-1 text-center">

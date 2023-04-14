@@ -5,6 +5,10 @@ const dateFormat = createDateFormat("uk-UA")
 export default {
     key: "uk-UA",
     displayName: "Українська",
+    yesNo: {
+        [true]: "Так",
+        [false]: "Ні"
+    },
     action: {
         edit: "Редагувати",
         save: "Зберегти",
@@ -17,12 +21,14 @@ export default {
         details: "Докладніше"
     },
     common: {
+        catalog: "Каталог",
         list: "Список",
         archive: "Архів",
         page: "Сторінка",
         pleaseTryAgain: "Будь ласка, спробуйте ще раз",
         somethingWrong: "Виникла проблема",
         seeConsole: "Дивіться детальний опис проблеми в консолі", 
+        loading: "Завантажується! Будь ласка, зачекайте...",
     },
     header: {
         nav: {
@@ -88,9 +94,13 @@ export default {
     productionOrder: {
         single: "Виробниче замовлення",
         plural: "Виробничі замовлення",
+        details: "Деталі замовлення",
         quantity: "Кількість",
         pricePerOne: "Ціна за одиницю",
         priceTotal: "Сумарна вартість",
+        design: "Дизайн",
+        fabric: "Тканина",
+        decorMaterial: "Матеріал декорації"
     },
     repairOrder: {
         single: "Ремонтне замовлення",
@@ -98,6 +108,23 @@ export default {
         price: "Вартість робіт",
         prepayment: "Внесена передплата",
         description: "Опис замовлення"
+    },
+    fabric: {
+        catalog: "Каталог тканин",
+        single: "Тканина",
+        plural: "Тканини",
+    },
+    design: {
+        catalog: "Каталог дизайнів",
+        single: "Дизайн меблів",
+        plural: "Дизайни меблів",
+        displayName: "Найменування",
+        type: "Тип",
+        price: "Базова ціна",
+        isTransformable: "Трансформується",
+        dimCompact: "Розміри в складеному стані (ДxШxВ)",
+        dimExpanded: "Розміри в розгорнутому стані (ДxШxВ)",
+        createdAt: "Created at"
     },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)
@@ -108,5 +135,9 @@ export default {
     formatDate (date) {
         date = new Date(date)
         return dateFormat.format(date)
+    },
+    formatDateTime (date) {
+        date = new Date(date)
+        return dateFormat.format(date) + " " + date.toLocaleTimeString(this.key)
     }
 }

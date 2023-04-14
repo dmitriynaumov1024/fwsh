@@ -1,10 +1,15 @@
+// Import pages
 import index from "@/pages/index.vue"
+
 import login from "@/pages/login.vue"
 import signup from "@/pages/signup.vue"
-import catalog from "@/pages/catalog/index.vue"
 import profile from "@/pages/profile.vue"
+
+import catalog from "@/pages/catalog/index.vue"
 import designList from "@/pages/catalog/designs/list.vue" 
 import fabricList from "@/pages/catalog/fabrics/list.vue"
+import designView from "@/pages/catalog/designs/view.vue"
+
 import productionOrderList from "@/pages/orders/production/list.vue"
 import repairOrderList from "@/pages/orders/repair/list.vue"
 import productionOrderView from "@/pages/orders/production/view.vue"
@@ -47,6 +52,11 @@ const routes = [
         path: "/catalog/fabrics/list",
         component: fabricList,
         props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/catalog/designs/view/:id",
+        component: designView,
+        props: ({ params }) => ({ id: Number(params.id) })
     },
     {
         path: "/orders/production/:tab(list|archive)",

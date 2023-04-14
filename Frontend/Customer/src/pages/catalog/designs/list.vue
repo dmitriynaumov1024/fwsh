@@ -1,8 +1,8 @@
 <template>
 <Bread :crumbs="[
     { href: '/', text: 'fwsh' },
-    { href: '/catalog', text: 'Catalog' }
-    ]" last="Designs" />
+    { href: '/catalog', text: locale.common.catalog }
+    ]" :last="locale.design.plural" />
 <Pagination v-if="data.items?.length"
     :page="props.page" :previous="data.previous" :next="data.next"
     :items="data.items" :view="DesignView"
@@ -14,7 +14,7 @@
     class-item="card pad-1 margin-bottom-1">
     <template #title>
         <h2 class="margin-bottom-1">
-            Design catalog &ndash; {{locale.common.page}} {{props.page}}
+            {{locale.design.catalog}} &ndash; {{locale.common.page}} {{props.page}}
         </h2>
     </template>
 </Pagination>

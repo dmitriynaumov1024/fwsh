@@ -1,7 +1,7 @@
 <template>
 <div>
     <slot name="title"></slot>
-    <div :class="classPagination">
+    <div :class="classPagination ?? 'default-pagination' ">
         <template v-for="item of items">
             <component :is="view" 
                 :class="classItem"
@@ -11,13 +11,13 @@
     </div>
     <div class="height-1"></div>
     <div class="flex-stripe">
-        <button class="button button-secondary" @click="()=> $emit('click-previous')">
+        <button class="button button-secondary" :class="{ 'disabled': previous==null }" @click="()=> $emit('click-previous')">
             &lt;
         </button>
         <span class="flex-grow text-center">
             {{locale.common.page}} {{page}}
         </span>
-        <button class="button button-secondary" @click="()=> $emit('click-next')">
+        <button class="button button-secondary" :class="{ 'disabled': next==null }" @click="()=> $emit('click-next')">
             &gt;
         </button>
     </div>
