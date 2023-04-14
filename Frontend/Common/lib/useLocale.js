@@ -4,8 +4,8 @@ let locale = undefined
 
 let onLocaleChangeCallbacks = [ ]
 
-function selectLocale (localeKey) {
-    locale = locales[localeKey]
+function selectLocale (localeKey, { fallbackToAnything } = { }) {
+    locale = locales[localeKey] ?? (fallbackToAnything ? Object.values(locales)[0] : undefined)
     for (const callback of onLocaleChangeCallbacks) callback(locale)
 }
 
