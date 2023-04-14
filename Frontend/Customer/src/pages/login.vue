@@ -16,6 +16,7 @@ let login = reactive({ })
 
 const router = useRouter()
 const axios = inject("axios")
+const locale = inject("locale")
 
 function loginSubmit ({ phone, password } = data) {
     axios.post({
@@ -31,16 +32,16 @@ function loginSubmit ({ phone, password } = data) {
         else {
             if ((response.badFields instanceof Array) && response.badFields.length) { 
                 login.badFields = arrayToDict(response.badFields)
-                login.errorMessage = response.message ?? `Seems like ${response.badFields[0]} is incorrect`
+                login.errorMessage = locale.value.formatBadFields(response.badFields, l => l.profile)
             }
             else {
-                login.errorMessage = response.message ?? "Something went wrong"
+                login.errorMessage = response.message ?? locale.value.common.somethingWrong
             }
         }
     })
     .catch(error => {
         console.error(error)
-        login.errorMessage = "Something went wrong. See console for details"
+        signup.errorMessage = `${locale.value.common.somethingWrong}. ${locale.value.common.seeConsole}`
     })
 }
 

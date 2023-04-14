@@ -7,7 +7,7 @@ const availableLocales = [
     uk_UA
 ]
 
-function setupLocales ({ select }) {
+function setupLocales ({ select } = { }) {
     const { locales, registerLocale, selectLocale } = useLocale()
     for (const locale of availableLocales) {
         registerLocale(locale.key, locale)

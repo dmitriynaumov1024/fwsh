@@ -99,7 +99,13 @@ export default {
         prepayment: "Prepayment",
         description: "Description"
     },
-    formatDate(date) {
+    formatBadFields (badFields, selector) {
+        if (!badFields instanceof Array) badFields = Object.keys(badFields)
+        if (selector instanceof Function) 
+            badFields = badFields.map(key => selector(this)[key]).filter(key => key != undefined)
+        return "Please check " + badFields.map(field => field.toLowerCase()).join(", ") + " once again."
+    },
+    formatDate (date) {
         date = new Date(date)
         return dateFormat.format(date)
     }

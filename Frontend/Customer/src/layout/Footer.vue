@@ -2,10 +2,12 @@
 <footer class="footer">
     <div class="width-container pad-1-05">
         <p>Furniture workshop 
-            <span v-for="locale in locales" 
-                @click="() => selectLocale(locale.key)">
-                {{locale.displayName}}&ensp;
-            </span>
+            <template v-for="locale in locales">
+                &ensp;
+                <button class="button button-inline" @click="() => selectLocale(locale.key)">
+                    {{locale.displayName}}
+                </button>
+            </template>
         </p>
         <p>Copyright &copy; 2022 &ndash; 2023 Dmitriy Naumov</p>
         <p>Github: <a class="link" href="https://github.com/dmitriynaumov1024">dmitriynaumov1024</a></p>

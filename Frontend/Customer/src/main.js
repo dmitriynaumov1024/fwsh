@@ -13,9 +13,6 @@ let router = createRouter({
 
 app.use(router)
 
-import { setupLocales } from "./locales.js"
-setupLocales({ select: "en-GB" })
-
 import { useAxiosWrapper, useLocalStorage, useLocale } from "@common"
 
 let axios = useAxiosWrapper("customer", "http://192.168.0.107:4000")
@@ -25,13 +22,26 @@ let storage = useLocalStorage("customer", {
     volatile: [ "tmp" ],
     created() {
         this.tmp = { }
+        axios.get({
+            url: "/manager/profile/view"
+        })
+        .then(({ status, data: response } = axiosresponse) => {
+            if (status < 299 && response.id) {
+                this.tmp.profile = response
+            }
+        })
     }
 })
 
-let { onLocaleChange } = useLocale()
+import { setupLocales } from "@/locales.js"
+setupLocales()
+
+let { selectLocale, onLocaleChange } = useLocale()
+selectLocale(storage.localeKey ?? "en-GB", { fallbackToAnything: true })
 let locale = ref(undefined)
 onLocaleChange (newLocale => {
     locale.value = newLocale
+    storage.localeKey = newLocale.key
 })
 
 app.provide("locale", locale)

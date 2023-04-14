@@ -30,7 +30,7 @@ function signupSubmit (data) {
         }
         else {
             signup.badFields = arrayToDict(response.badFields)
-            signup.errorMessage = response.message
+            signup.errorMessage = locale.value.formatBadFields(response.badFields, l => l.profile)
         }
     })
     .catch(error => {

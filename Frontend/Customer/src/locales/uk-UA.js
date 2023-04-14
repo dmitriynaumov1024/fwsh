@@ -99,7 +99,13 @@ export default {
         prepayment: "Внесена передплата",
         description: "Опис замовлення"
     },
-    formatDate(date) {
+    formatBadFields (badFields, selector) {
+        if (!badFields instanceof Array) badFields = Object.keys(badFields)
+        if (selector instanceof Function) 
+            badFields = badFields.map(key => selector(this)[key]).filter(key => key != undefined)
+        return "Будь ласка, перевірте правильність введення таких полів: " + badFields.map(field => field.toLowerCase()).join(", ") + "."
+    },
+    formatDate (date) {
         date = new Date(date)
         return dateFormat.format(date)
     }
