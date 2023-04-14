@@ -9,6 +9,8 @@ public class ProductionOrderEvent : BasicEvent
     public int FabricTypeId { get; set; }
     public int Quantity { get; set; }
 
+    public ProductionOrderEvent() : base() { }
+
     public ProductionOrderEvent(ProductionOrder order) : base()
     {
         this.OrderId = order.Id;
