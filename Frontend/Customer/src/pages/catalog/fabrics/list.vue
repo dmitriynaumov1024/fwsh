@@ -64,7 +64,8 @@ function goToItem(item) {
 async function getFabrics() {
     axios.get({
         url: "/catalog/fabrics/list",
-        params: { page: props.page }
+        params: { page: props.page },
+        cacheTTL: 600
     })
     .then(({ status, data: response }) => {
         data.items = response.items

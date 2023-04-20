@@ -30,7 +30,8 @@ watch(() => props.id, getDesign, { immediate: true })
 
 function getDesign () {
     axios.get({
-        url: `/catalog/designs/view/${props.id}`
+        url: `/catalog/designs/view/${props.id}`,
+        cacheTTL: 600
     })
     .then(({ status, data: response }) => {
         if (response.id) {

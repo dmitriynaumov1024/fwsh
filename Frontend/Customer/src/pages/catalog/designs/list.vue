@@ -54,13 +54,14 @@ function goToNext() {
 }
 
 function goToItem(item) {
-    console.log("Should go to " + item.id)
+    router.push(`/catalog/designs/view/${item.id}`)
 }
 
 async function getDesigns() {
     axios.get({
         url: "/catalog/designs/list",
-        params: { page: props.page }
+        params: { page: props.page },
+        cacheTTL: 600
     })
     .then(({ status, data: response }) => {
         data.items = response.items
@@ -71,7 +72,5 @@ async function getDesigns() {
         console.error(error)
     })
 }
-
-
 
 </script>

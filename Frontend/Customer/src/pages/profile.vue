@@ -19,9 +19,12 @@ const storage = inject("storage")
 
 const profile = computed(() => storage.tmp?.profile)
 
-onMounted(() => { 
+onMounted(getProfile)
+
+function getProfile() { 
     axios.get({
-        url: "/customer/profile/view"
+        url: "/customer/profile/view",
+        cacheTTL: storage.tmp.profile ? 60 : 0
     })
     .then(({ status, data: response } = axiosresponse) => {
         if (status < 299 && response.id) {
@@ -32,7 +35,7 @@ onMounted(() => {
             router.replace("/login")
         }
     })
-})
+}
 
 function profileLogout () {
     axios.post({
