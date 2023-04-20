@@ -3,6 +3,11 @@ import login from "@/pages/login.vue"
 // import signup from "@/pages/signup.vue"
 import profile from "@/pages/profile.vue"
 
+import blueprintsIndex from "@/pages/blueprints/index.vue"
+import designList from "@/pages/blueprints/designs/list.vue"
+import designView from "@/pages/blueprints/designs/view.vue"
+import designCreate from "@/pages/blueprints/designs/create.vue"
+
 // import catalog from "@/pages/catalog/index.vue"
 // import designList from "@/pages/catalog/designs/list.vue" 
 // import fabricList from "@/pages/catalog/fabrics/list.vue"
@@ -30,6 +35,24 @@ const routes = [
     {
         path: "/profile",
         component: profile
+    },
+    {
+        path: "/blueprints",
+        component: blueprintsIndex
+    },
+    {
+        path: "/blueprints/designs/list",
+        component: designList,
+        props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/blueprints/designs/view/:id",
+        component: designView,
+        props: ({ params }) => ({ id: Number(params.id) })
+    },
+    {
+        path: "/blueprints/designs/create",
+        component: designCreate
     },
     /*{
         path: "/catalog",

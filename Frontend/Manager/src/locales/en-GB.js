@@ -5,7 +5,16 @@ const dateFormat = createDateFormat("en-GB")
 export default {
     key: "en-GB",
     displayName: "English",
+    yesNo: {
+        [true]: "Yes",
+        [false]: "No"
+    },
     action: {
+        submit: "Submit",
+        create: "Create",
+        addPhotos: "Add photos",
+        reset: "Reset",
+        clear: "Clear",
         edit: "Edit",
         save: "Save",
         confirm: "Confirm",
@@ -17,6 +26,7 @@ export default {
         details: "Details"
     },
     common: {
+        id: "id",
         list: "List",
         archive: "Archive",
         page: "Page",
@@ -108,6 +118,37 @@ export default {
         price: "Price",
         prepayment: "Prepayment",
         description: "Description"
+    },
+    fabric: {
+        catalog: "Fabric catalog",
+        single: "Fabric",
+        plural: "Fabrics"
+    },
+    blueprint: {
+        single:"Blueprint",
+        plural: "Blueprints",
+    },
+    design: {
+        notFound: "Can not find design with given id or name key",
+        creationMessage: "Successfully created new design!",
+        create: "Create design",
+        list: "Design list",
+        catalog: "Design catalog",
+        single: "Design",
+        plural: "Designs",
+        nameKey: "Name key",
+        displayName: "Name",
+        type: "Type",
+        price: "Price",
+        description: "Description",
+        isVisible: "Visible in catalog",
+        isTransformable: "Transformable",
+        dimCompact: "Compact dimensions (WxLxH)",
+        dimExpanded: "Expanded dimensions (WxLxH)",
+        length: "Length",
+        width: "Width",
+        height: "Height",
+        createdAt: "Created at"
     },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)

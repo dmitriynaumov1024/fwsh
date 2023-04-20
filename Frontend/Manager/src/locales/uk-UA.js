@@ -5,7 +5,16 @@ const dateFormat = createDateFormat("uk-UA")
 export default {
     key: "uk-UA",
     displayName: "Українська",
+    yesNo: {
+        [true]: "Так",
+        [false]: "Ні"
+    },
     action: {
+        submit: "Готово",
+        create: "Створити",
+        addPhotos: "Додати фото",
+        reset: "Скасувати зміни",
+        clear: "Очистити",
         edit: "Редагувати",
         save: "Зберегти",
         confirm: "Підтвердити",
@@ -17,6 +26,7 @@ export default {
         details: "Докладніше"
     },
     common: {
+        id: "id",
         list: "Список",
         archive: "Архів",
         page: "Сторінка",
@@ -108,6 +118,32 @@ export default {
         price: "Вартість робіт",
         prepayment: "Внесена передплата",
         description: "Опис замовлення"
+    },
+    blueprint: {
+        single:"Прототип",
+        plural: "Прототипи",
+    },    
+    design: {
+        notFound: "Не вдалося знайти дизайн меблів з заданим id або ключем",
+        creationMessage: "Новий дизайн меблів був створений!",
+        create: "Створити дизайн",
+        list: "Список дизайнів",   
+        catalog: "Каталог дизайнів",
+        single: "Дизайн меблів",
+        plural: "Дизайни меблів",
+        nameKey: "Іменний код",
+        displayName: "Найменування",
+        type: "Тип",
+        price: "Базова ціна",
+        description: "Опис",
+        isVisible: "Відображається в каталозі",
+        isTransformable: "Трансформується",
+        dimCompact: "Розміри в складеному стані (ШxДхВ)",
+        dimExpanded: "Розміри в розгорнутому стані (ШxДхВ)",
+        length: "Довжина",
+        width: "Ширина",
+        height: "Висота",
+        createdAt: "Created at"
     },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)

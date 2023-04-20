@@ -15,7 +15,11 @@ app.use(router)
 
 import { useAxiosWrapper, useLocalStorage, useLocale } from "@common"
 
-let axios = useAxiosWrapper("manager", "http://192.168.0.107:4000")
+let axios = useAxiosWrapper("manager", { 
+    baseUrl: "http://192.168.0.107:4000",
+    cached: true
+})
+
 let storage = useLocalStorage("manager", { 
     initial: { }, 
     wrap: reactive, 
