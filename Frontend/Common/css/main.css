@@ -58,7 +58,7 @@
   opacity: 50%; 
 }
 
-.disabled.disabled {
+.disabled.disabled, [disabled] {
   opacity: 25%;
   pointer-events: none;
 }
@@ -115,7 +115,7 @@
 }
 
 /* flex spacing */
-.flex-spacing-1 {
+.flex-spacing-1, .flex-pad-1 {
   column-gap: 1rem;
   row-gap: 1rem;
 }

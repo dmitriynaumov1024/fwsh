@@ -14,6 +14,7 @@ table.kvtable tr>td {
   display: inline-block;
   width: 100%;
   padding: 0rem 0.5rem;
+  white-space: pre-wrap;
 }
 
 @media screen and (max-width: 479px) {

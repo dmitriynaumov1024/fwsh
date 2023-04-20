@@ -33,9 +33,10 @@
   resize: none;
 }
 
-input:invalid, 
-.fancy-textarea>[invalid="true"], 
-.fancy-input>[invalid="true"] {
+*:invalid, 
+.fancy-group[invalid="true"],
+.fancy-textarea[invalid="true"]>textarea, 
+.fancy-input[invalid="true"]>input {
   border-color: var(--color-bad);
 }
 
@@ -49,7 +50,7 @@ input[type="phone"]:focus, textarea:focus {
 input[type="radio"]+label, 
 input[type="checkbox"]+label {
   color: var(--color-fore-2);
-  padding-left: 0.75rem;
+  padding-left: 0.5rem;
 }
 
 input[type="radio"]:checked+label, 
@@ -57,7 +58,7 @@ input[type="checkbox"]:checked+label {
   color: inherit;
 }
 
-.fancy-checkbox {
+.fancy-checkbox-button {
   display: inline-block; 
   height: 1.5rem; 
   border: 2px solid var(--color-back-2); 
@@ -123,6 +124,7 @@ input[type="checkbox"]:checked+label {
 
   .fancy-group {
     border: 2px solid var(--color-back-2);
+    background-color: var(--color-back-0);
     background-image: linear-gradient(to bottom, 
       var(--color-back-1) 0%, 
       var(--color-back-1) 100%

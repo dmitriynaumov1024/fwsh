@@ -63,6 +63,5 @@
 
 .button-block {
   display: block;
-  max-width: 100%;
-  width: auto;
+  width: 100%;
 }
