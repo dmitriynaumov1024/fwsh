@@ -187,7 +187,9 @@ public class DesignController : FwshController
 
         var requestPhotos = this.Request.Form.Files.ToList();
 
-        int count = 0, pos = design.Photos.Max(p => p.Position) + 1;
+        int count = 0, 
+            pos = design.Photos.Count > 0 ? design.Photos.Max(p => p.Position) + 1 : 1;
+
         foreach (var photo in requestPhotos) {
             if (design.Photos.Count >= MAX_PHOTOS) break;
             string ext = photo.FileName.Split('.').LastOrDefault();

@@ -52,6 +52,7 @@ public class DesignRequest: Request,
         design.DisplayName = this.DisplayName;
         design.Description = this.Description;
         design.IsVisible = this.IsVisible;
+        design.IsTransformable = this.IsTransformable;
         design.DimCompact = this.DimCompact;
         design.DimExpanded = this.DimExpanded;
     }
