@@ -28,17 +28,21 @@ public class Startup
     public void ConfigureServices (IServiceCollection services)
     {
         services.AddSingleton<Logger, ConsoleLogger>();
-        services.AddDbContext<FwshDataContext, FwshDataContextPostgres>(ServiceLifetime.Scoped);
+
+        if (env.get("DB_HOST") == "memory") 
+            services.AddDbContext<FwshDataContext, FwshDataContextInMemory>(ServiceLifetime.Scoped);
+        else 
+            services.AddDbContext<FwshDataContext, FwshDataContextPostgres>(ServiceLifetime.Scoped);
+
+        services.AddSingleton<FileStorageProvider>(new PhysicalFileStorageProvider(env.get("UPLOAD_DIR")));
+
         services.AddSingleton<FwshUserStorage, FwshUserStorageInMemory>();
-        services.AddSingleton<FileStorageProvider>(new PhysicalFileStorageProvider("./var/files"));
-
-        services.AddRouting();
-        services.AddControllers().AddControllersAsServices();
-
-        // services.AddDistributedMemoryCache();
-        // services.AddSession();
 
         services.AddScoped<FwshUser>();
+
+        services.AddRouting();
+
+        services.AddControllers().AddControllersAsServices();
 
         this.DoStartupRoutine(services);
     }
@@ -50,6 +54,26 @@ public class Startup
         var dataContext = serviceProvider.GetService<FwshDataContext>();
         var logger = serviceProvider.GetService<Logger>();
 
+        // create first manager account if there is nothing yet
+        bool managerExists = dataContext.Workers.Include(w => w.Roles)
+            .Where(w => w.Roles.Any(r => r.RoleName == Roles.Management))
+            .Count() > 0;
+
+        if (! managerExists) {
+            var manager = new Worker() {
+                Name = "Default Manager",
+                Phone = env.get("MGR_LOGIN") ?? "admin",
+                Password = env.get("MGR_PASSWORD").QuickHash()
+            };
+            manager.Roles.Add ( new WorkerRole() { 
+                RoleName = Roles.Management 
+            });
+            dataContext.Workers.Add(manager);
+            dataContext.SaveChanges();
+            logger.Log("Created default manager");
+        }
+
+        // recalculate design prices
         var controller = serviceProvider
             .GetService<Fwsh.WebApi.Controllers.Manager.DesignController>();
         controller.Recalculate();
@@ -70,9 +94,6 @@ public class Startup
                 .AllowAnyHeader()
                 .WithExposedHeaders("Authorization");
         });
-
-        // Enable session
-        // app.UseSession();
 
         // Console logging
         app.UseMiddleware<HttpRequestLoggerMiddleware>();
