@@ -20,7 +20,7 @@ function useAxiosWrapper (wrapperId, { baseUrl, cached }) {
                 if (options.cacheTTL && this[$cache][requestId]) {
                     let cacheAge = Date.now() - this[$cache][requestId].timestamp
                     if (cacheAge < options.cacheTTL * 1000) {
-                        console.log(`AxiosWrapper: using ${requestId} cached ${cacheAge}s ago`)
+                        console.log(`AxiosWrapper: using ${requestId} cached ${cacheAge}ms ago`)
                         return new Promise((resolve, reject) => resolve(this[$cache][requestId].response))
                     }
                 }
