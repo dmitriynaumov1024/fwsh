@@ -42,6 +42,9 @@ export default {
             signup: "Sign up" 
         }
     },
+    index: {
+        welcome: "Manager's panel - Main page",
+    },
     login: {
         welcomeBack: "Welcome back!",
         haveNoAccount: "Have no account yet?"
@@ -63,6 +66,26 @@ export default {
         sewing: "Sewing",
         assembly: "Assembly",
         upholstery: "Upholstery"
+    },
+    person: {
+        single: "Person",
+        plural: "People",
+    },
+    customer: {
+        single: "Customer",
+        plural: "Customers",
+    },
+    manager: {
+        single: "Manager",
+        plural: "Managers",
+    },
+    worker: {
+        single: "Worker",
+        plural: "Workers",
+    },
+    supplier: {
+        single: "Supplier",
+        plural: "Suppliers",
     },
     profile: {
         myProfile: "My profile",

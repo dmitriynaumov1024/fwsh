@@ -1,9 +1,11 @@
 <template>
 <div class="width-container pad-1">
-    <h2 class="margin-bottom-2">Welcome to Manager's panel!</h2>
-    <router-link to="/blueprints"
-        class="button button-block button-secondary pad-05 margin-bottom-1">
-        {{locale.blueprint.plural}}
+    <h2 class="margin-bottom-2">{{locale.index.welcome}}</h2>
+    <router-link to="/blueprints" class="card pad-1 margin-bottom-1">
+        <h3 class="text-center">{{locale.blueprint.plural}}</h3>
+    </router-link>
+    <router-link to="/people" class="card pad-1 margin-bottom-1">
+        <h3 class="text-center">{{locale.person.plural}}</h3>
     </router-link>
     <p class="margin-bottom-1"><b>Buttons</b></p>
     <div class="flex-stripe flex-spacing-1 margin-bottom-1">
@@ -25,34 +27,34 @@
         <span class="flex-grow"></span>
     </div>
     <div class="fancy-input">
-      <label for="someid2">Name</label>
-      <input type="text" pattern="[А-Яа-я\-]{2,16}" id="someid2" />
+        <label for="someid2">Name</label>
+        <input type="text" pattern="[А-Яа-я\-]{2,16}" id="someid2" />
     </div>
     <div class="fancy-input">
-      <label for="someid3">Password</label>
-      <input type="password" id="someid3" />
+        <label for="someid3">Password</label>
+        <input type="password" id="someid3" />
     </div>
     <div class="fancy-textarea">
-      <label for="someid4">Description</label>
-      <textarea id="someid4"></textarea>
+        <label for="someid4">Description</label>
+        <textarea id="someid4"></textarea>
     </div>
     <div class="fancy-group">
-      <header>Contact me via {{contactSelected || '?'}}</header>
-      <main>
-        <div class="fancy-radio" v-for="contact of contactVariants">
-          <input type="radio" v-model="contactSelected" :value="contact" :id="'input_contact_'+contact" />
-          <label :for="'input_contact_'+contact">{{contact}}</label>
-        </div>
-      </main>
+        <header>Contact me via {{contactSelected || '?'}}</header>
+        <main>
+            <div class="fancy-radio" v-for="contact of contactVariants">
+                <input type="radio" v-model="contactSelected" :value="contact" :id="'input_contact_'+contact" />
+                <label :for="'input_contact_'+contact">{{contact}}</label>
+            </div>
+        </main>
     </div>
     <div class="fancy-group">
-      <header>I am interested in</header>
-      <main>
-        <div class="fancy-checkbox" v-for="topic of topicVariants">
-          <input type="checkbox" v-model="topicsSelected" :value="topic.key" :id="'input_topic_'+topic.key" />
-          <label :for="'input_topic_'+topic.key">{{topic.name}}</label>
-        </div>
-      </main>
+        <header>I am interested in</header>
+        <main>
+            <div class="fancy-checkbox" v-for="topic of topicVariants">
+                <input type="checkbox" v-model="topicsSelected" :value="topic.key" :id="'input_topic_'+topic.key" />
+                <label :for="'input_topic_'+topic.key">{{topic.name}}</label>
+            </div>
+        </main>
     </div>
 </div>
 </template>

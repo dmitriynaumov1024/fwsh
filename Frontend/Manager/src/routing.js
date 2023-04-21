@@ -8,6 +8,11 @@ import designList from "@/pages/blueprints/designs/list.vue"
 import designView from "@/pages/blueprints/designs/view.vue"
 import designCreate from "@/pages/blueprints/designs/create.vue"
 
+import peopleIndex from "@/pages/people/index.vue"
+import customersList from "@/pages/people/customers/list.vue"
+import suppliersList from "@/pages/people/suppliers/list.vue"
+import workersList from "@/pages/people/workers/list.vue"
+
 // import catalog from "@/pages/catalog/index.vue"
 // import designList from "@/pages/catalog/designs/list.vue" 
 // import fabricList from "@/pages/catalog/fabrics/list.vue"
@@ -53,6 +58,25 @@ const routes = [
     {
         path: "/blueprints/designs/create",
         component: designCreate
+    },
+    {
+        path: "/people",
+        component: peopleIndex
+    },
+    {
+        path: "/people/customers/list",
+        component: customersList,
+        props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/people/workers/list",
+        component: workersList,
+        props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/people/suppliers/list",
+        component: suppliersList,
+        props: ({ query }) => ({ page: Number(query.page) })
     },
     /*{
         path: "/catalog",

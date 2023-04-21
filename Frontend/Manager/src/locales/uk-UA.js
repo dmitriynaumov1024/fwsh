@@ -42,6 +42,9 @@ export default {
             signup: "Реєстрація" 
         }
     },
+    index: {
+        welcome: "Панель менеджера - головна сторінка",
+    },
     login: {
         welcomeBack: "Ласкаво просимо!",
         haveNoAccount: "Немає облікового запису?"
@@ -63,6 +66,26 @@ export default {
         sewing: "Швець",
         assembly: "Збиральник",
         upholstery: "Оббивщик"
+    },
+    person: {
+        single: "Людина",
+        plural: "Люди",
+    },
+    customer: {
+        single: "Покупець",
+        plural: "Покупці",
+    },
+    manager: {
+        single: "Менеджер",
+        plural: "Менеджери",
+    },
+    worker: {
+        single: "Робітник",
+        plural: "Робітники",
+    },
+    supplier: {
+        single: "Постачальник",
+        plural: "Постачальники",
     },
     profile: {
         myProfile: "Мій профіль",

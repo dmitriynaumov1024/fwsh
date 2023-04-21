@@ -1,12 +1,12 @@
 <template>
 <Bread :crumbs="[
     { href: '/', text: 'fwsh' },
-    { href: '/blueprints', text: locale.blueprint.plural }
-    ]" :last="locale.design.plural" />
+    { href: '/people', text: locale.person.plural }
+    ]" :last="locale.customer.plural" />
 <Pagination v-if="data.items?.length"
     :page="props.page" :previous="data.previous" :next="data.next"
-    :items="data.items" :view="DesignView"
-    :bind="item => ({ design: item })"
+    :items="data.items" :view="PersonView"
+    :bind="item => ({ person: item })"
     @click-previous="goToPrevious"
     @click-next="goToNext"
     @click-item="goToItem"
@@ -14,7 +14,7 @@
     class-item="card pad-1 margin-bottom-1">
     <template #title>
         <h2 class="margin-bottom-1">
-            {{locale.design.plural}} &ndash; {{locale.common.page}} {{props.page}}
+            {{locale.customer.plural}} &ndash; {{locale.common.page}} {{props.page}}
         </h2>
     </template>
 </Pagination>
@@ -29,7 +29,7 @@ import { useRouter } from "vue-router"
 import { ref, reactive, inject, watch } from "vue"
 import Bread from "@/layout/Bread.vue"
 import Pagination from "@/layout/Pagination.vue"
-import DesignView from "@/comp/mini/DesignView.vue"
+import PersonView from "@/comp/mini/PersonView.vue"
 
 const router = useRouter()
 const locale = inject("locale")
@@ -41,26 +41,27 @@ const props = defineProps({
 
 const data = reactive({})
 
-watch(() => props.page, getDesigns, { immediate: true })
+watch(() => props.page, getCustomers, { immediate: true })
 
 function goToPrevious() {
     if (data.previous != null)
-        router.push(`/blueprints/designs/list?page=${data.previous}`)
+        router.push(`/people/customers/list?page=${data.previous}`)
 }
 
 function goToNext() {
     if (data.next != null)
-        router.push(`/blueprints/designs/list?page=${data.next}`)
+        router.push(`/people/customers/list?page=${data.next}`)
 }
 
-function goToItem(item) {
-    if (item.id) 
-        router.push(`/blueprints/designs/view/${item.id}`)
+function goToItem (item) {
+    console.log("Should go to "+item.id)
+    // if (item.id) 
+    //     router.push(`/people/customers/view/${item.id}`)
 }
 
-async function getDesigns() {
+async function getCustomers() {
     axios.get({
-        url: "/manager/designs/list",
+        url: "/manager/customers/list",
         params: { page: props.page },
         cacheTTL: 10
     })

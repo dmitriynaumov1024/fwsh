@@ -37,8 +37,10 @@
     </table>
     <div class="fancy-group margin-bottom-1">
         <header>{{locale.photo.plural}}</header>
-        <main class="preview-photo-gallery">
-            <div v-for="url of design.photoUrls"><img :src="resolvePhotoUrl(url)"></div>
+        <main>
+            <ImageGallery>
+                <img v-for="url of design.photoUrls" :src="resolvePhotoUrl(url)">
+            </ImageGallery>
         </main>
     </div>
     <div class="flex-stripe flex-pad-1">
@@ -51,6 +53,7 @@
 
 <script setup>
 import { inject } from "vue"
+import ImageGallery from "@/comp/ctrl/ImageGallery.vue"
 
 const locale = inject("locale")
 

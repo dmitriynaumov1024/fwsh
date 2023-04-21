@@ -46,9 +46,11 @@
     </div>
     <div class="fancy-group">
         <header>{{locale.photo.plural}}</header>
-        <main class="preview-photo-gallery">
-            <div v-for="url of design.photoUrls"><img :src="url"></div>
-            <div v-for="photo of photos"><img :src="URL.createObjectURL(photo)" @load="URL.revokeObjectURL(photo)"></div>
+        <main>
+            <div class="preview-photo-gallery">
+                <div v-for="url of design.photoUrls"><img :src="url"></div>
+                <div v-for="photo of photos"><img :src="URL.createObjectURL(photo)" @load="URL.revokeObjectURL(photo)"></div>
+            </div>
             <div>
                 <input type="file" multiple id="input-photos" ref="photoInput" 
                     @change="photoInputChanged" class="hidden">
