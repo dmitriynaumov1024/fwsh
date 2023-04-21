@@ -23,6 +23,7 @@
 }
 
 .card, .card-high {
+  display: block;
   border-bottom: var(--border);
 }
 

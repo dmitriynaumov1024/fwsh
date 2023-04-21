@@ -66,3 +66,7 @@ body[theme="dark"] {
 .accent-error.accent-error {
   --color-accent: var(--color-error);
 }
+
+.accent-gray.accent-gray {
+  --color-accent: var(--color-gray);
+}
