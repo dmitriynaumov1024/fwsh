@@ -2,6 +2,7 @@ namespace Fwsh.Database;
 
 using System;
 using Microsoft.EntityFrameworkCore;
+using Fwsh.Utils;
 
 public class FwshDataContextInMemory : FwshDataContext
 {
@@ -11,6 +12,6 @@ public class FwshDataContextInMemory : FwshDataContext
     {
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseSnakeCaseNamingConvention();
-        optionsBuilder.UseInMemoryDatabase("fwsh");
+        optionsBuilder.UseInMemoryDatabase(env.get("DB_DATABASE"));
     }
 }
