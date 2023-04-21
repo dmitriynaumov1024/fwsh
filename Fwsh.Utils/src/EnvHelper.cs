@@ -11,9 +11,9 @@ public static class env
     {
         try {
             return File.ReadLines(".env")
-                .Select(line => line.Split('='))
+                .Select(line => line.Split('#')[0].Split('='))
                 .Where(words => words.Length == 2)
-                .ToDictionary(kvpair => kvpair[0], kvpair => kvpair[1]);
+                .ToDictionary(kvpair => kvpair[0].Trim(), kvpair => kvpair[1].Trim());
         }
         catch (Exception) {
             return new Dictionary<string, string>();
@@ -29,5 +29,5 @@ public static class env
         return result ?? Environment.GetEnvironmentVariable(key);
     }
 
-    public static bool isDevelopment = get("ENVIRONMENT_TYPE").ToLower() == "development";
+    public static bool isDevelopment = get("ENVIRONMENT_TYPE")?.ToLower() == "development";
 }
