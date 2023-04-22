@@ -34,6 +34,14 @@ export default {
         somethingWrong: "Виникла проблема",
         seeConsole: "Дивіться детальний опис проблеми в консолі", 
     },
+    noData: {
+        title: "Тут нічого немає",
+        description: "На жаль, нам не вдалося завантажити дані, або ця сторінка не існує."
+    },
+    noRoute: {
+        title: "Помилка 404",
+        description: "Скоріш за все, Ви намагалися переглянути неіснуючу сторінку"
+    },
     header: {
         nav: {
             catalog: "Каталог",
@@ -43,7 +51,7 @@ export default {
         }
     },
     index: {
-        welcome: "Панель менеджера - головна сторінка",
+        title: "Панель менеджера - головна сторінка",
     },
     login: {
         welcomeBack: "Ласкаво просимо!",
@@ -177,5 +185,9 @@ export default {
     formatDate (date) {
         date = new Date(date)
         return dateFormat.format(date)
+    },
+    formatDateTime (date) {
+        date = new Date(date)
+        return dateFormat.format(date) + " " + date.toLocaleTimeString(this.key)
     }
 }

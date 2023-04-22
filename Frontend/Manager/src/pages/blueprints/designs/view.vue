@@ -11,7 +11,7 @@
 </template>
 <div v-else class="width-container text-center pad-1">
     <div v-if="data.notFound">
-        <h2 class="margin-bottom-1">Error 404</h2>
+        <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
         <p>{{locale.design.notFound}}</p>
     </div>
     <div v-else-if="data.error" class="width-container text-center pad-1">

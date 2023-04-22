@@ -34,6 +34,14 @@ export default {
         somethingWrong: "Something went wrong",
         seeConsole: "See console for problem details", 
     },
+    noData: {
+        title: "Nothing here",
+        description: "Sorry, data can not be loaded, or this page doesn't exist yet."
+    },
+    noRoute: {
+        title: "Error 404",
+        description: "Seems like you tried to navigate to non-existent page "
+    },
     header: {
         nav: {
             catalog: "Catalog",
@@ -43,7 +51,7 @@ export default {
         }
     },
     index: {
-        welcome: "Manager's panel - Main page",
+        title: "Manager's panel - Main page",
     },
     login: {
         welcomeBack: "Welcome back!",
@@ -182,5 +190,9 @@ export default {
     formatDate (date) {
         date = new Date(date)
         return dateFormat.format(date)
+    },
+    formatDateTime (date) {
+        date = new Date(date)
+        return dateFormat.format(date) + " " + date.toLocaleTimeString(this.key)
     }
 }

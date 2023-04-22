@@ -19,8 +19,8 @@
     </template>
 </Pagination>
 <div v-else class="width-container card pad-1">
-    <h2 class="margin-bottom-1">Nothing here</h2>
-    <p>Sorry, data can not be loaded, or this page doesn't exist yet.</p>
+    <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
+    <p>{{locale.noData.description}}</p>
 </div>
 </template>
 
