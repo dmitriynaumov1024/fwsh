@@ -1,8 +1,26 @@
 <template>
 <div class="width-container card pad-1 margin-bottom-1">
-    <h2 class="margin-bottom-1">
-        {{locale.productionOrder.single}} #{{order.id}}
-    </h2>
+    <div class="flex-stripe margin-bottom-1">
+        <h2>{{locale.productionOrder.single}} #{{order.id}}</h2>
+        <span class="flex-grow"></span>
+        <NotificationButton class="icon-2"
+            :active="showNotifications" 
+            :unread="!!(order.notifications?.find(n => !n.isRead))" 
+            @click="toggleNotifications" />
+    </div>
+    <template v-if="showNotifications">
+    <h3 class="pad-05">{{locale.order.notifications}}</h3>
+    <div v-for="notification of order.notifications" class="pad-05 border-bottom margin-bottom-1">
+        <p :class="{ 'text-gray':notification.isRead }">
+            [ {{locale.formatDateTime(notification.createdAt)}} ] : {{notification.text}}
+        </p>
+    </div>
+    <div v-if="!(order.notifications?.length)" class="pad-1">
+        <p class="text-center margin-bottom-1"><b>{{locale.noDataYet.title}}</b></p>
+        <p class="text-center">{{locale.noDataYet.description}}</p>
+    </div>
+    </template>
+    <template v-else>
     <h3 class="pad-05">{{locale.productionOrder.design}}</h3>
     <table class="kvtable stripes margin-bottom-1">
         <tr>
@@ -41,18 +59,14 @@
             <td>{{locale.formatDateTime(order[actionAt])}}</td>
         </tr>
         </template>
-        <!-- <template v-for="(value, key) in order">
-            <tr v-if="typeof value != 'object'">
-                <td>{{ locale.productionOrder.key }}</td>
-                <td>{{ value }}</td>
-            </tr>
-        </template> -->
     </table>
+    </template>
 </div>
 </template>
 
 <script setup>
-import { inject } from "vue"
+import { ref, inject } from "vue"
+import NotificationButton from "@/comp/ctrl/Notification.vue"
 
 const locale = inject("locale")
 
@@ -63,5 +77,11 @@ const props = defineProps({
 const emit = defineEmits([
     "click-design"
 ])
+
+const showNotifications = ref(false)
+
+function toggleNotifications() {
+    showNotifications.value = !(showNotifications.value)
+}
 
 </script>

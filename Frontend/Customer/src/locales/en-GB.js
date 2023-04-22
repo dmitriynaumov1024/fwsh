@@ -30,6 +30,18 @@ export default {
         seeConsole: "See console for problem details", 
         loading: "Loading! Please wait...",
     },
+    noDataYet: {
+        title: "Nothing here yet",
+        description: "Don't worry, it can be at the very beginning!"
+    },
+    noData: {
+        title: "Nothing here",
+        description: "Sorry, data can not be loaded, or this page doesn't exist yet."
+    },
+    noRoute: {
+        title: "Error 404",
+        description: "Seems like you tried to navigate to non-existent page "
+    },
     header: {
         nav: {
             catalog: "Catalog",
