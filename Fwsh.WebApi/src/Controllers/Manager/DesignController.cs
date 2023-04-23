@@ -211,7 +211,7 @@ public class DesignController : FwshController
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return ServerError("Something went wrong while trying to attach photos");
+            return ServerError(new FailResult("Something went wrong while trying to attach photos"));
         }
     }
 

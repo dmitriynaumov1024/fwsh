@@ -198,7 +198,9 @@ public class RepairOrderController : FwshController
 
         var requestPhotos = this.Request.Form.Files.ToList();
 
-        int count = 0, pos = order.Photos.Max(p => p.Position) + 1;
+        int count = 0, 
+            pos = order.Photos.Count > 0 ? Max(p => p.Position) + 1 : 1;
+
         foreach (var photo in requestPhotos) {
             if (order.Photos.Count >= MAX_PHOTOS) break;
             string ext = photo.FileName.Split('.').LastOrDefault();
@@ -220,7 +222,7 @@ public class RepairOrderController : FwshController
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return ServerError("Something went wrong while trying to attach photos to Repair Order");
+            return ServerError(new FailResult("Something went wrong while trying to attach photos to Repair Order"));
         }
     }
 
