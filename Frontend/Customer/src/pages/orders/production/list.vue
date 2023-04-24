@@ -15,6 +15,10 @@
         </h2>
     </template>
 </Pagination>
+<div v-else class="width-container card pad-1">
+    <h2 class="margin-bottom-1">{{locale.noDataYet.title}}</h2>
+    <p>{{locale.noDataYet.description}}</p>
+</div>
 </template>
 
 <script setup>

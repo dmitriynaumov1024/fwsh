@@ -18,9 +18,9 @@
         </h2>
     </template>
 </Pagination>
-<div v-else class="width-container card pad-1 margin-bottom-1">
-    <h2>Something went wrong.</h2>
-    <p>{{data.message}}</p>
+<div v-else class="width-container card pad-1">
+    <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
+    <p>{{locale.noData.description}}</p>
 </div>
 </template>
 

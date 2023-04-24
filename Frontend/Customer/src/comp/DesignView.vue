@@ -2,12 +2,12 @@
 <div class="width-container card pad-1 margin-bottom-2">
     <h2 class="margin-bottom-1">{{design.displayName}}</h2>
     <ImageGallery class="margin-bottom-2">
-        <img v-for="url of design.photoUrls" :src="resolvePhotoUrl(url)">
+        <img v-for="url of design.photoUrls" :src="cdnResolve(url)">
     </ImageGallery>
     <table class="kvtable stripes margin-bottom-2">
         <tr>
             <td>{{locale.design.type}}</td>
-            <td>{{locale.furnitureTypes[design.type]}} [ {{design.type}} ]</td>
+            <td>{{locale.furnitureTypes[design.type]}} ({{design.type}})</td>
         </tr>
         <tr>
             <td>{{locale.design.isTransformable}}</td>
@@ -31,7 +31,7 @@
         </tr>
     </table>
     <div class="flex-stripe flex-pad-1">
-        <button class="button button-primary button-block pad-1" @click="()=>emit('click-edit')">
+        <button class="button button-primary button-block pad-1" @click="()=>emit('click-order')">
             {{locale.action.makeOrder}}
         </button>
     </div>
@@ -39,6 +39,7 @@
 </template>
 
 <script setup>
+import { cdnResolve } from "@common/utils" 
 import { inject } from "vue"
 import ImageGallery from "@/comp/ctrl/ImageGallery.vue"
 
@@ -49,12 +50,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-    "click-edit",
-    "click-delete"
+    "click-order"
 ])
-
-function resolvePhotoUrl(url) {
-    return import.meta.env.VITE_CDN_BASEURL + "/files/" + url
-}
 
 </script>

@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td>{{locale.design.type}}</td>
-            <td>{{locale.furnitureTypes[order.design.type]}} [ {{order.design.type}} ]</td>
+            <td>{{locale.furnitureTypes[order.design.type]}} ({{order.design.type}})</td>
         </tr>
         <tr>
             <td><button class="button link" @click="()=> emit('click-design')">{{locale.action.details}}</button></td>

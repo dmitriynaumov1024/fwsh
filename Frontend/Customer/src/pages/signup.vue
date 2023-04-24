@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { arrayToDict } from "@common"
+import { arrayToDict } from "@common/utils"
 import { useRouter } from "vue-router"
 import { reactive, inject, computed, onMounted } from "vue"
 import SignupView from "@/comp/SignupView.vue"

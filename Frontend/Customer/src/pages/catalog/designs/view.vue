@@ -6,8 +6,7 @@
         { href: '/catalog/designs/list?page=0', text: locale.design.plural }
         ]" :last="data.design.displayName" />
     <DesignView :design="data.design"
-        @click-edit="editDesign"
-        @click-delete="deleteDesign" />
+        @click-order="makeOrder" />
 </template>
 <div v-else class="width-container text-center pad-1">
     <div v-if="data.notFound">
@@ -58,4 +57,9 @@ function getDesign () {
         
     })
 }
+
+function makeOrder() {
+    console.log("Should make order")
+}
+
 </script>
