@@ -20,11 +20,6 @@
   }
 }
 
-.photo-gallery img {
-  display: block;
-  max-width: 100%;
-}
-
 .photo-gallery>* {
   width: 100%;
   height: 30rem;
@@ -34,4 +29,16 @@
 
 .photo-gallery>.visible {
   display: block;
+}
+
+img.thumbnail {
+  width: 100%;
+}
+
+@media screen and (min-width: 760px) {
+  img.thumbnail {
+    width: 15rem;
+    height: 10rem;
+    object-fit: cover;
+  }
 }
