@@ -12,7 +12,7 @@
         <main>
             <div v-for="type of designTypes" class="fancy-radio">
                 <input type="radio" :id="'radio-design-type-'+type" v-model="design.type" :value="type" />
-                <label :for="'radio-design-type-'+type">{{type}}</label>
+                <label :for="'radio-design-type-'+type">locale.furnitureTypes[{{type}}] ({{type}})</label>
             </div>
         </main>
     </div>
@@ -48,7 +48,7 @@
         <header>{{locale.photo.plural}}</header>
         <main>
             <div class="preview-photo-gallery">
-                <div v-for="url of design.photoUrls"><img :src="url"></div>
+                <div v-for="url of design.photoUrls"><img :src="cdnResolve(url)"></div>
                 <div v-for="photo of photos"><img :src="URL.createObjectURL(photo)" @load="URL.revokeObjectURL(photo)"></div>
             </div>
             <div>
@@ -72,6 +72,7 @@
 </template>
 
 <script setup>
+import { cdnResolve } from "@common/utils"
 import { ref, reactive, computed, inject } from "vue"
 import Checkbox from "@/comp/ctrl/Checkbox.vue"
 

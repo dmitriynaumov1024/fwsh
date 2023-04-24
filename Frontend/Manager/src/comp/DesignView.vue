@@ -3,12 +3,16 @@
     <h2 class="margin-bottom-1">{{design.displayName}}</h2>
     <table class="kvtable stripes margin-bottom-2">
         <tr>
+            <td>{{locale.common.id}}</td>
+            <td>#{{design.id}}</td>
+        </tr>
+        <tr>
             <td>{{locale.design.displayName}}</td>
             <td>{{design.displayName}}</td>
         </tr>
         <tr>
             <td>{{locale.design.type}}</td>
-            <td>{{design.type}}</td>
+            <td>{{locale.furnitureTypes[design.type]}} ({{design.type}})</td>
         </tr>
         <tr>
             <td>{{locale.design.isVisible}}</td>
@@ -39,7 +43,7 @@
         <header>{{locale.photo.plural}}</header>
         <main>
             <ImageGallery>
-                <img v-for="url of design.photoUrls" :src="resolvePhotoUrl(url)">
+                <img v-for="url of design.photoUrls" :src="cdnResolve(url)">
             </ImageGallery>
         </main>
     </div>
@@ -52,6 +56,7 @@
 </template>
 
 <script setup>
+import { cdnResolve } from "@common/utils"
 import { inject } from "vue"
 import ImageGallery from "@/comp/ctrl/ImageGallery.vue"
 
@@ -65,9 +70,5 @@ const emit = defineEmits([
     "click-edit",
     "click-delete"
 ])
-
-function resolvePhotoUrl(url) {
-    return "http://192.168.0.107:8000/files/" + url
-}
 
 </script>

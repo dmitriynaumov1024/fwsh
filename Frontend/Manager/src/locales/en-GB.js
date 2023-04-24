@@ -181,6 +181,14 @@ export default {
         height: "Height",
         createdAt: "Created at"
     },
+    furnitureTypes: {
+        unknown: "Unknown",
+        ottoman: "Ottoman",
+        sofa: "Sofa",
+        corner: "Corner",
+        armchair: "Armchair",
+        pouffe: "Pouffe"
+    },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)
         if (selector instanceof Function) 

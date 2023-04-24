@@ -176,6 +176,14 @@ export default {
         height: "Висота",
         createdAt: "Created at"
     },
+    furnitureTypes: {
+        unknown: "Невідомо",
+        ottoman: "Тахта",
+        sofa: "Диван",
+        corner: "Куток",
+        armchair: "Крісло",
+        pouffe: "Пуф"
+    },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)
         if (selector instanceof Function) 

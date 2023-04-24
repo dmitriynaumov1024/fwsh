@@ -24,7 +24,7 @@
 <script setup>
 import { useRouter } from "vue-router"
 import { ref, reactive, inject } from "vue"
-import { arrayToDict } from "@common"
+import { arrayToDict } from "@common/utils"
 import Bread from "@/layout/Bread.vue"
 import DesignEdit from "@/comp/DesignEdit.vue"
 
