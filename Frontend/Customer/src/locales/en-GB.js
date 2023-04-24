@@ -18,7 +18,8 @@ export default {
         signup: "Sign up",
         login: "Log in",
         logout: "Log out",
-        details: "Details"
+        details: "Details",
+        makeOrder: "Make order"
     },
     common: {
         catalog: "Catalog",
@@ -133,10 +134,19 @@ export default {
         displayName: "Name",
         type: "Type",
         price: "Price",
+        description: "Description",
         isTransformable: "Transformable",
         dimCompact: "Compact dimensions (WxLxH)",
         dimExpanded: "Expanded dimensions (WxLxH)",
         createdAt: "Created at"
+    },
+    furnitureTypes: {
+        unknown: "Unknown",
+        ottoman: "Ottoman",
+        sofa: "Sofa",
+        corner: "Corner",
+        armchair: "Armchair",
+        pouffe: "Pouffe"
     },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)

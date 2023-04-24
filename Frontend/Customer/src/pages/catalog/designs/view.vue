@@ -1,16 +1,32 @@
 <template>
-<DesignView v-if="data.design" :design="data.design" />
-<div v-else-if="data.error" class="width-container text-center pad-1">
-    <p>{{locale.common.somethingWrong}}. {{locale.common.seeConsole}}</p>
-</div>
+<template v-if="data.design">
+    <Bread :crumbs="[
+        { href: '/', text: 'fwsh' },
+        { href: '/catalog', text: locale.common.catalog },
+        { href: '/catalog/designs/list?page=0', text: locale.design.plural }
+        ]" :last="data.design.displayName" />
+    <DesignView :design="data.design"
+        @click-edit="editDesign"
+        @click-delete="deleteDesign" />
+</template>
 <div v-else class="width-container text-center pad-1">
-    <p>{{locale.common.loading}}</p>
+    <div v-if="data.notFound">
+        <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
+        <p>{{locale.design.notFound}}</p>
+    </div>
+    <div v-else-if="data.error" class="width-container text-center pad-1">
+        <p>{{locale.common.somethingWrong}}. {{locale.common.seeConsole}}</p>
+    </div>
+    <div v-else class="width-container text-center pad-1">
+        <p>{{locale.common.loading}}</p>
+    </div>
 </div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router" 
 import { reactive, inject, watch } from "vue" 
+import Bread from "@/layout/Bread.vue"
 import DesignView from "@/comp/DesignView.vue"
 
 const router = useRouter()

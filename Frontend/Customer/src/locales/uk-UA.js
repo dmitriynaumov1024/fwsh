@@ -18,7 +18,8 @@ export default {
         signup: "Зареєструватися",
         login: "Увійти",
         logout: "Вийти",
-        details: "Докладніше"
+        details: "Докладніше",
+        makeOrder: "Замовити"
     },
     common: {
         catalog: "Каталог",
@@ -133,10 +134,19 @@ export default {
         displayName: "Найменування",
         type: "Тип",
         price: "Базова ціна",
+        description: "Опис",
         isTransformable: "Трансформується",
         dimCompact: "Розміри в складеному стані (ДxШxВ)",
         dimExpanded: "Розміри в розгорнутому стані (ДxШxВ)",
         createdAt: "Created at"
+    },
+    furnitureTypes: {
+        unknown: "Невідомо",
+        ottoman: "Тахта",
+        sofa: "Диван",
+        corner: "Куток",
+        armchair: "Крісло",
+        pouffe: "Пуф"
     },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)
