@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "author": "Dmitriy Naumov",
   "scripts": {
-    "dev": "vite --port 3000 --host",
-    "build": "vite build",
-    "preview": "vite preview --port 4173"
+    "dev": "vite --port 5000 --host",
+    "build": "vite build"
   },
   "dependencies": {
-    "vue": "^3.2.38",
-    "vue-router": "^4.1.6",
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",
