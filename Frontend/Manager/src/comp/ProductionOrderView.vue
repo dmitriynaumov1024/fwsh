@@ -4,17 +4,14 @@
         <h2>{{locale.productionOrder.single}} #{{order.id}}</h2>
         <span class="flex-grow"></span>
         <NotificationButton class="icon-2"
-            :active="showNotifications" 
-            :unread="!!(order.notifications?.find(n => !n.isRead))" 
+            :active="showNotifications"
             @click="toggleNotifications" />
     </div>
     <template v-if="showNotifications">
-    <h3 class="pad-05">{{locale.order.notifications}}</h3>
+    <h3 class="pad-05">{{locale.notification.plural}}</h3>
     <div v-if="order.notifications?.length" class="notification-list">
         <div v-for="notification of order.notifications" 
-            class="pad-05 notification margin-bottom-1" 
-            :read="notification.isRead"
-            @click="()=> emit('click-read', notification)">
+            class="pad-05 notification margin-bottom-1" :read="notification.isRead">
             <p>{{notification.text}}</p>
             <p class="text-gray text-right text-small">{{locale.formatDateTime(notification.createdAt)}}</p>
         </div>
@@ -23,30 +20,30 @@
         <p class="text-center margin-bottom-1"><b>{{locale.noDataYet.title}}</b></p>
         <p class="text-center">{{locale.noDataYet.description}}</p>
     </div>
-    <div v-if="!!(order.notifications?.find(n => !n.isRead))">
-        <button class="button button-secondary button-block pad-05"
-            @click="()=> emit('click-read-all')">
-            {{locale.notification.readAll}}
-        </button>
+    <div class="fancy-textarea notification-input">
+        <label>{{locale.notification.new}}</label>
+        <textarea v-model="order.newNotificationText"></textarea>
     </div>
+    <button class="button button-primary button-block pad-05"
+        :disabled="!(order.newNotificationText?.length > 6)"
+        @click="()=> emit('click-notify')">
+        {{locale.action.send}}
+    </button>
     </template>
     <template v-else>
-    <h3 class="pad-05">{{locale.productionOrder.design}}</h3>
     <table class="kvtable stripes margin-bottom-1">
         <tr>
-            <td>{{locale.design.displayName}}</td>
-            <td>{{order.design.displayName}}</td>
+            <td>{{locale.design.single}}</td>
+            <td><button class="button link" @click="()=> emit('click-design')">{{order.design.displayName}}</button></td>
         </tr>
         <tr>
-            <td>{{locale.design.type}}</td>
-            <td>{{locale.furnitureTypes[order.design.type]}} ({{order.design.type}})</td>
+            <td>{{locale.customer.single}}</td>
+            <td>
+                <p class="margin-bottom-05">{{order.customer.name}} {{order.customer.surname}}</p>
+                <p v-if="order.customer.orgName" class="text-gray margin-bottom-05">{{order.customer.orgName}}</p>
+                <p class="text-gray margin-bottom-05">{{order.customer.phone}}</p>
+            </td>
         </tr>
-        <tr>
-            <td><button class="button link" @click="()=> emit('click-design')">{{locale.action.details}}</button></td>
-        </tr>
-    </table>
-    <h3 class="pad-05">{{locale.productionOrder.details}}</h3>
-    <table class="kvtable stripes margin-bottom-1">
         <tr>
             <td>{{locale.productionOrder.quantity}}</td>
             <td>{{order.quantity}}</td>
@@ -86,8 +83,7 @@ const props = defineProps({
 
 const emit = defineEmits([
     "click-design",
-    "click-read",
-    "click-read-all"
+    "click-notify"
 ])
 
 const showNotifications = ref(false)

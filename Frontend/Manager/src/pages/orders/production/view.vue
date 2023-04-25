@@ -2,11 +2,11 @@
 <Bread v-if="data.order?.id" :crumbs="[
     { href: '/', text: 'fwsh' },
     { href: '/orders/production/list?page=0', text: locale.productionOrder.plural }
-    ]" :last="locale.order.single+' #'+data.order?.id" />
-<ProductionOrderView v-if="data.order?.id" :order="data.order" 
+    ]" :last="'#'+data.order?.id" />
+<ProductionOrderView v-if="data.order?.id" 
+    :order="data.order" 
     @click-design="goToDesign" 
-    @click-read="readNotification"
-    @click-read-all="readAllNotifications" />
+    @click-notify="notifyOrder" />
 <div v-else-if="data.error" class="width-container text-center pad-1">
     <p>{{locale.common.somethingWrong}}. {{locale.common.seeConsole}}</p>
 </div>
@@ -38,13 +38,13 @@ watch(() => props.id, getOrder, { immediate: true })
 
 function goToDesign () {
     setTimeout(() => {
-        router.push(`/catalog/designs/view/${data.order.design.id}`)
+        router.push(`/blueprints/designs/view/${data.order.design.id}`)
     }, 200)
 }
 
 function getOrder () {
     axios.get({
-        url: `/customer/orders/production/view/${props.id}`
+        url: `/manager/orders/production/view/${props.id}`
     })
     .then(({ status, data: response }) => {
         if (response.id) {
@@ -56,28 +56,25 @@ function getOrder () {
     })
 }
 
-function readNotification (notification) {
-    axios.post({
-        url: "/customer/orders/production/read-notifications",
-        params: { order: props.id, id: notification.id }
-    })
-    .then(({ status, data: response }) => {
-        if (response.success) {
-            notification.isRead = true
-        }
-    })
-}
+let sending = false
 
-function readAllNotifications () {
+function notifyOrder () {
+    if (sending) return
+    else sending = true
+    let message = data.order.newNotificationText
     axios.post({
-        url: "/customer/orders/production/read-notifications",
-        params: { order: props.id, last: 999999999 }
+        url: `/manager/orders/production/notify/${props.id}`,
+        data: message
     })
     .then(({ status, data: response }) => {
         if (response.success) {
-            data.order.notifications.forEach(n => {
-                n.isRead = true
+            data.order.notifications.push({
+                createdAt: new Date().toISOString(),
+                text: message,
+                isRead: false
             })
+            sending = false
+            data.order.newNotificationText = ""
         }
     })
 }

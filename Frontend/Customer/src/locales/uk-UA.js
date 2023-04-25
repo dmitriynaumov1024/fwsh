@@ -33,7 +33,7 @@ export default {
     },
     noDataYet: {
         title: "Тут ще нічого немає",
-        description: "Але нічого страшного, на початку таке буває."
+        description: "Але нічого страшного, на початку таке трапляється."
     },
     noData: {
         title: "Тут нічого немає",
@@ -92,6 +92,12 @@ export default {
         impossible: "Неможливо",
         rejected: "Відхилено",
         receivedpaid: "Отримано та оплачено"
+    },
+    notification: {
+        single: "Сповіщення",
+        plural: "Сповіщення",
+        new: "Нове сповіщення",
+        readAll: "Відмітити все як прочитане"
     },
     order: {
         single: "Замовлення",
@@ -154,12 +160,16 @@ export default {
             badFields = badFields.map(key => selector(this)[key]).filter(key => key != undefined)
         return "Будь ласка, перевірте правильність введення таких полів: " + badFields.map(field => field.toLowerCase()).join(", ") + "."
     },
-    formatDate (date) {
-        date = new Date(date)
+    formatDate (dateTimeString) {
+        let date = new Date(dateTimeString)
         return dateFormat.format(date)
     },
-    formatDateTime (date) {
-        date = new Date(date)
+    formatTime (dateTimeString) {
+        let date = new Date(dateTimeString)
+        return date.toLocaleTimeString(this.key)
+    },
+    formatDateTime (dateTimeString) {
+        let date = new Date(dateTimeString)
         return dateFormat.format(date) + " " + date.toLocaleTimeString(this.key)
     }
 }

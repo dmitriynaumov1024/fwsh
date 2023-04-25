@@ -33,7 +33,7 @@ export default {
     },
     noDataYet: {
         title: "Nothing here yet",
-        description: "Don't worry, it can be at the very beginning!"
+        description: "Don't worry, this happens at the very beginning!"
     },
     noData: {
         title: "Nothing here",
@@ -92,6 +92,12 @@ export default {
         impossible: "Impossible",
         rejected: "Rejected",
         receivedpaid: "Received and paid"
+    },
+    notification: {
+        single: "Notification",
+        plural: "Notifications",
+        new: "New notification",
+        readAll: "Mark all as read"
     },
     order: {
         single: "Order",
@@ -154,12 +160,16 @@ export default {
             badFields = badFields.map(key => selector(this)[key]).filter(key => key != undefined)
         return "Please check " + badFields.map(field => field.toLowerCase()).join(", ") + " once again."
     },
-    formatDate (date) {
-        date = new Date(date)
+    formatDate (dateTimeString) {
+        let date = new Date(dateTimeString)
         return dateFormat.format(date)
     },
-    formatDateTime (date) {
-        date = new Date(date)
+    formatTime (dateTimeString) {
+        let date = new Date(dateTimeString)
+        return date.toLocaleTimeString(this.key)
+    },
+    formatDateTime (dateTimeString) {
+        let date = new Date(dateTimeString)
         return dateFormat.format(date) + " " + date.toLocaleTimeString(this.key)
     }
 }

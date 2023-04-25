@@ -10,6 +10,7 @@ export default {
         [false]: "Ні"
     },
     action: {
+        send: "Надіслати",
         submit: "Готово",
         create: "Створити",
         addPhotos: "Додати фото",
@@ -33,6 +34,10 @@ export default {
         pleaseTryAgain: "Будь ласка, спробуйте ще раз",
         somethingWrong: "Виникла проблема",
         seeConsole: "Дивіться детальний опис проблеми в консолі", 
+    },
+    noDataYet: {
+        title: "Тут ще нічого немає",
+        description: "Але це нормально, на початку таке трапляється!"
     },
     noData: {
         title: "Тут нічого немає",
@@ -125,6 +130,11 @@ export default {
         rejected: "Відхилено",
         receivedpaid: "Отримано та оплачено"
     },
+    notification: {
+        single: "Сповіщення",
+        plural: "Сповіщення",
+        new: "Нове сповіщення"
+    },
     order: {
         single: "Замовлення",
         plural: "Замовлення",
@@ -190,12 +200,16 @@ export default {
             badFields = badFields.map(key => selector(this)[key]).filter(key => key != undefined)
         return "Будь ласка, перевірте правильність введення таких полів: " + badFields.map(field => field.toLowerCase()).join(", ") + "."
     },
-    formatDate (date) {
-        date = new Date(date)
+    formatDate (dateTimeString) {
+        let date = new Date(dateTimeString)
         return dateFormat.format(date)
     },
-    formatDateTime (date) {
-        date = new Date(date)
+    formatTime (dateTimeString) {
+        let date = new Date(dateTimeString)
+        return date.toLocaleTimeString(this.key)
+    },
+    formatDateTime (dateTimeString) {
+        let date = new Date(dateTimeString)
         return dateFormat.format(date) + " " + date.toLocaleTimeString(this.key)
     }
 }

@@ -12,7 +12,7 @@
         <main>
             <div v-for="type of designTypes" class="fancy-radio">
                 <input type="radio" :id="'radio-design-type-'+type" v-model="design.type" :value="type" />
-                <label :for="'radio-design-type-'+type">locale.furnitureTypes[{{type}}] ({{type}})</label>
+                <label :for="'radio-design-type-'+type">{{locale.furnitureTypes[type]}} ({{type}})</label>
             </div>
         </main>
     </div>

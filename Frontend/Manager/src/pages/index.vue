@@ -7,6 +7,9 @@
     <router-link to="/people" class="card pad-1 margin-bottom-1">
         <h3 class="text-center">{{locale.person.plural}}</h3>
     </router-link>
+    <router-link to="/orders" class="card pad-1 margin-bottom-1">
+        <h3 class="text-center">{{locale.order.plural}}</h3>
+    </router-link>
     <p class="margin-bottom-1"><b>Buttons</b></p>
     <div class="flex-stripe flex-spacing-1 margin-bottom-1">
         <button class="button button-primary">Primary</button>

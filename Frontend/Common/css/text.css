@@ -28,15 +28,15 @@ h1, h2, h3, h4, h5, h6 {
   text-align: right;
 }
 
-.text-huge, .text-175, .text-as-h1 {
+.text-huge, .text-175, .text-h1 {
   font-size: 1.75rem;
 }
 
-.text-large, .text-150, .text-as-h2 {
+.text-large, .text-150, .text-h2 {
   font-size: 1.5rem;
 }
 
-.text-bigger, .text-125, .text-as-h3 {
+.text-bigger, .text-125, .text-h3 {
   font-size: 1.25rem;
 }
 
@@ -46,6 +46,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .text-tiny, .text-05 {
   font-size: 0.5rem;
+}
+
+.text-thin.text-thin {
+  font-weight: normal;
 }
 
 .text-info {

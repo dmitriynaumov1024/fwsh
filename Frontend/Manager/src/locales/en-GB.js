@@ -10,6 +10,7 @@ export default {
         [false]: "No"
     },
     action: {
+        send: "Send",
         submit: "Submit",
         create: "Create",
         addPhotos: "Add photos",
@@ -33,6 +34,10 @@ export default {
         pleaseTryAgain: "Please try again",
         somethingWrong: "Something went wrong",
         seeConsole: "See console for problem details", 
+    },
+    noDataYet: {
+        title: "Nothing here yet",
+        description: "Don't worry, this happens at the very beginning!"
     },
     noData: {
         title: "Nothing here",
@@ -125,6 +130,11 @@ export default {
         rejected: "Rejected",
         receivedpaid: "Received and paid"
     },
+    notification: {
+        single: "Notification",
+        plural: "Notifications",
+        new: "New notification"
+    },
     order: {
         single: "Order",
         plural: "Orders",
@@ -142,6 +152,9 @@ export default {
         quantity: "Quantity",
         pricePerOne: "Price per one",
         priceTotal: "Price total",
+        design: "Design",
+        fabric: "Fabric",
+        decorMaterial: "Decor. material"
     },
     repairOrder: {
         single: "Repair order",
@@ -195,12 +208,16 @@ export default {
             badFields = badFields.map(key => selector(this)[key]).filter(key => key != undefined)
         return "Please check " + badFields.map(field => field.toLowerCase()).join(", ") + " once again."
     },
-    formatDate (date) {
-        date = new Date(date)
+    formatDate (dateTimeString) {
+        let date = new Date(dateTimeString)
         return dateFormat.format(date)
     },
-    formatDateTime (date) {
-        date = new Date(date)
+    formatTime (dateTimeString) {
+        let date = new Date(dateTimeString)
+        return date.toLocaleTimeString(this.key)
+    },
+    formatDateTime (dateTimeString) {
+        let date = new Date(dateTimeString)
         return dateFormat.format(date) + " " + date.toLocaleTimeString(this.key)
     }
 }

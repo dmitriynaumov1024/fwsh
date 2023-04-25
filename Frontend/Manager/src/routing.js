@@ -13,12 +13,15 @@ import customersList from "@/pages/people/customers/list.vue"
 import suppliersList from "@/pages/people/suppliers/list.vue"
 import workersList from "@/pages/people/workers/list.vue"
 
+import ordersIndex from "@/pages/orders/index.vue"
+import productionOrderList from "@/pages/orders/production/list.vue"
+import productionOrderView from "@/pages/orders/production/view.vue"
+
 // import catalog from "@/pages/catalog/index.vue"
 // import designList from "@/pages/catalog/designs/list.vue" 
 // import fabricList from "@/pages/catalog/fabrics/list.vue"
 // import productionOrderList from "@/pages/orders/production/list.vue"
 // import repairOrderList from "@/pages/orders/repair/list.vue"
-// import productionOrderView from "@/pages/orders/production/view.vue"
 
 import error404 from "@/pages/error404.vue" 
 
@@ -78,6 +81,20 @@ const routes = [
         component: suppliersList,
         props: ({ query }) => ({ page: Number(query.page) })
     },
+    {
+        path: "/orders",
+        component: ordersIndex
+    },
+    {
+        path: "/orders/production/:tab(list|archive)",
+        component: productionOrderList,
+        props: ({ params, query }) => ({ tab: params.tab, page: Number(query.page) })
+    },
+    {
+        path: "/orders/production/view/:id",
+        component: productionOrderView,
+        props: ({ params }) => ({ id: Number(params.id) })
+    },
     /*{
         path: "/catalog",
         component: catalog
@@ -91,16 +108,6 @@ const routes = [
         path: "/catalog/fabrics/list",
         component: fabricList,
         props: ({ query }) => ({ page: Number(query.page) })
-    },
-    {
-        path: "/orders/production/:tab(list|archive)",
-        component: productionOrderList,
-        props: ({ params, query }) => ({ tab: params.tab, page: Number(query.page) })
-    },
-    {
-        path: "/orders/production/view/:id",
-        component: productionOrderView,
-        props: ({ params }) => ({ id: Number(params.id) })
     },
     {
         path: "/orders/repair/:tab(list|archive)",

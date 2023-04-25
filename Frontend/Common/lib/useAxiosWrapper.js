@@ -26,8 +26,10 @@ function useAxiosWrapper (wrapperId, { baseUrl, cached }) {
                 }
                 let promise = this._get(options, extraOptions)
                 promise.then(response => {
-                    let timestamp = Date.now()
-                    this[$cache][requestId] = { timestamp, response }
+                    if (response.status == 200) { 
+                        let timestamp = Date.now()
+                        this[$cache][requestId] = { timestamp, response }
+                    }
                 })
                 return promise
             }

@@ -38,6 +38,26 @@
   margin-bottom: 0.5rem;
 }
 
+/* Notifications */
+
+.notification-list {
+  height: 40vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.notification {
+  border-bottom: 2px solid var(--color-back-3);
+  background-color: var(--color-back-2);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.notification[read="true"] {
+  background-color: transparent;
+  color: var(--color-gray);
+}
+
 /* More important things */
 
 .block {
