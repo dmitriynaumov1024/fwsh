@@ -199,7 +199,7 @@ public class RepairOrderController : FwshController
         var requestPhotos = this.Request.Form.Files.ToList();
 
         int count = 0, 
-            pos = order.Photos.Count > 0 ? Max(p => p.Position) + 1 : 1;
+            pos = order.Photos.Count > 0 ? order.Photos.Max(p => p.Position) + 1 : 1;
 
         foreach (var photo in requestPhotos) {
             if (order.Photos.Count >= MAX_PHOTOS) break;
