@@ -17,6 +17,12 @@ import ordersIndex from "@/pages/orders/index.vue"
 import productionOrderList from "@/pages/orders/production/list.vue"
 import productionOrderView from "@/pages/orders/production/view.vue"
 
+import resourcesIndex from "@/pages/resources/index.vue"
+import colorList from "@/pages/resources/colors/list.vue"
+import partList from "@/pages/resources/parts/list.vue"
+import materialList from "@/pages/resources/materials/list.vue"
+import fabricList from "@/pages/resources/fabrics/list.vue"
+
 // import catalog from "@/pages/catalog/index.vue"
 // import designList from "@/pages/catalog/designs/list.vue" 
 // import fabricList from "@/pages/catalog/fabrics/list.vue"
@@ -94,6 +100,30 @@ const routes = [
         path: "/orders/production/view/:id",
         component: productionOrderView,
         props: ({ params }) => ({ id: Number(params.id) })
+    },
+    {
+        path: "/resources",
+        component: resourcesIndex
+    },
+    {
+        path: "/resources/colors/list",
+        component: colorList,
+        props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/resources/parts/list",
+        component: partList,
+        props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/resources/materials/list",
+        component: materialList,
+        props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/resources/fabrics/list",
+        component: fabricList,
+        props: ({ query }) => ({ page: Number(query.page) })
     },
     /*{
         path: "/catalog",

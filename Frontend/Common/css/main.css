@@ -58,6 +58,17 @@
   color: var(--color-gray);
 }
 
+/* Color cards */
+.color-card-thumbnail {
+  width: 5rem;
+  height: 4rem;
+}
+
+.fabric-card-thumbnail {
+  width: 6rem;
+  height: 6rem;
+}
+
 /* More important things */
 
 .block {

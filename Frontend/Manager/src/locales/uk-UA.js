@@ -28,12 +28,15 @@ export default {
     },
     common: {
         id: "id",
+        other: "Інше",
         list: "Список",
         archive: "Архів",
         page: "Сторінка",
         pleaseTryAgain: "Будь ласка, спробуйте ще раз",
         somethingWrong: "Виникла проблема",
         seeConsole: "Дивіться детальний опис проблеми в консолі", 
+        createdAt: "Створено",
+        daysSinceCreated: "Днів з моменту створення"
     },
     noDataYet: {
         title: "Тут ще нічого немає",
@@ -159,6 +162,58 @@ export default {
         price: "Вартість робіт",
         prepayment: "Внесена передплата",
         description: "Опис замовлення"
+    },
+    measureUnits: {
+        unknown: "невідомо",
+        m: "м",
+        m2: "кв.м",
+        m3: "куб.м",
+        L: "л",
+        Kg: "кг",
+        g: "г"
+    },
+    resource: {
+        single: "Ресурс",
+        plural: "Ресурси",
+        name: "Найменування",
+        externalId: "Ідентифікатор",
+        description: "Опис",
+        price: "Ціна",
+        pricePer: "Ціна за 1",
+        pricePerUnit: "Ціна за одиницю",
+        measureUnit: "Одиниці виміру",
+        quantity: "Кількість",
+        inStock: "В наявності",
+        normalStock: "Нормальна кількість",
+        refillPeriodDays: "Період поповнення, днів",
+        lastCheckedAt: "Перевірено",
+        lastRefilledAt: "Поповнено",
+        createdAt: "Створено",
+    },
+    part: {
+        single: "Деталь",
+        plural: "Деталі",
+    },
+    material: {
+        single: "Матеріал",
+        plural: "Матеріали",
+    },
+    fabric: {
+        catalog: "Каталог тканин",
+        single: "Тканина",
+        plural: "Тканини"
+    },
+    fabricType: {
+        single: "Тип тканини",
+        plural: "Типи тканин",
+        name: "Найменування",
+        description: "Опис"
+    },
+    color: {
+        single: "Колір",
+        plural: "Кольори",
+        name: "Найменування",
+        rgbCode: "RGB-код"
     },
     blueprint: {
         single:"Прототип",

@@ -28,12 +28,15 @@ export default {
     },
     common: {
         id: "id",
+        other: "Other",
         list: "List",
         archive: "Archive",
         page: "Page",
         pleaseTryAgain: "Please try again",
         somethingWrong: "Something went wrong",
         seeConsole: "See console for problem details", 
+        createdAt: "Created at",
+        daysSinceCreated: "Days since created"
     },
     noDataYet: {
         title: "Nothing here yet",
@@ -163,10 +166,57 @@ export default {
         prepayment: "Prepayment",
         description: "Description"
     },
+    measureUnits: {
+        unknown: "unknown",
+        m: "m",
+        m2: "sq.m",
+        m3: "cub.m",
+        L: "L",
+        Kg: "Kg",
+        g: "g"
+    },
+    resource: {
+        single: "Resource",
+        plural: "Resources",
+        name: "Name",
+        externalId: "External id",
+        description: "Description",
+        price: "Price",
+        pricePer: "Price per",
+        pricePerUnit: "Price per unit",
+        measureUnit: "Measure unit",
+        quantity: "Quantity",
+        inStock: "In stock",
+        normalStock: "Normal stock",
+        refillPeriodDays: "Refill period, days",
+        lastCheckedAt: "Last checked at",
+        lastRefilledAt: "Last refilled at",
+        createdAt: "Created at",
+    },
+    part: {
+        single: "Part",
+        plural: "Parts",
+    },
+    material: {
+        single: "Material",
+        plural: "Materials",
+    },
     fabric: {
         catalog: "Fabric catalog",
         single: "Fabric",
         plural: "Fabrics"
+    },
+    fabricType: {
+        single: "Fabric type",
+        plural: "Fabric types",
+        name: "Name",
+        description: "Description"
+    },
+    color: {
+        single: "Color",
+        plural: "Colors",
+        name: "Name",
+        rgbCode: "RGB code"
     },
     blueprint: {
         single:"Blueprint",
