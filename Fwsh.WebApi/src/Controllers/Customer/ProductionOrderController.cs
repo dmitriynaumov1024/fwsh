@@ -43,7 +43,7 @@ public class ProductionOrderController : FwshController
             .Where(order => order.CustomerId == user.ConfirmedId)
             .Where(condition);
 
-        return Ok ( orders.OrderBy(order => order.Id).Paginate (
+        return Ok ( orders.OrderByDescending(order => order.Id).Paginate (
             (int)page, PAGESIZE, order => new ProductionOrderResult(order).Mini()
         ));
     }

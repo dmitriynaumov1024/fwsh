@@ -28,10 +28,7 @@ public class StoredFabricResult : StoredResourceResult<double, Fabric>, IResultB
             RefillPeriodDays = resource.RefillPeriodDays,
             LastRefilledAt = resource.LastRefilledAt,
             LastCheckedAt = resource.LastCheckedAt,
-            Item = new FabricResult() {
-                Name = resource.Item.Name,
-                PricePerUnit = resource.Item.PricePerUnit
-            }
+            Item = new FabricResult(resource.Item)
         };
     }
 
@@ -44,7 +41,6 @@ public class StoredFabricResult : StoredResourceResult<double, Fabric>, IResultB
     {
         var result = Mini();
         result.Supplier = new SupplierResult(resource.Supplier);
-        result.Item = new FabricResult(resource.Item);
 
         return result;
     }

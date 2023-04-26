@@ -27,10 +27,7 @@ public class StoredPartResult : StoredResourceResult<int, Part>, IResultBuilder<
             RefillPeriodDays = resource.RefillPeriodDays,
             LastRefilledAt = resource.LastRefilledAt,
             LastCheckedAt = resource.LastCheckedAt,
-            Item = new PartResult() {
-                Name = resource.Item.Name,
-                PricePerUnit = resource.Item.PricePerUnit
-            }
+            Item = new PartResult(resource.Item)
         };
     }
 
@@ -43,7 +40,6 @@ public class StoredPartResult : StoredResourceResult<int, Part>, IResultBuilder<
     {
         var result = Mini();
         result.Supplier = new SupplierResult(resource.Supplier);
-        result.Item = new PartResult(resource.Item);
 
         return result;
     }

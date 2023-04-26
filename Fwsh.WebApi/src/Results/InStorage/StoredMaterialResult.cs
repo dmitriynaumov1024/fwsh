@@ -28,10 +28,7 @@ public class StoredMaterialResult : StoredResourceResult<double, Material>, IRes
             RefillPeriodDays = resource.RefillPeriodDays,
             LastRefilledAt = resource.LastRefilledAt,
             LastCheckedAt = resource.LastCheckedAt,
-            Item = new MaterialResult() {
-                Name = resource.Item.Name,
-                PricePerUnit = resource.Item.PricePerUnit
-            }
+            Item = new MaterialResult(resource.Item)
         };
     }
 
@@ -44,7 +41,6 @@ public class StoredMaterialResult : StoredResourceResult<double, Material>, IRes
     {
         var result = Mini();
         result.Supplier = new SupplierResult(resource.Supplier);
-        result.Item = new MaterialResult(resource.Item);
         
         return result;
     }
