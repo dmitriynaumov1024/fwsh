@@ -74,15 +74,8 @@ where TResource : Resource
         return Ok ( ResultBuilder(existingResource).For(user) );
     }
 
-    [HttpPost("set-quantity/{id}")]
-    public IActionResult SetQuantity (int id, [FromBody] TCount quantity)
+    protected IActionResult OnSetQuantity (int id, TStored storedResource, TCount quantity)
     {
-        var storedResource = dbSet.Find(id);
-
-        if (storedResource == null) {
-            return NotFound ( new BadFieldResult("id") );
-        }
-
         try {
             storedResource.Quantity = quantity;
             storedResource.LastCheckedAt = DateTime.UtcNow;

@@ -52,4 +52,20 @@ public class MaterialController : ResourceController<double, Material, StoredMat
     {
         return base.OnUpdate(id, request);
     }
+
+    [HttpPost("set-quantity/{id}")]
+    public IActionResult SetQuantity (int id, [FromBody] double quantity)
+    {
+        var storedResource = dbSet.Find(id);
+
+        if (storedResource == null) {
+            return NotFound ( new BadFieldResult("id") );
+        }
+
+        if (quantity > storedResource.NormalStock * 3 || quantity < 0) {
+            return BadRequest(new BadFieldResult("quantity"));
+        } 
+
+        return base.OnSetQuantity(id, storedResource, quantity);
+    }
 }
