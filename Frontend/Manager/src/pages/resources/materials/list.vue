@@ -23,14 +23,22 @@
     <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
     <p>{{locale.noData.description}}</p>
 </div>
+<Modal v-if="data.selectedItem">
+    <QuantityEdit :resource="data.selectedItem"
+        :errorMessage="data.quantityErrorMessage"
+        @click-cancel="deselectItem"
+        @click-submit="updateQuantity" />
+</Modal>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
 import { reactive, inject, watch } from "vue"
 import Bread from "@/layout/Bread.vue"
+import Modal from "@/layout/Modal.vue"
 import Pagination from "@/layout/Pagination.vue"
 import MaterialView from "@/comp/mini/MaterialView.vue"
+import QuantityEdit from "@/comp/mini/QuantityEdit.vue"
 
 const router = useRouter()
 const axios = inject("axios")
@@ -43,7 +51,8 @@ const props = defineProps({
 const data = reactive({
     previous: null,
     next: null,
-    items: [ ]
+    items: [ ],
+    selectedItem: undefined
 })
 
 watch(() => props.page, getMaterials, { immediate: true })
@@ -59,7 +68,9 @@ function goToNext() {
 }
 
 function goToItem (item) {
+    if (data.selectedItem) return
     console.log("Should go to "+item.id)
+    data.selectedItem = item
 }
 
 function getMaterials() {
@@ -76,6 +87,33 @@ function getMaterials() {
     .catch(error => {
         console.error(error)
     })
+}
+
+function updateQuantity (newQuantity) {
+    let item = data.selectedItem
+    console.log(`Item #${item.id}: quantity: ${item.quantity} => ${newQuantity}`)
+    axios.post({
+        url: `/resources/materials/set-quantity/${item.id}`,
+        data: newQuantity
+    })
+    .then(({ status, data: response }) => {
+        if (response.success) {
+            item.inStock = Number.parseInt(newQuantity)
+            item.lastCheckedAt = new Date().toISOString()
+            data.quantityErrorMessage = undefined
+            data.selectedItem = undefined
+        }
+        else if (response.badFields) {
+            data.quantityErrorMessage = locale.value.formatBadFields(response.badFields, l => l.resource)
+        }
+        else {
+            data.quantityErrorMessage = locale.value.common.somethingWrong
+        }
+    })
+}
+
+function deselectItem () {
+    data.selectedItem = undefined
 }
 
 </script>

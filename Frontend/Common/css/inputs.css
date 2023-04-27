@@ -1,3 +1,7 @@
+input {
+  max-width: 100%;
+}
+
 .fancy-input, .fancy-textarea, .fancy-group {
   margin: 1rem auto;
 }
@@ -139,4 +143,26 @@ input[type="checkbox"]:checked+label {
 
 .notification-input>textarea {
   height: 8rem;
+}
+
+input.inline-input {
+  display: inline-block;
+  min-width: 5rem;
+  outline: none;
+  border-radius: 0;
+  border: 2px solid transparent;
+  border-bottom: var(--border);
+  line-height: inherit;
+  font-family: inherit;
+  color: inherit;
+  font-size: 1rem;
+  text-align: inherit;
+}
+
+input.inline-input:focus {
+  border-bottom-color: var(--color-accent); 
+}
+
+input.inline-input[invalid="true"] {
+  border-bottom-color: var(--color-bad); 
 }
