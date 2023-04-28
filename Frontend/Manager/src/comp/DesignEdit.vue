@@ -10,10 +10,9 @@
     <div class="fancy-group" :invalid="badFields?.type">
         <header>{{locale.design.type}}</header>
         <main>
-            <div v-for="type of designTypes" class="fancy-radio">
-                <input type="radio" :id="'radio-design-type-'+type" v-model="design.type" :value="type" />
-                <label :for="'radio-design-type-'+type">{{locale.furnitureTypes[type]}} ({{type}})</label>
-            </div>
+            <Radiobox v-for="type of designTypes" v-model="design.type" :value="type">
+                <span>{{locale.furnitureTypes[type]}} ({{type}})</span>
+            </Radiobox>
         </main>
     </div>
     <div class="margin-bottom-1">
@@ -75,6 +74,7 @@
 import { cdnResolve } from "@common/utils"
 import { ref, reactive, computed, inject } from "vue"
 import Checkbox from "@/comp/ctrl/Checkbox.vue"
+import Radiobox from "@/comp/ctrl/Radiobox.vue"
 
 const URL = window.URL
 

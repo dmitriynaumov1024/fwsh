@@ -62,12 +62,19 @@ input[type="checkbox"]:checked+label {
   color: inherit;
 }
 
-.fancy-checkbox-button {
+.fancy-checkbox-button,
+.fancy-radiobox-button {
   display: inline-block; 
   height: 1.5rem; 
-  border: 2px solid var(--color-back-2); 
+  border: 2px solid var(--color-back-3); 
   margin-right: 0.5rem;
   background-color: var(--color-back-0);
+  /*border-radius: 2px;*/
+}
+
+.fancy-checkbox-button[checked="true"],
+.fancy-radiobox-button[checked="true"] {
+  border: 3px solid var(--color-accent);
 }
 
 .fancy-group>header {

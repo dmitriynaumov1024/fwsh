@@ -19,6 +19,7 @@ import productionOrderView from "@/pages/orders/production/view.vue"
 
 import resourcesIndex from "@/pages/resources/index.vue"
 import colorList from "@/pages/resources/colors/list.vue"
+import fabricTypeList from "@/pages/resources/fabrictypes/list.vue"
 import partList from "@/pages/resources/parts/list.vue"
 import materialList from "@/pages/resources/materials/list.vue"
 import fabricList from "@/pages/resources/fabrics/list.vue"
@@ -108,6 +109,11 @@ const routes = [
     {
         path: "/resources/colors/list",
         component: colorList,
+        props: ({ query }) => ({ page: Number(query.page) })
+    },
+    {
+        path: "/resources/fabrictypes/list",
+        component: fabricTypeList,
         props: ({ query }) => ({ page: Number(query.page) })
     },
     {

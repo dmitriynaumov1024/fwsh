@@ -47,6 +47,22 @@
     <div class="fancy-group">
         <header>Contact me via {{contactSelected || '?'}}</header>
         <main>
+            <Radiobox v-for="contact of contactVariants" v-model="contactSelected" :value="contact">
+                <span>{{contact}}</span>
+            </Radiobox>
+        </main>
+    </div>
+    <div class="fancy-group">
+        <header>I am interested in {{topicsSelected.join(", ")}}</header>
+        <main>
+            <Checkbox v-for="topic of topicVariants" v-model="topicsSelected" :value="topic.key">
+                <span>{{topic.name}}</span>
+            </Checkbox>
+        </main>
+    </div>
+    <!-- <div class="fancy-group">
+        <header>Contact me via {{contactSelected || '?'}}</header>
+        <main>
             <div class="fancy-radio" v-for="contact of contactVariants">
                 <input type="radio" v-model="contactSelected" :value="contact" :id="'input_contact_'+contact" />
                 <label :for="'input_contact_'+contact">{{contact}}</label>
@@ -61,12 +77,15 @@
                 <label :for="'input_topic_'+topic.key">{{topic.name}}</label>
             </div>
         </main>
-    </div>
+    </div> -->
 </div>
 </template>
 
 <script setup>
 import { ref, inject } from "vue"
+
+import Checkbox from "@/comp/ctrl/Checkbox.vue"
+import Radiobox from "@/comp/ctrl/Radiobox.vue"
 
 const locale = inject("locale")
 
