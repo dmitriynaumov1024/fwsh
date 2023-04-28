@@ -42,8 +42,10 @@
     <div class="fancy-group margin-bottom-1">
         <header>{{locale.photo.plural}}</header>
         <main>
-            <ImageGallery>
-                <img v-for="url of design.photoUrls" :src="cdnResolve(url)">
+            <ImageGallery :items="design.photoUrls">
+                <template v-slot="{ active, item }">
+                    <img :src="cdnResolve(item)" :class="{ 'visible': active }">
+                </template>
             </ImageGallery>
         </main>
     </div>

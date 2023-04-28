@@ -1,8 +1,10 @@
 <template>
 <div class="width-container card pad-1 margin-bottom-2">
     <h2 class="margin-bottom-1">{{design.displayName}}</h2>
-    <ImageGallery class="margin-bottom-2">
-        <img v-for="url of design.photoUrls" :src="cdnResolve(url)">
+    <ImageGallery :items="design.photoUrls" class="margin-bottom-2">
+        <template v-slot="{ active, item }">
+            <img :src="cdnResolve(item)" :class="{ 'visible': active }">
+        </template>
     </ImageGallery>
     <table class="kvtable stripes margin-bottom-2">
         <tr>
