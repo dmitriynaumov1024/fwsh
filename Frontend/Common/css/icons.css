@@ -10,3 +10,7 @@
 .icon-2 {
   height: 2rem;
 }
+
+.icon-1, .icon-15, .icon-2 {
+  display: block;
+}

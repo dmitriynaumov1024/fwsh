@@ -32,7 +32,7 @@
   border: var(--border);
 }
 
-@media screen and (min-width: 760px) 
+@media screen and (min-width: 490px) 
 {
   .card {
     background-color: var(--color-back-0);
@@ -99,7 +99,7 @@
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
 }
 
-@media screen and (min-width: 480px) {
+@media screen and (min-width: 400px) {
   .modal-wrapper .width-container {
     max-width: 400px;
   }

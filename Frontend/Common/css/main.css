@@ -10,6 +10,10 @@
   border-bottom: var(--border);
 }
 
+#app-root>.main>:first-child:not(.bread) {
+  margin-top: 1rem;
+}
+
 #app-root>.footer {
   background-color: var(--color-back-2);
   color: var(--color-fore-2);
@@ -20,11 +24,12 @@
   height: var(--reserved-for-footer);
 }
 
-#bread {
+#bread, .bread {
   min-height: 1rem;
+  margin-bottom: -2px;
 }
 
-#bread .link {
+#bread .link, .bread .link {
   color: var(--color-fore-1);
 }
 

@@ -72,9 +72,14 @@ input[type="checkbox"]:checked+label {
   /*border-radius: 2px;*/
 }
 
+.fancy-checkbox-label,
+.fancy-radiobox-label {
+  cursor: default;
+}
+
 .fancy-checkbox-button[checked="true"],
 .fancy-radiobox-button[checked="true"] {
-  border: 3px solid var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .fancy-group>header {
