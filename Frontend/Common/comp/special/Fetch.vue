@@ -90,7 +90,16 @@ const state = reactive({
     badRequest: false,
     notFound: false,
     noData: false,
-    error: false
+    error: false,
+    reset() {
+        this.data = undefined
+        this.loading = true
+        this.unauthorized = false
+        this.badRequest = false
+        this.notFound = false
+        this.noData = false
+        this.error = false
+    }
 })
 
 const emit = defineEmits([
@@ -105,8 +114,7 @@ const emit = defineEmits([
 watch ([ ()=> props.url, ()=> props.params ], dispatchRequest, { immediate: true })
 
 function dispatchRequest() {
-    state.data = undefined
-    state.loading = true
+    state.reset()
     setTimeout(request, (200 + Math.random()*400) | 0)
 }
 
