@@ -1,6 +1,8 @@
 <template>
-<Bread :crumbs="[{href: '/', text: 'fwsh'}]" 
-    :last="locale.common.catalog" />
+<Bread>
+    <Crumb to="/">fwsh</Crumb>
+    <Crumb last>{{locale.common.catalog}}</Crumb>
+</Bread>
 <div class="width-container pad-05 margin-bottom-1">
     <h2 class="margin-bottom-1">{{locale.common.catalog}}</h2>
     <router-link to="/catalog/designs/list?page=0" class="card pad-1 margin-bottom-1">
@@ -19,7 +21,7 @@
 import { useRouter } from "vue-router"
 import { inject } from "vue"
 
-import Bread from "@/layout/Bread.vue"
+import { Bread, Crumb } from "@common/comp/layout"
 
 const router = useRouter()
 const locale = inject("locale")

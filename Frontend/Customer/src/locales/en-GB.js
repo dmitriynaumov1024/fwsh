@@ -30,6 +30,29 @@ export default {
         somethingWrong: "Something went wrong",
         seeConsole: "See console for problem details", 
         loading: "Loading! Please wait...",
+        language: "language",
+    },
+    selectLanguage: {
+        title: "Language"
+    },
+    loading: {
+        title: "Loading",
+        description: "Please wait, loading may take some time. If this message does "+
+            "not disappear after 10 seconds, please try reloading the page with CTRL+F5, "+
+            "check your network connection, or contact site administrator."
+    },
+    unauthorized: {
+        title: "Unauthorized",
+        description: "You tried to access some resource that only allows authorized clients. "+
+            "Please log in or sign up and then try again."
+    },
+    notFound: {
+        title: "Bad request",
+        description: "Please check parameters you've provided and try again."
+    },
+    notFound: {
+        title: "Nothing here",
+        description: "Sorry, data can not be loaded, or this page doesn't exist yet."
     },
     noDataYet: {
         title: "Nothing here yet",
@@ -44,12 +67,16 @@ export default {
         description: "Seems like you tried to navigate to non-existent page "
     },
     header: {
+        title: "workshop",
         nav: {
             catalog: "Catalog",
             profile: "Profile",
             login: "Log in",
             signup: "Sign up" 
         }
+    },
+    footer: {
+        siteName: "Furniture workshop"
     },
     login: {
         welcomeBack: "Welcome back!",

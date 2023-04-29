@@ -26,8 +26,8 @@
         <input id="input-patronym" type="text" 
             v-model="data.patronym" :invalid="!!badFields.patronym" />
     </div>
-    <div class="margin-bottom-1" @click="toggleOrg">
-        <Checkbox :checked="data.isOrganization">{{locale.signup.iAmOrganization}}</Checkbox>
+    <div class="margin-bottom-1">
+        <Checkbox v-model="data.isOrganization">{{locale.signup.iAmOrganization}}</Checkbox>
     </div>
     <div v-if="data.isOrganization" class="fancy-input margin-bottom-1">
         <label for="input-orgName">{{locale.profile.orgName}}</label>
@@ -67,7 +67,7 @@
 
 <script setup>
 import { ref, reactive, inject } from "vue"
-import Checkbox from "@/comp/ctrl/Checkbox.vue"
+import { Checkbox } from "@common/comp/ctrl"
 
 const locale = inject("locale")
 
@@ -84,6 +84,7 @@ const data = reactive({
     surname: "",
     name: "",
     patronym: "",
+    isOrganization: false,
     orgName: null,
     phone: "",
     email: "",
@@ -94,11 +95,6 @@ const emit = defineEmits([
     "click-signup",
     "click-login"
 ])
-
-function toggleOrg() {
-    data.isOrganization = !(data.isOrganization)
-    if (data.isOrganization) data.orgName = null
-}
 
 function signupButtonClick() {
     setTimeout(() => emit("click-signup", data), 200)

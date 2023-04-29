@@ -33,7 +33,7 @@
         </tr>
     </table>
     <div class="flex-stripe flex-pad-1">
-        <button class="button button-primary button-block pad-1" @click="()=>emit('click-order')">
+        <button class="button button-primary button-block pad-1" @click="()=>emit('click-order', design)">
             {{locale.action.makeOrder}}
         </button>
     </div>
@@ -41,9 +41,9 @@
 </template>
 
 <script setup>
-import { cdnResolve } from "@common/utils" 
 import { inject } from "vue"
-import ImageGallery from "@/comp/ctrl/ImageGallery.vue"
+import { cdnResolve } from "@common/utils" 
+import { ImageGallery } from "@common/comp/layout"
 
 const locale = inject("locale")
 

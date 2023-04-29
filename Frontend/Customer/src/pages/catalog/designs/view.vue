@@ -1,32 +1,23 @@
 <template>
-<template v-if="data.design">
-    <Bread :crumbs="[
-        { href: '/', text: 'fwsh' },
-        { href: '/catalog', text: locale.common.catalog },
-        { href: '/catalog/designs/list?page=0', text: locale.design.plural }
-        ]" :last="data.design.displayName" />
-    <DesignView :design="data.design"
-        @click-order="makeOrder" />
+<Fetch :url="`/catalog/designs/view/${id}`" :cacheTTL="600" @load="onLoad" no-default
+    class-error="width-container card pad-1 margin-bottom-1" />
+<template v-if="design">
+<Bread>
+    <Crumb to="/">fwsh</Crumb>
+    <Crumb to="/catalog">{{locale.common.catalog}}</Crumb>
+    <Crumb to="/catalog/designs/list?page=0">{{locale.design.plural}}</Crumb>
+    <Crumb last>{{design.displayName}}</Crumb>
+</Bread>
+<DesignView :design="design" @click-order="makeOrder" />
 </template>
-<div v-else class="width-container text-center pad-1">
-    <div v-if="data.notFound">
-        <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
-        <p>{{locale.design.notFound}}</p>
-    </div>
-    <div v-else-if="data.error" class="width-container text-center pad-1">
-        <p>{{locale.common.somethingWrong}}. {{locale.common.seeConsole}}</p>
-    </div>
-    <div v-else class="width-container text-center pad-1">
-        <p>{{locale.common.loading}}</p>
-    </div>
-</div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router" 
-import { reactive, inject, watch } from "vue" 
-import Bread from "@/layout/Bread.vue"
-import DesignView from "@/comp/DesignView.vue"
+import { ref, reactive, inject, watch } from "vue" 
+import { Fetch } from "@common/comp/special"
+import { Bread, Crumb } from "@common/comp/layout"
+import DesignView from "@/comp/views/DesignView.vue"
 
 const router = useRouter()
 
@@ -37,28 +28,13 @@ const props = defineProps({
     id: Number
 })
 
-const data = reactive({
-    design: null
-})
+const design = ref(null)
 
-watch(() => props.id, getDesign, { immediate: true })
-
-function getDesign () {
-    axios.get({
-        url: `/catalog/designs/view/${props.id}`,
-        cacheTTL: 600
-    })
-    .then(({ status, data: response }) => {
-        if (response.id) {
-            data.design = response
-        }
-    })
-    .catch(error => {
-        
-    })
+function onLoad (data) {
+    design.value = data
 }
 
-function makeOrder() {
+function makeOrder (design) {
     console.log("Should make order")
 }
 

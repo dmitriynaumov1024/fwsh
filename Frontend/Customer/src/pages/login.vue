@@ -10,7 +10,7 @@
 import { arrayToDict } from "@common/utils"
 import { useRouter } from "vue-router"
 import { ref, reactive, inject } from "vue"
-import LoginView from "@/comp/LoginView.vue"
+import LoginView from "@/comp/views/LoginView.vue"
 
 let login = reactive({ })
 

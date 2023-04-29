@@ -11,7 +11,7 @@
 import { arrayToDict } from "@common/utils"
 import { useRouter } from "vue-router"
 import { reactive, inject, computed, onMounted } from "vue"
-import SignupView from "@/comp/SignupView.vue"
+import SignupView from "@/comp/views/SignupView.vue"
 
 const router = useRouter()
 const axios = inject("axios")

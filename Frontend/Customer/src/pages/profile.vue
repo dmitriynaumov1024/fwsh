@@ -10,7 +10,7 @@
 <script setup>
 import { useRouter } from "vue-router"
 import { reactive, inject, computed, onMounted } from "vue"
-import ProfileView from "@/comp/ProfileView.vue"
+import ProfileView from "@/comp/views/ProfileView.vue"
 
 const router = useRouter()
 

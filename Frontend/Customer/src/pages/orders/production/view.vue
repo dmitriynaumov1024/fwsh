@@ -1,25 +1,25 @@
 <template>
-<Bread v-if="data.order?.id" :crumbs="[
-    { href: '/', text: 'fwsh' },
-    { href: '/orders/production/list?page=0', text: locale.productionOrder.plural }
-    ]" :last="locale.order.single+' #'+data.order?.id" />
-<ProductionOrderView v-if="data.order?.id" :order="data.order" 
-    @click-design="goToDesign" 
+<Fetch :url="`/customer/orders/production/view/${id}`" :cacheTTL="3" @load="onLoad" no-default 
+    class-error="width-container card pad-1 margin-bottom-1" />
+<template v-if="order">
+<Bread>
+    <Crumb to="/">fwsh</Crumb>
+    <Crumb to="/orders/production/list?page=0">{{locale.productionOrder.plural}}</Crumb>
+    <Crumb last>{{locale.order.single}} #{{order.id}}</Crumb>
+</Bread>
+<ProductionOrderView :order="order" 
+    @click-design="goToDesign"
     @click-read="readNotification"
     @click-read-all="readAllNotifications" />
-<div v-else-if="data.error" class="width-container text-center pad-1">
-    <p>{{locale.common.somethingWrong}}. {{locale.common.seeConsole}}</p>
-</div>
-<div v-else class="width-container text-center pad-1">
-    <p>{{locale.common.loading}}</p>
-</div>
+</template>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router" 
-import { reactive, inject, watch } from "vue" 
-import Bread from "@/layout/Bread.vue"
-import ProductionOrderView from "@/comp/ProductionOrderView.vue"
+import { ref, reactive, inject, watch } from "vue" 
+import { Fetch } from "@common/comp/special"
+import { Bread, Crumb } from "@common/comp/layout"
+import ProductionOrderView from "@/comp/views/ProductionOrderView.vue"
 
 const router = useRouter()
 
@@ -30,30 +30,16 @@ const props = defineProps({
     id: Number
 })
 
-const data = reactive({
-    order: null
-})
+const order = ref(null)
 
-watch(() => props.id, getOrder, { immediate: true })
-
-function goToDesign () {
-    setTimeout(() => {
-        router.push(`/catalog/designs/view/${data.order.design.id}`)
-    }, 200)
+function onLoad (data) {
+    order.value = data
 }
 
-function getOrder () {
-    axios.get({
-        url: `/customer/orders/production/view/${props.id}`
-    })
-    .then(({ status, data: response }) => {
-        if (response.id) {
-            data.order = response
-        }
-    })
-    .catch(error => {
-        console.log("Something went wrong")
-    })
+function goToDesign (design) {
+    setTimeout(() => {
+        router.push(`/catalog/designs/view/${design.id}`)
+    }, 200)
 }
 
 function readNotification (notification) {
@@ -75,7 +61,7 @@ function readAllNotifications () {
     })
     .then(({ status, data: response }) => {
         if (response.success) {
-            data.order.notifications.forEach(n => {
+            order.value.notifications.forEach(n => {
                 n.isRead = true
             })
         }
