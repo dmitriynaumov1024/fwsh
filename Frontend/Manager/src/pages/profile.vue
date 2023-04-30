@@ -1,17 +1,21 @@
 <template>
-<Bread :crumbs="[{ href: '/', text: 'fwsh' }]" 
-    :last="locale.profile.myProfile" />
-<ProfileView v-if="profile.id" 
+<Bread>
+    <crumb to="/">fwsh</crumb>
+    <crumb last>{{locale.profile.myProfile}}</crumb>
+</Bread>
+<Fetch url="/manager/profile/view" :cacheTTL="loggedin? 60 : 0"
+    @load="onLoad" no-default class-error="width-container card pad-1" />
+<ProfileView v-if="profile" 
     :profile="profile"
-    :errorMessage="profile.errorMessage" 
     @click-logout="profileLogout" />
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
-import { reactive, inject, computed, onMounted } from "vue"
-import Bread from "@/layout/Bread.vue"
-import ProfileView from "@/comp/ProfileView.vue"
+import { ref, inject, computed } from "vue"
+import { Fetch } from "@common/comp/special"
+import { Bread, Crumb } from "@common/comp/layout"
+import ProfileView from "@/comp/views/ProfileView.vue"
 
 const router = useRouter()
 
@@ -19,31 +23,24 @@ const axios = inject("axios")
 const storage = inject("storage")
 const locale = inject("locale")
 
-const profile = computed(() => storage.tmp?.profile ?? { })
+const loggedin = computed(() => storage.tmp?.profile)
 
-onMounted(() => { 
-    axios.get({
-        url: "/manager/profile/view"
-    })
-    .then(({ status, data: response } = axiosresponse) => {
-        if (status < 299 && response.id) {
-            storage.tmp.profile = response
-        }
-        else {
-            storage.tmp.profile = { errorMessage: response.message ?? "Something went wrong" }
-            router.replace("/login")
-        }
-    })
-})
+const profile = ref(null)
+
+function onLoad (data) { 
+    profile.value = data
+    storage.tmp.profile = data
+}
 
 function profileLogout () {
     axios.post({
         url: "/auth/manager/logout"
     })
     .then(_ => {
-        storage.tmp.profile = { }
+        storage.tmp.profile = null
         router.push("/")
     })
 }
+
 
 </script>

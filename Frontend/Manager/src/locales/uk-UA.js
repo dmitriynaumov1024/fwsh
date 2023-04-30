@@ -37,7 +37,30 @@ export default {
         somethingWrong: "Виникла проблема",
         seeConsole: "Дивіться детальний опис проблеми в консолі", 
         createdAt: "Створено",
-        daysSinceCreated: "Днів з моменту створення"
+        daysSinceCreated: "Днів з моменту створення",
+        language: "мова"
+    },
+    selectLanguage: {
+        title: "Мова"
+    },
+    loading: {
+        title: "Завантажуємо",
+        description: "Зачекайте, будь ласка. Завантаження даних може зайняти певний час. "+
+            "Якщо через 10 секунд нічого не з'явиться, перезавантажте сторінку з CTRL+F5, "+
+            "перевірте своє мережеве з'єднання або зв'яжіться з адміністратором сайту."
+    },
+    unauthorized: {
+        title: "Ви не авторизувалися",
+        description: "Ви намагалися переглянути ресурси, що доступні лише авторизованим користувачам. "+
+            "Будь ласка, увійдіть в обліковий запис або зареєструйтеся."
+    },
+    notFound: {
+        title: "Тут нічого немає",
+        description: "На жаль, нам не вдалося завантажити дані, або ця сторінка не існує."
+    },
+    notFound: {
+        title: "Некоректний запит",
+        description: "Будь ласка, перевірте правильність введених даних та спробуйте ще раз."
     },
     noDataYet: {
         title: "Тут ще нічого немає",
@@ -52,12 +75,16 @@ export default {
         description: "Скоріш за все, Ви намагалися переглянути неіснуючу сторінку"
     },
     header: {
+        title: "workshop",
         nav: {
             catalog: "Каталог",
             profile: "Профіль",
             login: "Вхід",
             signup: "Реєстрація" 
         }
+    },
+    footer: {
+        siteName: "Manager's panel"
     },
     index: {
         title: "Панель менеджера - головна сторінка",
@@ -191,6 +218,8 @@ export default {
         refillPeriodDays: "Період поповнення, днів",
         lastCheckedAt: "Перевірено",
         lastRefilledAt: "Поповнено",
+        needsRefill: "Треба поповнити запас якнайшвидше",
+        isTimeToRefill: "Прийшов час поповнювати",
         createdAt: "Створено",
     },
     part: {
@@ -251,6 +280,30 @@ export default {
         corner: "Куток",
         armchair: "Крісло",
         pouffe: "Пуф"
+    },
+    taskPrototype: {
+        single: "Шаблон задачі",
+        plural: "Шаблони задач",
+    },
+    task: {
+        single: "Задача",
+        plural: "Задачі",
+        status: "Статус",
+        createdAt: "Створено",
+        startedAt: "Початок робіт",
+        finishedAt: "Завершено",
+        workType: "Тип роботи",
+        role: "Роль",
+        resourceUsage: "Використання ресурсів",
+        instructions: "Інструкції",
+    },
+    productionTask: {
+        single: "Виробнича задача",
+        plural: "Виробничі задачі",
+    },
+    repairTask: {
+        single: "Ремонтна задача",
+        plural: "Ремонтні задачі",
     },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)

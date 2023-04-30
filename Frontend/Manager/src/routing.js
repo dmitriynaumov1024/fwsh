@@ -100,7 +100,7 @@ const routes = [
     {
         path: "/orders/production/view/:id",
         component: productionOrderView,
-        props: ({ params }) => ({ id: Number(params.id) })
+        props: ({ params, query }) => ({ id: Number(params.id), tab: query.tab })
     },
     {
         path: "/resources",

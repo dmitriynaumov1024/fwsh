@@ -3,9 +3,10 @@
     <div class="flex-stripe margin-bottom-1">
         <h2>{{locale.productionOrder.single}} #{{order.id}}</h2>
         <span class="flex-grow"></span>
-        <NotificationButton class="icon-2"
-            :active="showNotifications"
-            @click="toggleNotifications" />
+        <ToggleButton v-model="showNotifications" v-slot="{ active }">
+            <XIcon v-if="active" class="icon-2" />
+            <NotificationIcon v-else :unread="!!(order.notifications?.find(n => !n.isRead))" class="icon-2" />
+        </ToggleButton>
     </div>
     <template v-if="showNotifications">
     <h3 class="pad-05">{{locale.notification.plural}}</h3>
@@ -73,7 +74,8 @@
 
 <script setup>
 import { ref, inject } from "vue"
-import NotificationButton from "@/comp/ctrl/Notification.vue"
+import { ToggleButton } from "@common/comp/ctrl"
+import { NotificationIcon, XIcon } from "@common/comp/icons"
 
 const locale = inject("locale")
 
@@ -87,9 +89,5 @@ const emit = defineEmits([
 ])
 
 const showNotifications = ref(false)
-
-function toggleNotifications() {
-    showNotifications.value = !(showNotifications.value)
-}
 
 </script>

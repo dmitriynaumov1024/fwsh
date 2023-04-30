@@ -1,36 +1,45 @@
 <template>
-<Bread :crumbs="[
-    { href: '/', text: 'fwsh' },
-    { href: '/orders', text: locale.order.plural } 
-    ]"
-    :last="locale.productionOrder.plural" />
-<Pagination v-if="data.items?.length"
-    :page="props.page" :previous="data.previous" :next="data.next"
-    :items="data.items" :view="ProductionOrderView"
-    :bind="item => ({ order: item })"
-    @click-previous="goToPrevious"
-    @click-next="goToNext" 
-    @click-item="goToItem"
-    class="width-container pad-05 margin-bottom-1"
-    class-item="card pad-1 margin-bottom-1">
-    <template #title>
-        <h2 class="margin-bottom-1">
-            {{locale.productionOrder.plural}} &ndash; {{locale.common[tab]}} 
-            &ndash; {{locale.common.page}} {{props.page}}
-        </h2>
-    </template>
-</Pagination>
-<div v-else class="width-container card pad-1">
-    <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
-    <p>{{locale.noData.description}}</p>
+<Bread>
+    <Crumb to="/">fwsh</Crumb>
+    <Crumb to="/orders">{{locale.order.plural}}</Crumb>
+    <Crumb last>{{locale.productionOrder.plural}}</Crumb>
+</Bread>
+<div class="width-container pad-05">
+    <h2 class="margin-bottom-05">{{locale.productionOrder.plural}}</h2>
+    <div class="flex-stripe flex-pad-1">
+        <template v-for="nextTab of ['list', 'archive']">
+            <button v-if="nextTab==props.tab" 
+                class="button button-secondary accent-weak text-strong">{{locale.common[nextTab]}}</button>
+            <router-link v-else :to="`/orders/production/${nextTab}?page=0`" 
+                class="button button-primary accent-weak">{{locale.common[nextTab]}}</router-link>
+        </template>
+        <span class="flex-grow"></span>
+    </div>
 </div>
+<Fetch :url="`/manager/orders/production/${props.tab}`"
+    :params="{ page: props.page }" :cacheTTL="2"
+    class-error="width-container card pad-1 margin-bottom-1">
+    <template v-slot:default="{ data }">
+    <Pagination :items="data.items" :page="props.page" 
+        :previous="data.previous" :next="data.next"
+        @click-previous="()=> goToPage(data.previous)"
+        @click-next="()=> goToPage(data.next)"
+        class="width-container pad-05 margin-bottom-1">
+        <template v-slot:title>
+        </template>
+        <template v-slot:repeating="{ item }">
+            <ProductionOrderView :order="item" @click="()=> goToItem(item)" class="card-card pad-1 margin-bottom-1" />
+        </template>
+    </Pagination>
+    </template>
+</Fetch>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
 import { reactive, inject, watch } from "vue"
-import Bread from "@/layout/Bread.vue"
-import Pagination from "@/layout/Pagination.vue"
+import { Fetch } from "@common/comp/special"
+import { Bread, Crumb, Pagination } from "@common/comp/layout"
 import ProductionOrderView from "@/comp/mini/ProductionOrderView.vue"
 
 const router = useRouter()
@@ -42,42 +51,13 @@ const props = defineProps({
     page: Number
 })
 
-const data = reactive({
-    previous: null,
-    next: null,
-    items: [ ]
-})
-
-watch(() => props, getOrders, { immediate: true })
-
-function goToPrevious() {
-    if (data.previous != null)
-        router.push(`/orders/production/${props.tab}?page=${data.previous}`)
+function goToPage (page) {
+    if (page != null && page != undefined)
+        router.push(`/orders/production/list?page=${page}`)
 }
 
-function goToNext() {
-    if (data.next != null)
-        router.push(`/orders/production/${props.tab}?page=${data.next}`)
-}
-
-function goToItem(item) {
-    if (item?.id)
-        router.push(`/orders/production/view/${item.id}`)
-}
-
-function getOrders() {
-    axios.get({
-        url: `/manager/orders/production/${props.tab}`,
-        params: { page: props.page }
-    })
-    .then(({ status, data: response }) => {
-        data.items = response.items
-        data.previous = response.previous
-        data.next = response.next
-    })
-    .catch(error => {
-        console.error(error)
-    })
+function goToItem (item) {
+    router.push(`/orders/production/view/${item?.id}?tab=${props.tab}`)
 }
 
 </script>

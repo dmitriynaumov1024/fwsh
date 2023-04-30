@@ -1,42 +1,41 @@
 <template>
-<Bread :crumbs="[
-    { href: '/', text: 'fwsh' },
-    { href: '/resources', text: locale.resource.plural } 
-    ]"
-    :last="locale.part.plural" />
-<Pagination v-if="data.items?.length"
-    :page="props.page" :previous="data.previous" :next="data.next"
-    :items="data.items" :view="PartView"
-    :bind="item => ({ part: item })"
-    @click-previous="goToPrevious"
-    @click-next="goToNext"
-    @click-item="goToItem"
-    class="width-container pad-05 margin-bottom-1"
-    class-item="card pad-1 margin-bottom-1">
-    <template #title>
-        <h2 class="margin-bottom-1">
-            {{locale.part.plural}} &ndash; {{locale.common.page}} {{props.page}}
-        </h2>
+<Bread>
+    <crumb to="/">fwsh</crumb>
+    <crumb to="/resources">{{locale.resource.plural}}</crumb>
+    <crumb last>{{locale.part.plural}}</crumb>
+</Bread>
+<Fetch url="/resources/parts/list" 
+    :params="{ page: props.page }" :cacheTTL="4"
+    class-error="width-container card pad-1">
+    <template v-slot:default="{ data }">
+    <Pagination :items="data.items" :page="props.page" 
+        :previous="data.previous" :next="data.next"
+        @click-previous="()=> goToPage(data.previous)"
+        @click-next="()=> goToPage(data.next)"
+        class="width-container pad-05 margin-bottom-1">
+        <template v-slot:title>
+            <h2 class="margin-bottom-1">{{locale.part.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
+        </template>
+        <template v-slot:repeating="{ item }">
+            <PartView :part="item" @click="()=> goToItem(data, item)" class="card pad-1 margin-bottom-1" />
+        </template>
+    </Pagination>
+    <Modal v-if="data.selectedItem">
+        <QuantityEdit :resource="data.selectedItem"
+            :errorMessage="data.quantityErrorMessage"
+            @click-cancel="()=> data.selectedItem = null"
+            @click-submit="(newQuantity)=> updateQuantity(data, newQuantity)" />
+    </Modal>
     </template>
-</Pagination>
-<div v-else class="width-container card pad-1">
-    <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
-    <p>{{locale.noData.description}}</p>
-</div>
-<Modal v-if="data.selectedItem">
-    <QuantityEdit :resource="data.selectedItem"
-        :errorMessage="data.quantityErrorMessage"
-        @click-cancel="deselectItem"
-        @click-submit="updateQuantity" />
-</Modal>
+</Fetch>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
-import { reactive, inject, watch } from "vue"
-import Bread from "@/layout/Bread.vue"
-import Modal from "@/layout/Modal.vue"
-import Pagination from "@/layout/Pagination.vue"
+import { reactive, inject } from "vue"
+import { nestedObjectAssign } from "@common/utils"
+import { Fetch } from "@common/comp/special"
+import { Bread, Crumb, Modal, Pagination } from "@common/comp/layout"
 import PartView from "@/comp/mini/PartView.vue"
 import QuantityEdit from "@/comp/mini/QuantityEdit.vue"
 
@@ -48,50 +47,18 @@ const props = defineProps({
     page: Number
 })
 
-const data = reactive({
-    previous: null,
-    next: null,
-    items: [ ],
-    selectedItem: undefined
-})
-
-watch(() => props.page, getParts, { immediate: true })
-
-function goToPrevious() {
-    if (data.previous != null)
-        router.push(`/resources/parts/list?page=${data.previous}`)
+function goToPage(page) {
+    if (page != null) router.push(`/resources/parts/list?page=${page}`)
 }
 
-function goToNext() {
-    if (data.next != null)
-        router.push(`/resources/parts/list?page=${data.next}`)
-}
-
-function goToItem (item) {
+function goToItem (data, item) {
     if (data.selectedItem) return
     console.log("Should go to "+item.id)
     data.selectedItem = item
 }
 
-function getParts() {
-    axios.get({
-        url: "/resources/parts/list",
-        params: { page: props.page },
-        cacheTTL: 10
-    })
-    .then(({ status, data: response }) => {
-        data.items = response.items
-        data.previous = response.previous
-        data.next = response.next
-    })
-    .catch(error => {
-        console.error(error)
-    })
-}
-
-function updateQuantity (newQuantity) {
+function updateQuantity (data, newQuantity) {
     let item = data.selectedItem
-    console.log(`Item #${item.id}: quantity: ${item.quantity} => ${newQuantity}`)
     axios.post({
         url: `/resources/parts/set-quantity/${item.id}`,
         data: newQuantity

@@ -1,6 +1,8 @@
 <template>
-<Bread :crumbs="[{href: '/', text: 'fwsh'}]" 
-    :last="locale.blueprint.plural" />
+<Bread> 
+    <Crumb to="/">fwsh</Crumb>
+    <Crumb last>{{locale.blueprint.plural}}</Crumb>
+</Bread>
 <div class="width-container pad-05 margin-bottom-1">
     <h2 class="margin-bottom-1">{{locale.blueprint.plural}}</h2>
     <router-link to="/blueprints/designs/list?page=0" class="card pad-1 margin-bottom-1">
@@ -17,7 +19,7 @@
 
 <script setup>
 import { inject } from "vue"
-import Bread from "@/layout/Bread.vue"
+import { Bread, Crumb } from "@common/comp/layout"
 
 const locale = inject("locale")
 </script>

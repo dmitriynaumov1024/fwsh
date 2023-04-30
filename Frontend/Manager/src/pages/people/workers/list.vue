@@ -1,34 +1,35 @@
 <template>
-<Bread :crumbs="[
-    { href: '/', text: 'fwsh' },
-    { href: '/people', text: locale.person.plural }
-    ]" :last="locale.worker.plural" />
-<Pagination v-if="data.items?.length"
-    :page="props.page" :previous="data.previous" :next="data.next"
-    :items="data.items" :view="PersonView"
-    :bind="item => ({ person: item })"
-    @click-previous="goToPrevious"
-    @click-next="goToNext"
-    @click-item="goToItem"
-    class="width-container pad-05 margin-bottom-1"
-    class-item="card pad-1 margin-bottom-1">
-    <template #title>
-        <h2 class="margin-bottom-1">
-            {{locale.worker.plural}} &ndash; {{locale.common.page}} {{props.page}}
-        </h2>
+<Bread>
+    <Crumb to="/">fwsh</Crumb>
+    <Crumb to="/people">{{locale.person.plural}}</Crumb>
+    <Crumb last>{{locale.worker.plural}}</Crumb>
+</Bread>
+<Fetch url="/manager/workers/list"
+    :params="{ page: props.page }" :cacheTTL="4"
+    class-error="width-container card pad-1">
+    <template v-slot:default="{ data }">
+    <Pagination :items="data.items" :page="props.page" 
+        :previous="data.previous" :next="data.next"
+        @click-previous="()=>goToPage(data.previous)"
+        @click-next="()=>goToPage(data.next)"
+        @click-item="goToItem"
+        class="width-container pad-05 margin-bottom-1">
+        <template v-slot:title>
+            <h2 class="margin-bottom-1">{{locale.worker.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
+        </template>
+        <template v-slot:repeating="{ item }">
+            <PersonView :person="item" @click="goToItem(item)" class="card-card pad-1 margin-bottom-1" />
+        </template>
+    </Pagination>
     </template>
-</Pagination>
-<div v-else class="width-container card pad-1">
-    <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
-    <p>{{locale.noData.description}}</p>
-</div>
+</Fetch>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
-import { ref, reactive, inject, watch } from "vue"
-import Bread from "@/layout/Bread.vue"
-import Pagination from "@/layout/Pagination.vue"
+import { inject } from "vue"
+import { Fetch } from "@common/comp/special"
+import { Bread, Crumb, Pagination } from "@common/comp/layout"
 import PersonView from "@/comp/mini/PersonView.vue"
 
 const router = useRouter()
@@ -39,18 +40,9 @@ const props = defineProps({
     page: Number
 })
 
-const data = reactive({})
-
-watch(() => props.page, getWorkers, { immediate: true })
-
-function goToPrevious() {
-    if (data.previous != null)
-        router.push(`/people/workers/list?page=${data.previous}`)
-}
-
-function goToNext() {
-    if (data.next != null)
-        router.push(`/people/workers/list?page=${data.next}`)
+function goToPage (page) {
+    if (page != null && page != undefined)
+        router.push(`/people/workers/list?page=${page}`)
 }
 
 function goToItem (item) {
@@ -59,19 +51,4 @@ function goToItem (item) {
     //     router.push(`/people/workers/view/${item.id}`)
 }
 
-async function getWorkers() {
-    axios.get({
-        url: "/manager/workers/list",
-        params: { page: props.page },
-        cacheTTL: 10
-    })
-    .then(({ status, data: response }) => {
-        data.items = response.items
-        data.previous = response.previous
-        data.next = response.next
-    })
-    .catch(error => {
-        console.error(error)
-    })
-}
 </script>

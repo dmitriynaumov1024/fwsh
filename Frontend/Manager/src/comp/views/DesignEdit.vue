@@ -73,8 +73,7 @@
 <script setup>
 import { cdnResolve } from "@common/utils"
 import { ref, reactive, computed, inject } from "vue"
-import Checkbox from "@/comp/ctrl/Checkbox.vue"
-import Radiobox from "@/comp/ctrl/Radiobox.vue"
+import { Checkbox, Radiobox } from "@common/comp/ctrl"
 
 const URL = window.URL
 

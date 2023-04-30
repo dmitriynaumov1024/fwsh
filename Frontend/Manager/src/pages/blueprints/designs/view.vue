@@ -1,33 +1,25 @@
 <template>
-<template v-if="data.design">
-    <Bread :crumbs="[
-        { href: '/', text: 'fwsh' },
-        { href: '/blueprints', text: locale.blueprint.plural },
-        { href: '/blueprints/designs/list?page=0', text: locale.design.plural}
-        ]" :last="data.design.displayName" />
-    <DesignView :design="data.design"
-        @click-edit="editDesign"
-        @click-delete="deleteDesign" />
+<Fetch :url="`/manager/designs/view/${id}`" :cacheTTL="4" 
+    @load="onLoad" no-default class-error="width-container card pad-1" />
+<template v-if="design">
+<Bread>
+    <Crumb to="/">fwsh</Crumb>
+    <Crumb to="/blueprints">{{locale.common.blueprints}}</Crumb>
+    <Crumb to="/blueprints/designs/list?page=0">{{locale.design.plural}}</Crumb>
+    <Crumb last>{{design.displayName}}</Crumb>
+</Bread>
+<DesignView :design="design"
+    @click-edit="editDesign"
+    @click-delete="deleteDesign" />
 </template>
-<div v-else class="width-container text-center pad-1">
-    <div v-if="data.notFound">
-        <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
-        <p>{{locale.design.notFound}}</p>
-    </div>
-    <div v-else-if="data.error" class="width-container text-center pad-1">
-        <p>{{locale.common.somethingWrong}}. {{locale.common.seeConsole}}</p>
-    </div>
-    <div v-else class="width-container text-center pad-1">
-        <p>{{locale.common.loading}}</p>
-    </div>
-</div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router" 
-import { reactive, inject, watch } from "vue"
-import Bread from "@/layout/Bread.vue"
-import DesignView from "@/comp/DesignView.vue"
+import { ref, inject } from "vue"
+import { Fetch } from "@common/comp/special"
+import { Bread, Crumb } from "@common/comp/layout"
+import DesignView from "@/comp/views/DesignView.vue"
 
 const router = useRouter()
 const locale = inject("locale")
@@ -37,31 +29,10 @@ const props = defineProps({
     id: [ Number, String ]
 })
 
-const data = reactive({})
+const design = ref(null)
 
-watch(()=> props.id, getDesign, { immediate: true })
-
-function getDesign() {
-    axios.get({
-        url: `/manager/designs/view/${props.id}`,
-        cacheTTL: 5
-    })
-    .then(({ status, data: response }) => {
-        if (status <= 299) {
-            data.design = response
-        }
-        else if (status == 404) {
-            data.notFound = true
-        }
-        else {
-            data.error = true
-            console.error(response.message)
-        }
-    })
-    .catch(error => {
-        data.error = true
-        console.error(error)
-    })
+function onLoad (data) {
+    design.value = data
 }
 
 function editDesign() {

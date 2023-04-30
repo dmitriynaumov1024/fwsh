@@ -1,13 +1,16 @@
 <template>    
-<Bread :crumbs="[
-    { href: '/', text: 'fwsh' },
-    { href: '/blueprints', text: locale.blueprint.plural }
-    ]" :last="locale.design.plural" />
+<Bread>
+    <Crumb to="/">fwsh</Crumb>
+    <Crumb to="/blueprints">{{locale.blueprint.plural}}</Crumb>
+    <Crumb last>{{locale.design.plural}}</Crumb>
+</Bread>
 <div class="width-container card pad-1 margin-bottom-2">
     <h2 class="margin-bottom-1">{{locale.design.create}}</h2>
     <div v-if="data.success">
         <p>{{locale.design.creationMessage}}</p>
-        <router-link :to="'/designs/view/'+data.id" class="link">{{locale.action.details}}</router-link>
+        <router-link :to="`/blueprints/designs/view/${data.id}`" class="link">
+            {{locale.action.details}}
+        </router-link>
     </div>
     <DesignEdit v-else 
         :design="data.design" 
@@ -25,8 +28,8 @@
 import { useRouter } from "vue-router"
 import { ref, reactive, inject } from "vue"
 import { arrayToDict } from "@common/utils"
-import Bread from "@/layout/Bread.vue"
-import DesignEdit from "@/comp/DesignEdit.vue"
+import { Bread, Crumb } from "@common/comp/layout"
+import DesignEdit from "@/comp/views/DesignEdit.vue"
 
 const locale = inject("locale")
 const axios = inject("axios")

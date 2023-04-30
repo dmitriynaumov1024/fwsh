@@ -37,7 +37,30 @@ export default {
         somethingWrong: "Something went wrong",
         seeConsole: "See console for problem details", 
         createdAt: "Created at",
-        daysSinceCreated: "Days since created"
+        daysSinceCreated: "Days since created",
+        language: "language"
+    },
+    selectLanguage: {
+        title: "Language"
+    },
+    loading: {
+        title: "Loading",
+        description: "Please wait, loading may take some time. If this message does "+
+            "not disappear after 10 seconds, please try reloading the page with CTRL+F5, "+
+            "check your network connection, or contact site administrator."
+    },
+    unauthorized: {
+        title: "Unauthorized",
+        description: "You tried to access some resource that only allows authorized clients. "+
+            "Please log in or sign up and then try again."
+    },
+    notFound: {
+        title: "Bad request",
+        description: "Please check parameters you've provided and try again."
+    },
+    notFound: {
+        title: "Nothing here",
+        description: "Sorry, data can not be loaded, or this page doesn't exist yet."
     },
     noDataYet: {
         title: "Nothing here yet",
@@ -52,12 +75,16 @@ export default {
         description: "Seems like you tried to navigate to non-existent page "
     },
     header: {
+        title: "workshop",
         nav: {
             catalog: "Catalog",
             profile: "Profile",
             login: "Log in",
             signup: "Sign up" 
         }
+    },
+    footer: {
+        siteName: "Worker's panel"
     },
     index: {
         title: "Manager's panel - Main page",
@@ -194,6 +221,8 @@ export default {
         refillPeriodDays: "Refill period, days",
         lastCheckedAt: "Last checked at",
         lastRefilledAt: "Last refilled at",
+        needsRefill: "Critical amount, needs refill",
+        isTimeToRefill: "It's time to refill",
         createdAt: "Created at",
     },
     part: {
@@ -254,6 +283,30 @@ export default {
         corner: "Corner",
         armchair: "Armchair",
         pouffe: "Pouffe"
+    },
+    taskPrototype: {
+        single: "Task prototype",
+        plural: "Task prototypes",
+    },
+    task: {
+        single: "Task",
+        plural: "Tasks",
+        status: "Status",
+        createdAt: "Created at",
+        startedAt: "Work started at",
+        finishedAt: "Finished at",
+        workType: "Work type",
+        role: "Role",
+        resourceUsage: "Resource usage",
+        instructions: "Instructions",
+    },
+    productionTask: {
+        single: "Production task",
+        plural: "Production tasks",
+    },
+    repairTask: {
+        single: "Repair task",
+        plural: "Repair tasks",
     },
     formatBadFields (badFields, selector) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)

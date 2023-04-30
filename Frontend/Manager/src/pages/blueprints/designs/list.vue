@@ -1,34 +1,35 @@
 <template>
-<Bread :crumbs="[
-    { href: '/', text: 'fwsh' },
-    { href: '/blueprints', text: locale.blueprint.plural }
-    ]" :last="locale.design.plural" />
-<Pagination v-if="data.items?.length"
-    :page="props.page" :previous="data.previous" :next="data.next"
-    :items="data.items" :view="DesignView"
-    :bind="item => ({ design: item })"
-    @click-previous="goToPrevious"
-    @click-next="goToNext"
-    @click-item="goToItem"
-    class="width-container pad-05 margin-bottom-1"
-    class-item="card pad-1 margin-bottom-1">
-    <template #title>
-        <h2 class="margin-bottom-1">
-            {{locale.design.plural}} &ndash; {{locale.common.page}} {{props.page}}
-        </h2>
+<Bread>
+    <Crumb to="/">fwsh</Crumb>
+    <Crumb to="/blueprints">{{locale.common.blueprints}}</Crumb>
+    <Crumb last>{{locale.design.plural}}</Crumb>
+</Bread>
+<Fetch url="/manager/designs/list"
+    :params="{ page: props.page }" :cacheTTL="4"
+    :check-data="data => data.items?.length"
+    class-error="width-container card pad-1">
+    <template v-slot:default="{ data }">
+    <Pagination :items="data.items" :page="props.page" 
+        :previous="data.previous" :next="data.next"
+        @click-previous="()=> goToPage(data.previous)"
+        @click-next="()=> goToPage(data.next)"
+        class="width-container pad-05 margin-bottom-1">
+        <template v-slot:title>
+            <h2 class="margin-bottom-1">{{locale.design.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
+        </template>
+        <template v-slot:repeating="{ item }">
+            <DesignView :design="item" @click="()=> goToItem(item)" class="card-card pad-1 margin-bottom-1" />
+        </template>
+    </Pagination>
     </template>
-</Pagination>
-<div v-else class="width-container card pad-1">
-    <h2 class="margin-bottom-1">{{locale.noData.title}}</h2>
-    <p>{{locale.noData.description}}</p>
-</div>
+</Fetch>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
-import { ref, reactive, inject, watch } from "vue"
-import Bread from "@/layout/Bread.vue"
-import Pagination from "@/layout/Pagination.vue"
+import { inject } from "vue"
+import { Fetch } from "@common/comp/special"
+import { Bread, Crumb, Pagination } from "@common/comp/layout"
 import DesignView from "@/comp/mini/DesignView.vue"
 
 const router = useRouter()
@@ -39,18 +40,9 @@ const props = defineProps({
     page: Number
 })
 
-const data = reactive({})
-
-watch(() => props.page, getDesigns, { immediate: true })
-
-function goToPrevious() {
-    if (data.previous != null)
-        router.push(`/blueprints/designs/list?page=${data.previous}`)
-}
-
-function goToNext() {
-    if (data.next != null)
-        router.push(`/blueprints/designs/list?page=${data.next}`)
+function goToPage() {
+    if (page != null && page != undefined)
+        router.push(`/blueprints/designs/list?page=${page}`)
 }
 
 function goToItem(item) {
@@ -58,19 +50,4 @@ function goToItem(item) {
         router.push(`/blueprints/designs/view/${item.id}`)
 }
 
-async function getDesigns() {
-    axios.get({
-        url: "/manager/designs/list",
-        params: { page: props.page },
-        cacheTTL: 10
-    })
-    .then(({ status, data: response }) => {
-        data.items = response.items
-        data.previous = response.previous
-        data.next = response.next
-    })
-    .catch(error => {
-        console.error(error)
-    })
-}
 </script>

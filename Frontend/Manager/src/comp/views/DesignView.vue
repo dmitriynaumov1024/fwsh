@@ -60,7 +60,7 @@
 <script setup>
 import { cdnResolve } from "@common/utils"
 import { inject } from "vue"
-import ImageGallery from "@/comp/ctrl/ImageGallery.vue"
+import { ImageGallery } from "@common/comp/layout"
 
 const locale = inject("locale")
 

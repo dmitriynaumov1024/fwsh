@@ -8,10 +8,10 @@
 <script setup>
 import { inject } from "vue"
 
+const locale = inject("locale")
+
 const props = defineProps({
     path: String
 })
-
-const locale = inject("locale")
 
 </script>
