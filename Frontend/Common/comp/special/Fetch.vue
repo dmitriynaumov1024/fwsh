@@ -77,6 +77,10 @@ const props = defineProps({
     params: Object,
     cacheTTL: Number,
     noDefault: Boolean,
+    checkData: {
+        type: Function,
+        default: (_) => true
+    },
     classError: {
         type: undefined,
         default: "card pad-1 margin-bottom-1"
@@ -127,7 +131,7 @@ function request() {
     .then(({ status, data }) => {
         state.loading = false
         if (status == 200) {
-            if (data != null && data != undefined) {
+            if (data != null && data != undefined && props.checkData(data)) {
                 state.data = data
                 emit("load", data)
             }

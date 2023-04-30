@@ -70,3 +70,7 @@ body[theme="dark"] {
 .accent-gray.accent-gray {
   --color-accent: var(--color-gray);
 }
+
+.accent-weak.accent-weak {
+  --color-accent: var(--color-border);
+}

@@ -56,6 +56,10 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-fore-1);
 }
 
+.text-strong.text-strong {
+  color: var(--color-fore-0);
+}
+
 .text-warn {
   color: var(--color-warn);
 }
@@ -70,4 +74,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .text-gray {
   color: var(--color-gray);
+}
+
+.text-weak {
+  color: var(--color-border);
 }

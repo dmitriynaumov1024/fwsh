@@ -1,6 +1,6 @@
 <template>
 <div class="width-container border-bottom bread">
-    <div class="flex-stripe flex-wrap pad-05">
+    <div class="pad-05" style="">
         <slot></slot>
         <span class="flex-grow"></span>
     </div>
