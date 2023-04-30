@@ -6,10 +6,10 @@
 </Bread>
 <Fetch url="/catalog/designs/list"
     :params="{ page: props.page }" :cacheTTL="600"
+    :check-data="data => data.items?.length"
     class-error="width-container card pad-1 margin-bottom-1">
     <template v-slot:default="{ data }">
-    <Pagination v-if="data.items?.length"
-        :items="data.items" :page="props.page" 
+    <Pagination :items="data.items" :page="props.page" 
         :previous="data.previous" :next="data.next"
         @click-previous="()=>goToPage(data.previous)"
         @click-next="()=>goToPage(data.next)"
@@ -18,7 +18,7 @@
             <h2 class="margin-bottom-1">{{locale.design.catalog}} &ndash; {{locale.common.page}} {{props.page}}</h2>
         </template>
         <template v-slot:repeating="{ item }">
-            <DesignView :design="item" @click="()=>goToItem(item)" class="card pad-1 margin-bottom-1" />
+            <DesignView :design="item" @click="()=>goToItem(item)" class="card-card pad-1 margin-bottom-1" />
         </template>
     </Pagination>
     </template>

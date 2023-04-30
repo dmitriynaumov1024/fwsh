@@ -1,7 +1,8 @@
 <template>
-<ProfileView v-if="profile?.id" 
+<Fetch url="/customer/profile/view" :cacheTTL="loggedin? 60 : 0"
+    @load="onLoad" no-default class-error="width-container card pad-1" />
+<ProfileView v-if="profile" 
     :profile="profile"
-    :errorMessage="profile?.errorMessage" 
     @click-logout="profileLogout" 
     @click-production-orders="goToProductionOrders" 
     @click-repair-orders="goToRepairOrders" />
@@ -9,7 +10,8 @@
 
 <script setup>
 import { useRouter } from "vue-router"
-import { reactive, inject, computed, onMounted } from "vue"
+import { ref, inject, computed } from "vue"
+import { Fetch } from "@common/comp/special"
 import ProfileView from "@/comp/views/ProfileView.vue"
 
 const router = useRouter()
@@ -17,24 +19,13 @@ const router = useRouter()
 const axios = inject("axios")
 const storage = inject("storage")
 
-const profile = computed(() => storage.tmp?.profile)
+const loggedin = computed(() => storage.tmp?.profile)
 
-onMounted(getProfile)
+const profile = ref(null)
 
-function getProfile() { 
-    axios.get({
-        url: "/customer/profile/view",
-        cacheTTL: storage.tmp.profile ? 60 : 0
-    })
-    .then(({ status, data: response } = axiosresponse) => {
-        if (status < 299 && response.id) {
-            storage.tmp.profile = response
-        }
-        else {
-            storage.tmp.profile = { errorMessage: response.message ?? "Something went wrong" }
-            router.replace("/login")
-        }
-    })
+function onLoad (data) { 
+    profile.value = data
+    storage.tmp.profile = data
 }
 
 function profileLogout () {
@@ -42,7 +33,7 @@ function profileLogout () {
         "url": "/auth/customer/logout"
     })
     .then(_ => {
-        storage.tmp.profile = { }
+        storage.tmp.profile = null
         router.push("/")
     })
 }

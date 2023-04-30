@@ -2,7 +2,7 @@
 <HeaderLayout>
     <template v-slot:nav>
         <router-link to="/catalog" class="top-navbar-link">{{ locale.header.nav.catalog }}</router-link>
-        <template v-if="profile?.id">
+        <template v-if="loggedin">
             <router-link to="/profile" class="top-navbar-link">{{ locale.header.nav.profile }}</router-link>
         </template>
         <template v-else>
@@ -20,6 +20,6 @@ import HeaderLayout from "@common/layout/Header.vue"
 const storage = inject("storage")
 const locale = inject("locale")
 
-const profile = computed(() => storage.tmp?.profile)
+const loggedin = computed(() => storage.tmp?.profile)
 
 </script>

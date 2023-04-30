@@ -97,6 +97,7 @@ const emit = defineEmits([
 ])
 
 function signupButtonClick() {
+    if (!data.isOrganization) data.orgName = null
     setTimeout(() => emit("click-signup", data), 200)
 }
 
