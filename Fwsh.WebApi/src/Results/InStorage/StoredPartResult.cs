@@ -27,6 +27,8 @@ public class StoredPartResult : StoredResourceResult<int, Part>, IResultBuilder<
             RefillPeriodDays = resource.RefillPeriodDays,
             LastRefilledAt = resource.LastRefilledAt,
             LastCheckedAt = resource.LastCheckedAt,
+            NeedsRefill = resource.NeedsRefill,
+            IsTimeToRefill = resource.IsTimeToRefill,
             Item = new PartResult(resource.Item)
         };
     }

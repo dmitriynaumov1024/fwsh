@@ -20,6 +20,12 @@ where TResource : Resource
 
     public virtual int InStock => 0;
 
+    public virtual bool IsTimeToRefill => (DateTime.UtcNow - this.LastRefilledAt).Days >= this.RefillPeriodDays;
+
+    public virtual bool NeedsRefill => this.IsTimeToRefill ? 
+        100 * this.InStock / this.NormalStock < 60 :
+        100 * this.InStock / this.NormalStock < 30; 
+
     public override int CalculateResourcePrice()
     {
         return 0;

@@ -19,6 +19,9 @@ where TResource : Resource
     public DateTime? LastRefilledAt { get; set; }
     public DateTime? LastCheckedAt { get; set; }
 
+    public bool NeedsRefill { get; set; }
+    public bool IsTimeToRefill { get; set; }
+
     public SupplierResult Supplier { get; set; }
 
     public StoredResourceResult () { }

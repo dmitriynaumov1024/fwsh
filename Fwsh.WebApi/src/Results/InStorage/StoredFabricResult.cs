@@ -28,6 +28,8 @@ public class StoredFabricResult : StoredResourceResult<double, Fabric>, IResultB
             RefillPeriodDays = resource.RefillPeriodDays,
             LastRefilledAt = resource.LastRefilledAt,
             LastCheckedAt = resource.LastCheckedAt,
+            NeedsRefill = resource.NeedsRefill,
+            IsTimeToRefill = resource.IsTimeToRefill,
             Item = new FabricResult(resource.Item)
         };
     }

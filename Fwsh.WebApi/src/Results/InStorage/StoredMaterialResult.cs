@@ -28,6 +28,8 @@ public class StoredMaterialResult : StoredResourceResult<double, Material>, IRes
             RefillPeriodDays = resource.RefillPeriodDays,
             LastRefilledAt = resource.LastRefilledAt,
             LastCheckedAt = resource.LastCheckedAt,
+            NeedsRefill = resource.NeedsRefill,
+            IsTimeToRefill = resource.IsTimeToRefill,
             Item = new MaterialResult(resource.Item)
         };
     }
