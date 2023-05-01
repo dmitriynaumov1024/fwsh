@@ -21,6 +21,14 @@
             <td>{{profile.patronym}}</td>
         </tr>
         <tr>
+            <td>{{locale.profile.roles}}</td>
+            <td>
+                <div v-for="role of profile.roles">
+                    <Checkbox checked class="accent-gray">{{locale.roles[role] ?? role}}</Checkbox>
+                </div>
+            </td>
+        </tr>
+        <tr>
             <td>{{locale.profile.phone}}</td>
             <td>{{profile.phone}}</td>
         </tr>
@@ -41,6 +49,7 @@
 
 <script setup>
 import { ref, reactive, inject } from "vue"
+import { Checkbox } from "@common/comp/ctrl"
 
 const locale = inject("locale")
 

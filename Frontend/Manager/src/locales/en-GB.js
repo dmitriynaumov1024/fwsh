@@ -41,7 +41,7 @@ export default {
         language: "language"
     },
     selectLanguage: {
-        title: "Language"
+        title: "Site language"
     },
     loading: {
         title: "Loading",
@@ -100,6 +100,11 @@ export default {
         goToLogin: "Go to login",
         iAmOrganization: "I am representing organization",
         alreadyHaveAccount: "Already have account?"
+    },
+    noSignup: {
+        title: "Can not sign up",
+        description: "Manager signup is not allowed at this moment. If you are sure this is an error, "+
+            "please contact site administrator. If you already have account, please go to login page."
     },
     roles: {
         unknown: "Unknown",

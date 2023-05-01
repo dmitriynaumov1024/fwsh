@@ -1,7 +1,7 @@
 <template>
 <Bread>
     <Crumb to="/">fwsh</Crumb>
-    <Crumb to="/blueprints">{{locale.common.blueprints}}</Crumb>
+    <Crumb to="/blueprints">{{locale.blueprint.plural}}</Crumb>
     <Crumb last>{{locale.design.plural}}</Crumb>
 </Bread>
 <Fetch url="/manager/designs/list"

@@ -4,7 +4,7 @@
 <template v-if="design">
 <Bread>
     <Crumb to="/">fwsh</Crumb>
-    <Crumb to="/blueprints">{{locale.common.blueprints}}</Crumb>
+    <Crumb to="/blueprints">{{locale.blueprint.plural}}</Crumb>
     <Crumb to="/blueprints/designs/list?page=0">{{locale.design.plural}}</Crumb>
     <Crumb last>{{design.displayName}}</Crumb>
 </Bread>

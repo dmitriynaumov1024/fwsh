@@ -1,6 +1,6 @@
 import index from "@/pages/index.vue"
 import login from "@/pages/login.vue"
-// import signup from "@/pages/signup.vue"
+import signup from "@/pages/signup.vue"
 import profile from "@/pages/profile.vue"
 
 import blueprintsIndex from "@/pages/blueprints/index.vue"
@@ -46,6 +46,10 @@ const routes = [
     {
         path: "/login",
         component: login
+    },
+    {
+        path: "/signup",
+        component: signup
     },
     {
         path: "/profile",
