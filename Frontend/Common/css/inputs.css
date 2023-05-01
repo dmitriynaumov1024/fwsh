@@ -40,7 +40,8 @@ input {
 *:invalid, 
 .fancy-group[invalid="true"],
 .fancy-textarea[invalid="true"]>textarea, 
-.fancy-input[invalid="true"]>input {
+.fancy-input[invalid="true"]>input,
+input[invalid="true"] {
   border-color: var(--color-bad);
 }
 

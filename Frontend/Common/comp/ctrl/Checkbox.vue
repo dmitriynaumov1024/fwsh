@@ -2,7 +2,7 @@
 <div class="flex-stripe">
     <svg class="fancy-checkbox-button" viewBox="0 0 16 16" :checked="thisIsChecked" @click="toggle">
         <path v-if="thisIsChecked" stroke="var(--color-accent)" 
-            stroke-width="3" fill="none" d="M 3 7 L 8 12 L 18 2" />
+            stroke-width="2.5" fill="none" d="M 3 7 L 7 12 L 14.5 4" />
     </svg>
     <div class="fancy-checkbox-label" @click="toggle"><slot></slot></div>
     <div class="flex-grow"></div>

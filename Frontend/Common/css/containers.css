@@ -104,3 +104,19 @@
     max-width: 460px;
   }
 }
+
+.scroll {
+  overflow: scroll;
+}
+
+.height-10 {
+  height: 10rem;
+}
+
+.height-15 {
+  height: 15rem;
+}
+
+.height-20 {
+  height: 20rem;
+}

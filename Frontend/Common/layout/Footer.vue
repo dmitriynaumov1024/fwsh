@@ -12,7 +12,7 @@
 </footer>
 <Modal v-if="isSelectingLocale">
     <h2 class="margin-bottom-05">{{locale.selectLanguage.title}}</h2>
-    <div class="margin-bottom-2">
+    <div class="height-15 scroll margin-bottom-2">
         <Radiobox v-for="localeOption of locales" class="margin-bottom-05"
             :checked="localeOption.displayName == locale.displayName"
             @click="()=> endSelectLocale(localeOption.key)">
