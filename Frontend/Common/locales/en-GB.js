@@ -53,6 +53,10 @@ export default nestedObjectMerge (base, {
     selectLanguage: {
         title: "Site language"
     },
+    changesSaved: {
+        title: "Success",
+        description: "All changes were successfully saved."
+    },
     loading: {
         title: "Loading",
         description: "Please wait, loading may take some time. If this message does "+
@@ -263,6 +267,8 @@ export default nestedObjectMerge (base, {
     color: {
         single: "Color",
         plural: "Colors",
+        create: "Create new color",
+        edit: "Edit existing color",
         name: "Name",
         rgbCode: "RGB code"
     },

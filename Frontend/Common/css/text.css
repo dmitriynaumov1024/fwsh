@@ -79,3 +79,8 @@ h1, h2, h3, h4, h5, h6 {
 .text-weak {
   color: var(--color-border);
 }
+
+.text-code.text-code,
+.text-mono.text-mono {
+  font-family: "Noto mono", "Consolas", monospace;
+}

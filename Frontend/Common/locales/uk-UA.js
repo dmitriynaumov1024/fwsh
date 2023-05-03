@@ -59,6 +59,10 @@ export default nestedObjectMerge (base, {
             "Якщо через 10 секунд нічого не з'явиться, перезавантажте сторінку з CTRL+F5, "+
             "перевірте своє мережеве з'єднання або зв'яжіться з адміністратором сайту."
     },
+    changesSaved: {
+        title: "Успіх",
+        description: "Всі зміни збережено."
+    },
     unauthorized: {
         title: "Ви не авторизувалися",
         description: "Ви намагалися переглянути ресурси, що доступні лише авторизованим користувачам. "+
@@ -260,6 +264,8 @@ export default nestedObjectMerge (base, {
     color: {
         single: "Колір",
         plural: "Кольори",
+        create: "Новий колір",
+        edit: "Редагувати колір",
         name: "Найменування",
         rgbCode: "RGB-код"
     },

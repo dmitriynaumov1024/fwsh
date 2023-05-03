@@ -4,6 +4,10 @@
   margin: 0;
 }
 
+*::selection {
+  background-color: var(--color-shadow);
+}
+
 body {
   font-family: Arimo, Arial, "Droid Sans", sans-serif;
   font-size: 16px;
