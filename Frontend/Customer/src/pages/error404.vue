@@ -1,6 +1,6 @@
 <template>
 <div class="width-container card pad-1">
-    <h2 class="margin-bottom-1">{{locale.noRoute.title}}</h2>
+    <h2 class="mar-b-1">{{locale.noRoute.title}}</h2>
     <p>{{locale.noRoute.description}} /{{ path }} .</p>
 </div>
 </template>

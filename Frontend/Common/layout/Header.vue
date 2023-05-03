@@ -11,7 +11,7 @@
             </ToggleButton>
         </div>
         <nav v-if="headerMenuExpanded" 
-            class="flex-stripe pad-05 flex-spacing-1 margin-bottom-05" 
+            class="flex-stripe pad-05 flex-pad-1 mar-b-05" 
             style="border-top: var(--border)">
             <slot name="nav"></slot>
             <span class="flex-grow"></span>

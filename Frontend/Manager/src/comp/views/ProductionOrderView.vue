@@ -1,6 +1,6 @@
 <template>
-<div class="width-container card pad-1 margin-bottom-1">
-    <div class="flex-stripe margin-bottom-1">
+<div class="width-container card pad-1 mar-b-1">
+    <div class="flex-stripe mar-b-1">
         <h2>{{locale.productionOrder.single}} #{{order.id}}</h2>
         <span class="flex-grow"></span>
         <ToggleButton v-model="showNotifications" v-slot="{ active }">
@@ -12,13 +12,13 @@
     <h3 class="pad-05">{{locale.notification.plural}}</h3>
     <div v-if="order.notifications?.length" class="notification-list">
         <div v-for="notification of order.notifications" 
-            class="pad-05 notification margin-bottom-1" :read="notification.isRead">
+            class="pad-05 notification mar-b-1" :read="notification.isRead">
             <p>{{notification.text}}</p>
             <p class="text-gray text-right text-small">{{locale.formatDateTime(notification.createdAt)}}</p>
         </div>
     </div>
     <div v-else class="pad-1">
-        <p class="text-center margin-bottom-1"><b>{{locale.noDataYet.title}}</b></p>
+        <p class="text-center mar-b-1"><b>{{locale.noDataYet.title}}</b></p>
         <p class="text-center">{{locale.noDataYet.description}}</p>
     </div>
     <div class="fancy-textarea notification-input">
@@ -32,7 +32,7 @@
     </button>
     </template>
     <template v-else>
-    <table class="kvtable stripes margin-bottom-1">
+    <table class="kvtable stripes mar-b-1">
         <tr>
             <td>{{locale.design.single}}</td>
             <td><button class="button link" @click="()=> emit('click-design')">{{order.design.displayName}}</button></td>
@@ -40,9 +40,9 @@
         <tr>
             <td>{{locale.customer.single}}</td>
             <td>
-                <p class="margin-bottom-05">{{order.customer.name}} {{order.customer.surname}}</p>
-                <p v-if="order.customer.orgName" class="text-gray margin-bottom-05">{{order.customer.orgName}}</p>
-                <p class="text-gray margin-bottom-05">{{order.customer.phone}}</p>
+                <p class="mar-b-05">{{order.customer.name}} {{order.customer.surname}}</p>
+                <p v-if="order.customer.orgName" class="text-gray mar-b-05">{{order.customer.orgName}}</p>
+                <p class="text-gray mar-b-05">{{order.customer.phone}}</p>
             </td>
         </tr>
         <tr>

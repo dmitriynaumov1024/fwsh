@@ -1,7 +1,7 @@
 <template>
-<div class="width-container card pad-1 margin-bottom-2">
-    <h2 class="margin-bottom-1">{{design.displayName}}</h2>
-    <table class="kvtable stripes margin-bottom-2">
+<div class="width-container card pad-1 mar-b-2">
+    <h2 class="mar-b-1">{{design.displayName}}</h2>
+    <table class="kvtable stripes mar-b-2">
         <tr>
             <td>{{locale.common.id}}</td>
             <td>#{{design.id}}</td>
@@ -39,7 +39,7 @@
             <td>{{design.description}}</td>
         </tr>
     </table>
-    <div class="fancy-group margin-bottom-1">
+    <div class="fancy-group mar-b-1">
         <header>{{locale.photo.plural}}</header>
         <main>
             <ImageGallery :items="design.photoUrls">

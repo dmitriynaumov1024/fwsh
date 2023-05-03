@@ -11,9 +11,9 @@
     </div>
 </footer>
 <Modal v-if="isSelectingLocale">
-    <h2 class="margin-bottom-05">{{locale.selectLanguage.title}}</h2>
-    <div class="margin-bottom-2">
-        <Radiobox v-for="localeOption of locales" class="margin-bottom-05"
+    <h2 class="mar-b-05">{{locale.selectLanguage.title}}</h2>
+    <div class="mar-b-2">
+        <Radiobox v-for="localeOption of locales" class="mar-b-05"
             :checked="localeOption.displayName == locale.displayName"
             @click="()=> endSelectLocale(localeOption.key)">
             {{localeOption.displayName}}

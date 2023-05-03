@@ -6,7 +6,7 @@
     <Crumb last v-if="order">#{{order.id}}</Crumb>
 </Bread>
 <Fetch :url="`/manager/orders/production/view/${id}`" :cacheTTL="4"
-    @load="onLoad" no-default class-error="width-container card pad-1 margin-bottom-1"/>
+    @load="onLoad" no-default class-error="width-container card pad-1 mar-b-1"/>
 <ProductionOrderView v-if="order" 
     :order="order" 
     @click-design="goToDesign" 

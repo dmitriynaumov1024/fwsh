@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="photo-gallery margin-bottom-1">
+    <div class="photo-gallery mar-b-1">
         <template v-for="(item, i) in items">
             <slot :active="data.current == i" :item="item"></slot>
         </template>

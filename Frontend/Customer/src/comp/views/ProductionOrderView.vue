@@ -1,6 +1,6 @@
 <template>
-<div class="width-container card pad-1 margin-bottom-1">
-    <div class="flex-stripe margin-bottom-1">
+<div class="width-container card pad-1 mar-b-1">
+    <div class="flex-stripe mar-b-1">
         <h2>{{locale.productionOrder.single}} #{{order.id}}</h2>
         <span class="flex-grow"></span>
         <ToggleButton v-model="showNotifications" v-slot="{ active }">
@@ -12,7 +12,7 @@
     <h3 class="pad-05">{{locale.order.notifications}}</h3>
     <div v-if="order.notifications?.length" class="notification-list">
         <div v-for="notification of order.notifications" 
-            class="pad-05 notification margin-bottom-1" 
+            class="pad-05 notification mar-b-1" 
             :read="notification.isRead"
             @click="()=> emit('click-read', notification)">
             <p>{{notification.text}}</p>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div v-else class="pad-1">
-        <p class="text-center margin-bottom-1"><b>{{locale.noDataYet.title}}</b></p>
+        <p class="text-center mar-b-1"><b>{{locale.noDataYet.title}}</b></p>
         <p class="text-center">{{locale.noDataYet.description}}</p>
     </div>
     <div v-if="!!(order.notifications?.find(n => !n.isRead))">
@@ -32,7 +32,7 @@
     </template>
     <template v-else>
     <h3 class="pad-05">{{locale.productionOrder.design}}</h3>
-    <table class="kvtable stripes margin-bottom-1">
+    <table class="kvtable stripes mar-b-1">
         <tr>
             <td>{{locale.design.displayName}}</td>
             <td>{{order.design.displayName}}</td>
@@ -51,7 +51,7 @@
         </tr>
     </table>
     <h3 class="pad-05">{{locale.productionOrder.details}}</h3>
-    <table class="kvtable stripes margin-bottom-1">
+    <table class="kvtable stripes mar-b-1">
         <tr>
             <td>{{locale.productionOrder.quantity}}</td>
             <td>{{order.quantity}}</td>

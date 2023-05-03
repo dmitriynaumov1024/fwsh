@@ -13,12 +13,12 @@
         @click-previous="()=>goToPage(data.previous)"
         @click-next="()=>goToPage(data.next)"
         @click-item="goToItem"
-        class="width-container pad-05 margin-bottom-1">
+        class="width-container pad-05 mar-b-1">
         <template v-slot:title>
-            <h2 class="margin-bottom-1">{{locale.customer.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
+            <h2 class="mar-b-1">{{locale.customer.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
         </template>
         <template v-slot:repeating="{ item }">
-            <PersonView :person="item" @click="goToItem(item)" class="card-card pad-1 margin-bottom-1" />
+            <PersonView :person="item" @click="goToItem(item)" class="card-card pad-1 mar-b-1" />
         </template>
     </Pagination>
     </template>

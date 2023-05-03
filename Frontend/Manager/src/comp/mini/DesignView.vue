@@ -2,7 +2,7 @@
 <div class="flex-row flex-wrap flex-pad-1">
     <img class="thumbnail" :src="cdnResolve(design.photoUrls[0])">
     <div>
-        <p class="margin-bottom-05">
+        <p class="mar-b-05">
             <b class="text-125">{{design.displayName}}</b>
             <span class="text-gray">&ensp;#{{design.id}}</span>
         </p>

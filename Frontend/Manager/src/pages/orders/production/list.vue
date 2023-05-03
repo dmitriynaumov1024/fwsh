@@ -5,7 +5,7 @@
     <Crumb last>{{locale.productionOrder.plural}}</Crumb>
 </Bread>
 <div class="width-container pad-05">
-    <h2 class="margin-bottom-05">{{locale.productionOrder.plural}}</h2>
+    <h2 class="mar-b-05">{{locale.productionOrder.plural}}</h2>
     <div class="flex-stripe flex-pad-1">
         <template v-for="nextTab of ['list', 'archive']">
             <button v-if="nextTab==props.tab" 
@@ -18,17 +18,17 @@
 </div>
 <Fetch :url="`/manager/orders/production/${props.tab}`"
     :params="{ page: props.page }" :cacheTTL="2"
-    class-error="width-container card pad-1 margin-bottom-1">
+    class-error="width-container card pad-1 mar-b-1">
     <template v-slot:default="{ data }">
     <Pagination :items="data.items" :page="props.page" 
         :previous="data.previous" :next="data.next"
         @click-previous="()=> goToPage(data.previous)"
         @click-next="()=> goToPage(data.next)"
-        class="width-container pad-05 margin-bottom-1">
+        class="width-container pad-05 mar-b-1">
         <template v-slot:title>
         </template>
         <template v-slot:repeating="{ item }">
-            <ProductionOrderView :order="item" @click="()=> goToItem(item)" class="card-card pad-1 margin-bottom-1" />
+            <ProductionOrderView :order="item" @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" />
         </template>
     </Pagination>
     </template>

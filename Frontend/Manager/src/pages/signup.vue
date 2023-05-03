@@ -5,9 +5,9 @@
     :errorMessage="signup.errorMessage"
     @click-login="goToLogin"
     @click-signup="signupSubmit" />
-<div v-else class="width-container card pad-1 margin-bottom-1">
-    <h2 class="margin-bottom-05">{{locale.noSignup.title}}</h2>
-    <p class="margin-bottom-2">{{locale.noSignup.description}}</p>
+<div v-else class="width-container card pad-1 mar-b-1">
+    <h2 class="mar-b-05">{{locale.noSignup.title}}</h2>
+    <p class="mar-b-2">{{locale.noSignup.description}}</p>
     <div>
         <button class="button button-primary button-block pad-05"
             @click="goToLogin">{{locale.signup.goToLogin}}</button>

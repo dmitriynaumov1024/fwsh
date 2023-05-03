@@ -1,6 +1,6 @@
 <template>
 <Fetch :url="`/customer/orders/production/view/${id}`" :cacheTTL="3" @load="onLoad" no-default 
-    class-error="width-container card pad-1 margin-bottom-1" />
+    class-error="width-container card pad-1 mar-b-1" />
 <template v-if="order">
 <Bread>
     <Crumb to="/">fwsh</Crumb>

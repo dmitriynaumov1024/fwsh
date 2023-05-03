@@ -7,18 +7,18 @@
 <Fetch url="/catalog/fabrics/list"
     :params="{ page: props.page }" :cacheTTL="600"
     :check-data="data => data.items?.length"
-    class-error="width-container card pad-1 margin-bottom-1">
+    class-error="width-container card pad-1 mar-b-1">
     <template v-slot:default="{ data }">
     <Pagination :items="data.items" :page="props.page" 
         :previous="data.previous" :next="data.next" 
         @click-previous="()=>goToPage(data.previous)"
         @click-next="()=>goToPage(data.next)"
-        class="width-container pad-05 margin-bottom-1">
+        class="width-container pad-05 mar-b-1">
         <template v-slot:title>
-            <h2 class="margin-bottom-1">{{locale.fabric.catalog}} &ndash; {{locale.common.page}} {{props.page}}</h2>
+            <h2 class="mar-b-1">{{locale.fabric.catalog}} &ndash; {{locale.common.page}} {{props.page}}</h2>
         </template>
         <template v-slot:repeating="{ item }">
-            <FabricView :fabric="item" class="card-card pad-1 margin-bottom-1" />
+            <FabricView :fabric="item" class="card-card pad-1 mar-b-1" />
         </template>
     </Pagination>
     </template>

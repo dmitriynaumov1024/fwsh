@@ -10,7 +10,7 @@
 <template v-if="state.loading">
     <slot name="loading">
         <div :class="props.classError">
-            <h2 class="margin-bottom-05">{{locale.loading.title}}</h2>
+            <h2 class="mar-b-05">{{locale.loading.title}}</h2>
             <p>{{locale.loading.description}}</p>
         </div>
     </slot>
@@ -18,8 +18,8 @@
 <template v-if="state.unauthorized">
     <slot name="unauthorized">
         <div :class="props.classError">
-            <h2 class="margin-bottom-05">{{locale.unauthorized.title}}</h2>
-            <p class="margin-bottom-2">{{locale.unauthorized.description}}</p>
+            <h2 class="mar-b-05">{{locale.unauthorized.title}}</h2>
+            <p class="mar-b-2">{{locale.unauthorized.description}}</p>
             <div class="flex-stripe flex-pad-1">
                 <button class="button button-primary" 
                     @click="()=> router.push('/login')">{{locale.action.login}}</button>
@@ -33,7 +33,7 @@
 <template v-if="state.badRequest">
     <slot name="unauthorized">
         <div :class="props.classError">
-            <h2 class="margin-bottom-05">{{locale.badRequest.title}}</h2>
+            <h2 class="mar-b-05">{{locale.badRequest.title}}</h2>
             <p>{{locale.badRequest.description}}</p>
         </div>
     </slot>
@@ -41,7 +41,7 @@
 <template v-if="state.notFound">
     <slot name="notFound">
         <div :class="props.classError">
-            <h2 class="margin-bottom-05">{{locale.notFound.title}}</h2>
+            <h2 class="mar-b-05">{{locale.notFound.title}}</h2>
             <p>{{locale.notFound.description}}</p>
         </div>
     </slot>
@@ -49,7 +49,7 @@
 <template v-if="state.noData">
     <slot name="noData">
         <div :class="props.classError">
-            <h2 class="margin-bottom-05">{{locale.noData.title}}</h2>
+            <h2 class="mar-b-05">{{locale.noData.title}}</h2>
             <p>{{locale.noData.description}}</p>
         </div>
     </slot>
@@ -57,7 +57,7 @@
 <template v-if="state.error">
     <slot name="error">
         <div :class="props.classError">
-            <h2 class="margin-bottom-05">{{locale.common.somethingWrong}}</h2>
+            <h2 class="mar-b-05">{{locale.common.somethingWrong}}</h2>
             <p>{{locale.common.seeConsole}}</p>
         </div>
     </slot>
@@ -83,7 +83,7 @@ const props = defineProps({
     },
     classError: {
         type: undefined,
-        default: "card pad-1 margin-bottom-1"
+        default: "card pad-1 mar-b-1"
     }
 })
 

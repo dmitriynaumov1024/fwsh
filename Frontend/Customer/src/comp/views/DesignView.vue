@@ -1,12 +1,12 @@
 <template>
-<div class="width-container card pad-1 margin-bottom-2">
-    <h2 class="margin-bottom-1">{{design.displayName}}</h2>
-    <ImageGallery :items="design.photoUrls" class="margin-bottom-2">
+<div class="width-container card pad-1 mar-b-2">
+    <h2 class="mar-b-1">{{design.displayName}}</h2>
+    <ImageGallery :items="design.photoUrls" class="mar-b-2">
         <template v-slot="{ active, item }">
             <img :src="cdnResolve(item)" :class="{ 'visible': active }">
         </template>
     </ImageGallery>
-    <table class="kvtable stripes margin-bottom-2">
+    <table class="kvtable stripes mar-b-2">
         <tr>
             <td>{{locale.design.type}}</td>
             <td>{{locale.furnitureTypes[design.type]}} ({{design.type}})</td>

@@ -4,8 +4,8 @@
     <Crumb to="/blueprints">{{locale.blueprint.plural}}</Crumb>
     <Crumb last>{{locale.design.plural}}</Crumb>
 </Bread>
-<div class="width-container card pad-1 margin-bottom-2">
-    <h2 class="margin-bottom-1">{{locale.design.create}}</h2>
+<div class="width-container card pad-1 mar-b-2">
+    <h2 class="mar-b-1">{{locale.design.create}}</h2>
     <div v-if="data.success">
         <p>{{locale.design.creationMessage}}</p>
         <router-link :to="`/blueprints/designs/view/${data.id}`" class="link">

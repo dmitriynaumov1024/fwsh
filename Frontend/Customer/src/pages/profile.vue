@@ -1,4 +1,8 @@
 <template>
+<Bread>
+    <crumb to="/">fwsh</crumb>
+    <crumb last>{{locale.profile.myProfile}}</crumb>
+</Bread>
 <Fetch url="/customer/profile/view" :cacheTTL="loggedin? 60 : 0"
     @load="onLoad" no-default class-error="width-container card pad-1" />
 <ProfileView v-if="profile" 
@@ -12,12 +16,14 @@
 import { useRouter } from "vue-router"
 import { ref, inject, computed } from "vue"
 import { Fetch } from "@common/comp/special"
+import { Bread, Crumb } from "@common/comp/layout"
 import ProfileView from "@/comp/views/ProfileView.vue"
 
 const router = useRouter()
 
 const axios = inject("axios")
 const storage = inject("storage")
+const locale = inject("locale")
 
 const loggedin = computed(() => storage.tmp?.profile)
 

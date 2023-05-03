@@ -1,6 +1,6 @@
 <template>
 <Fetch :url="`/catalog/designs/view/${id}`" :cacheTTL="600" @load="onLoad" no-default
-    class-error="width-container card pad-1 margin-bottom-1" />
+    class-error="width-container card pad-1 mar-b-1" />
 <template v-if="design">
 <Bread>
     <Crumb to="/">fwsh</Crumb>

@@ -1,5 +1,5 @@
 <template>
-<div class="card margin-bottom-1" style="width: 322px">
+<div class="card mar-b-1" style="width: 322px">
     <div :style="{ backgroundColor: color.rgbCode, height: '180px' }"></div>
     <div class="pad-05">
         <p><b>{{color.name}}</b></p>

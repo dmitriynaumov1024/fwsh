@@ -15,10 +15,10 @@
             </Radiobox>
         </main>
     </div>
-    <div class="margin-bottom-1">
+    <div class="mar-b-1">
         <Checkbox v-model="design.isVisible">{{locale.design.isVisible}}</Checkbox>
     </div>
-    <div class="margin-bottom-1">
+    <div class="mar-b-1">
         <Checkbox v-model="design.isTransformable">{{locale.design.isTransformable}}</Checkbox>
     </div>
     <div class="fancy-group" :invalid="badFields?.dimCompact">
@@ -60,7 +60,7 @@
             </div>
         </main>
     </div>
-    <div class="margin-bottom-2">
+    <div class="mar-b-2">
         <span class="text-error">{{errorMessage}}</span>
     </div>
     <div class="flex-stripe flex-pad-1">
