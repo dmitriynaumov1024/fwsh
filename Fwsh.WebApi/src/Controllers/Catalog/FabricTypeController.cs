@@ -29,17 +29,19 @@ public class FabricTypeController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int page = -1) 
+    public IActionResult List (int page = -1, bool reverse = false) 
     {
         if (page < 0) {
             return BadRequest(new BadFieldResult("page"));
         }
 
-        var fabricTypes = dataContext.FabricTypes
-            .OrderBy(ftype => ftype.Id)
-            .Paginate(page, PAGESIZE, ftype => new FabricTypeResult(ftype));
+        var fabricTypes = reverse ?
+            dataContext.FabricTypes.OrderByDescending(f => f.Id) :
+            dataContext.FabricTypes.OrderBy(f => f.Id);
 
-        return Ok(fabricTypes);
+        return Ok ( fabricTypes.Paginate (
+            page, PAGESIZE, ftype => new FabricTypeResult(ftype)
+        ));
     }
 
 }

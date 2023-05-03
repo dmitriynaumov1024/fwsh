@@ -31,7 +31,7 @@ public class FabricController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int? color = null, int? fabrictype = null, int? page = null)
+    public IActionResult List (int? color = null, int? fabrictype = null, int? page = null, bool reverse = false)
     {
         IQueryable<Fabric> fabrics = dataContext.Fabrics
             .Include(f => f.Color)
@@ -44,7 +44,10 @@ public class FabricController : FwshController
             fabrics = fabrics.Where(f => f.FabricTypeId == fabrictypeid);
         }
         if (page is int pagenumber) {
-            return Ok ( fabrics.OrderBy(f => f.Id).Paginate ( 
+            fabrics = reverse ? 
+                fabrics.OrderByDescending(f => f.Id) :
+                fabrics.OrderBy(f => f.Id);
+            return Ok ( fabrics.Paginate ( 
                 pagenumber, PAGESIZE, fabric => new FabricResult(fabric)
             ));
         }

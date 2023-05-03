@@ -30,18 +30,23 @@ public class MaterialController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int page = -1) 
+    public IActionResult List (int page = -1, bool reverse = false) 
     {
         if (page < 0) {
             return BadRequest(new BadFieldResult("page"));
         }
 
-        var materials = dataContext.Materials
+        IQueryable<Material> materials = dataContext.Materials
             .Include(m => m.Color)
-            .Where(m => m.IsDecorative)
-            .OrderBy(m => m.Id);
+            .Where(m => m.IsDecorative);
+        
+        materials = reverse ? 
+            materials.OrderByDescending(m => m.Id) :
+            materials.OrderBy(m => m.Id);
 
-        return Ok ( materials.Paginate(page, PAGESIZE, mat => new MaterialResult(mat)) );
+        return Ok ( materials.Paginate ( 
+            page, PAGESIZE, mat => new MaterialResult(mat) 
+        ));
     }
 
 }

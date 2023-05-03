@@ -31,7 +31,7 @@ public class DesignController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int? page = null, string type = null) 
+    public IActionResult List (int? page = null, string type = null, bool reverse = false) 
     {
         IQueryable<Design> designs = dataContext.Designs
             .Include(d => d.Photos)
@@ -41,7 +41,10 @@ public class DesignController : FwshController
             designs = designs.Where(d => d.Type == type);
         }
         if (page is int pagenumber) {
-            return Ok ( designs.OrderBy(d => d.Id).Paginate (
+            designs = reverse ? 
+                designs.OrderByDescending(d => d.Id) :
+                designs.OrderBy(d => d.Id);
+            return Ok ( designs.Paginate (
                 pagenumber, PAGESIZE, design => new DesignResult(design).Mini()
             ));
         }

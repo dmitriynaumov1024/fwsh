@@ -185,6 +185,10 @@ public class DesignController : FwshController
             .Include(d => d.Photos)
             .FirstOrDefault(d => d.Id == designId);
 
+        if (design == null) {
+            return BadRequest (new BadFieldResult("id"));
+        }
+
         var requestPhotos = this.Request.Form.Files.ToList();
 
         int count = 0, 

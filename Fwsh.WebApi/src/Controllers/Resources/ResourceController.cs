@@ -48,16 +48,19 @@ where TResource : Resource
     protected abstract IResultBuilder<TStoredResult> ResultBuilder (TStored item);
 
     [HttpGet("list")]
-    public IActionResult List (int page = -1) 
+    public IActionResult List (int page = -1, bool reverse = false) 
     {
         if (page < 0) {
             return BadRequest ( new BadFieldResult("page") );
         }
 
-        var result = dbQueryableSet.OrderBy(r => r.Id)
-            .Paginate(page, PAGESIZE, item => ResultBuilder(item).Mini());
+        var resources = reverse ? 
+            dbQueryableSet.OrderByDescending(r => r.Id) : 
+            dbQueryableSet.OrderBy(r => r.Id);
 
-        return Ok (result);
+        return Ok (
+            resources.Paginate(page, PAGESIZE, item => ResultBuilder(item).Mini())
+        );
     }
 
     [HttpGet("view/{id}")]

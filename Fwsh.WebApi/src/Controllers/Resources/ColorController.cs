@@ -35,16 +35,19 @@ public class ColorController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int page = -1)
+    public IActionResult List (int page = -1, bool reverse = false)
     {
         if (page < 0) {
             return BadRequest ( new BadFieldResult("page") );
         }
 
-        var result = dataContext.Colors.OrderBy(r => r.Id)
-            .Paginate(page, PAGESIZE, color => new ColorResult(color));
+        var colors = reverse ? 
+            dataContext.Colors.OrderByDescending(r => r.Id) :
+            dataContext.Colors.OrderBy(r => r.Id);
 
-        return Ok (result);
+        return Ok (
+            colors.Paginate(page, PAGESIZE, color => new ColorResult(color))
+        );
     }
 
     [HttpGet("view/{id}")]

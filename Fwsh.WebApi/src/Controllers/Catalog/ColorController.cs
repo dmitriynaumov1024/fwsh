@@ -21,7 +21,7 @@ using Fwsh.WebApi.Utils;
 [Route("catalog/colors")]
 public class ColorController : FwshController
 {
-    const int PAGESIZE = 5;
+    const int PAGESIZE = 10;
 
     public ColorController (FwshDataContext dataContext)
     {
@@ -29,17 +29,19 @@ public class ColorController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int page = -1) 
+    public IActionResult List (int page = -1, bool reverse = false) 
     {
         if (page < 0) {
             return BadRequest(new BadFieldResult("page"));
         }
 
-        var colors = dataContext.Colors
-            .OrderBy(color => color.Id)
-            .Paginate(page, PAGESIZE, color => new ColorResult(color));
+        var colors = reverse ? 
+            dataContext.Colors.OrderByDescending(r => r.Id) :
+            dataContext.Colors.OrderBy(r => r.Id);
 
-        return Ok(colors);
+        return Ok (
+            colors.Paginate(page, PAGESIZE, color => new ColorResult(color))
+        );
     }
 
 }
