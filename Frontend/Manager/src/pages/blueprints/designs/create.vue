@@ -29,7 +29,7 @@ import { useRouter } from "vue-router"
 import { ref, reactive, inject } from "vue"
 import { arrayToDict } from "@common/utils"
 import { Bread, Crumb } from "@common/comp/layout"
-import DesignEdit from "@/comp/views/DesignEdit.vue"
+import DesignEdit from "@/comp/edits/DesignEdit.vue"
 
 const locale = inject("locale")
 const axios = inject("axios")

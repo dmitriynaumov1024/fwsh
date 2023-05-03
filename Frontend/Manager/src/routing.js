@@ -19,6 +19,7 @@ import productionOrderView from "@/pages/orders/production/view.vue"
 
 import resourcesIndex from "@/pages/resources/index.vue"
 import colorList from "@/pages/resources/colors/list.vue"
+import colorEdit from "@/pages/resources/colors/edit.vue"
 import fabricTypeList from "@/pages/resources/fabrictypes/list.vue"
 import partList from "@/pages/resources/parts/list.vue"
 import materialList from "@/pages/resources/materials/list.vue"
@@ -113,7 +114,16 @@ const routes = [
     {
         path: "/resources/colors/list",
         component: colorList,
-        props: ({ query }) => ({ page: Number(query.page) })
+        props: ({ query }) => ({ page: Number(query.page), reverse: (query.reverse == "true") || undefined })
+    },
+    {
+        path: "/resources/colors/create",
+        component: colorEdit
+    },
+    {
+        path: "/resources/colors/edit/:id",
+        component: colorEdit,
+        props: ({ params }) => ({ id: Number(params.id) })
     },
     {
         path: "/resources/fabrictypes/list",

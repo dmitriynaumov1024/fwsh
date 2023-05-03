@@ -5,7 +5,7 @@
     <Crumb last>{{locale.color.plural}}</Crumb>
 </Bread>
 <Fetch url="/resources/colors/list"
-    :params="{ page: props.page }" :cacheTTL="4"
+    :params="{ page: props.page, reverse: props.reverse }" :cacheTTL="4"
     class-error="width-container card pad-1">
     <template v-slot:default="{ data }">
     <Pagination :items="data.items" :page="props.page" 
@@ -15,7 +15,21 @@
         @click-item="goToItem"
         class="width-container pad-05 mar-b-1">
         <template v-slot:title>
-            <h2 class="mar-b-1">{{locale.color.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
+            <!-- <h2 class="mar-b-05">{{locale.color.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2> -->
+            <h2 class="mar-b-05">{{locale.color.plural}}</h2>
+            <div class="flex-stripe flex-pad-1 mar-b-1">
+                <button class="button button-secondary accent-weak text-strong">
+                    {{locale.common.page}} {{props.page}}
+                </button>
+                <router-link :to="`/resources/colors/list?page=0&reverse=${!props.reverse}`" 
+                    class="button button-secondary accent-weak text-strong">
+                    {{locale.common.id}} {{reverse ? '▼' : '▲'}}
+                </router-link>
+                <span class="flex-grow"></span>
+                <router-link to="/resources/colors/create" class="button button-primary">
+                    + {{locale.color.single}}
+                </router-link>
+            </div>
         </template>
         <template v-slot:repeating="{ item }">
             <ColorView :color="item" @click="goToItem(item)" class="card-card pad-1 mar-b-1" />
@@ -26,6 +40,7 @@
 </template>
 
 <script setup>
+import qs from "qs"
 import { useRouter } from "vue-router"
 import { inject } from "vue"
 import { Fetch } from "@common/comp/special"
@@ -36,11 +51,20 @@ const router = useRouter()
 const locale = inject("locale")
 
 const props = defineProps({
-    page: Number
+    page: Number,
+    reverse: Boolean
 })
 
 function goToPage(page) {
-    if (page != null) router.push(`/resources/colors/list?page=${page}`)
+    if (page != null) router.push(`/resources/colors/list?${qs.stringify({ page, reverse: props.reverse })}`)
+}
+
+function goToItem(item) {
+    if (item.id) router.push(`/resources/colors/edit/${item.id}`)
+}
+
+function goToCreate() {
+    router.push(`/resources/colors/create`)
 }
 
 </script>
