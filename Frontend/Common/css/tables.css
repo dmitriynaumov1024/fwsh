@@ -20,6 +20,7 @@ table.kvtable tr>td {
 }
 
 table.kntable tr>td {
+  padding: 0 2px;
   display: inline-block;
 }
 
@@ -29,6 +30,9 @@ table.kntable tr>td:nth-child(1) {
 
 table.kntable tr>td:nth-child(2) {
   width: 40%;
+}
+
+table.kntable[align-right] tr>td:nth-child(2) {
   text-align: right;
 }
 
@@ -53,11 +57,11 @@ table.kntable tr>td:nth-child(2) {
   }
 }
 
-table.stripes tr:nth-child(2n) {
+table.stripes tr:nth-child(2n-1) {
   background-color: var(--color-back-0);  
 }
 
-table.stripes tr:nth-child(2n-1) {
+table.stripes tr:nth-child(2n) {
   background-color: var(--color-back-1);
 }
 

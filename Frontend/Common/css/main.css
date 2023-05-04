@@ -43,6 +43,10 @@
   margin-bottom: 0.5rem;
 }
 
+.clickable, [clickable] {
+  cursor: pointer;
+}
+
 /* Notifications */
 
 .notification-list {
@@ -72,9 +76,14 @@
 .fabric-card-thumbnail {
   width: 6rem;
   height: 6rem;
+  object-fit: cover;
 }
 
 /* More important things */
+
+.inline.inline {
+  display: inline;
+}
 
 .block {
   display: block;

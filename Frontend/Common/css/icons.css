@@ -13,4 +13,5 @@
 
 .icon-1, .icon-15, .icon-2 {
   display: block;
+  vertical-align: text-top;
 }
