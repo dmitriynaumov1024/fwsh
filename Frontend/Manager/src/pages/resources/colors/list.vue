@@ -32,7 +32,7 @@
             </div>
         </template>
         <template v-slot:repeating="{ item }">
-            <ColorView :color="item" @click="goToItem(item)" class="card-card pad-1 mar-b-1" />
+            <ColorView :color="item" clickable @click="goToItem(item)" class="card-card pad-1 mar-b-1" />
         </template>
     </Pagination>
     </template>
@@ -56,7 +56,8 @@ const props = defineProps({
 })
 
 function goToPage(page) {
-    if (page != null) router.push(`/resources/colors/list?${qs.stringify({ page, reverse: props.reverse })}`)
+    const query = { page: page, reverse: props.reverse }
+    if (page != null) router.push(`/resources/colors/list?${qs.stringify(query)}`)
 }
 
 function goToItem(item) {
