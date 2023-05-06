@@ -5,3 +5,5 @@ export { createDateFormat } from "./lib/createDateFormat.js"
 export { useAxiosWrapper } from "./lib/useAxiosWrapper.js"
 export { useLocalStorage } from "./lib/useLocalStorage.js"
 export { useLocale } from "./lib/useLocale.js"
+
+export { defineRoutes } from "./lib/defineRoutes.js"

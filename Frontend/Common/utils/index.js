@@ -8,6 +8,16 @@ function arrayToDict (array) {
     return result 
 }
 
+// concatenate arrays
+//
+function arrayConcat (...arrays) {
+    let result = [ ]
+    for (const array of arrays) {
+        for (const item of array) result.push(item)
+    }
+    return result
+}
+
 // Do content url resolution
 //
 function cdnResolve (url) {
@@ -50,6 +60,7 @@ function nestedObjectMerge (...sources) {
 
 export { 
     arrayToDict,
+    arrayConcat,
     cdnResolve,
     nestedObjectAssign,
     nestedObjectCopy,
