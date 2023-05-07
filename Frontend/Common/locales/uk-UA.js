@@ -53,15 +53,19 @@ export default nestedObjectMerge (base, {
     selectLanguage: {
         title: "Мова сайту"
     },
+    changesSaved: {
+        title: "Успіх",
+        description: "Всі зміни збережено."
+    },
     loading: {
         title: "Завантажуємо",
         description: "Зачекайте, будь ласка. Завантаження даних може зайняти певний час. "+
             "Якщо через 10 секунд нічого не з'явиться, перезавантажте сторінку з CTRL+F5, "+
             "перевірте своє мережеве з'єднання або зв'яжіться з адміністратором сайту."
     },
-    changesSaved: {
-        title: "Успіх",
-        description: "Всі зміни збережено."
+    badRequest: {
+        title: "Некоректний запит",
+        description: "Будь ласка, перевірте правильність введених параметрів запиту та спробуйте ще раз."
     },
     unauthorized: {
         title: "Ви не авторизувалися",
@@ -71,10 +75,6 @@ export default nestedObjectMerge (base, {
     notFound: {
         title: "Тут нічого немає",
         description: "На жаль, нам не вдалося завантажити дані, або ця сторінка не існує."
-    },
-    notFound: {
-        title: "Некоректний запит",
-        description: "Будь ласка, перевірте правильність введених даних та спробуйте ще раз."
     },
     noDataYet: {
         title: "Тут ще нічого немає",
@@ -245,19 +245,23 @@ export default nestedObjectMerge (base, {
     part: {
         single: "Деталь",
         plural: "Деталі",
+        create: "Нова деталь",
     },
     material: {
         single: "Матеріал",
         plural: "Матеріали",
+        create: "Новий матеріал"
     },
     fabric: {
         catalog: "Каталог тканин",
         single: "Тканина",
-        plural: "Тканини"
+        plural: "Тканини",
+        create: "Нова тканина"
     },
     fabricType: {
         single: "Тип тканини",
         plural: "Типи тканин",
+        create: "Новий тип тканини",
         name: "Найменування",
         description: "Опис"
     },

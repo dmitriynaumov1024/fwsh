@@ -32,7 +32,8 @@ table.kntable tr>td:nth-child(2) {
   width: 40%;
 }
 
-table.kntable[align-right] tr>td:nth-child(2) {
+table.kntable[align-right] tr>td:nth-child(2),
+table.kntable.align-right tr>td:nth-child(2) {
   text-align: right;
 }
 

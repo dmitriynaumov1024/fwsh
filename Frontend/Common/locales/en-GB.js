@@ -63,14 +63,14 @@ export default nestedObjectMerge (base, {
             "not disappear after 10 seconds, please try reloading the page with CTRL+F5, "+
             "check your network connection, or contact site administrator."
     },
+    badRequest: {
+        title: "Bad request",
+        description: "Please make sure query parameters match all requirements and try again."
+    },
     unauthorized: {
         title: "Unauthorized",
         description: "You tried to access some resource that only allows authorized clients. "+
             "Please log in or sign up and then try again."
-    },
-    notFound: {
-        title: "Bad request",
-        description: "Please check parameters you've provided and try again."
     },
     notFound: {
         title: "Nothing here",
@@ -248,19 +248,23 @@ export default nestedObjectMerge (base, {
     part: {
         single: "Part",
         plural: "Parts",
+        create: "Create new part"
     },
     material: {
         single: "Material",
         plural: "Materials",
+        create: "Create new material"
     },
     fabric: {
         catalog: "Fabric catalog",
         single: "Fabric",
-        plural: "Fabrics"
+        plural: "Fabrics",
+        create: "Create new fabric"
     },
     fabricType: {
         single: "Fabric type",
         plural: "Fabric types",
+        create: "Create new fabric type",
         name: "Name",
         description: "Description"
     },
