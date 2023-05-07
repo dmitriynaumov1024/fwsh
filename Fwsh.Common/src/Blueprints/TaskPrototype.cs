@@ -10,7 +10,7 @@ public class TaskPrototype
     public int DesignId { get; set; }
 
     public int Precedence { get; set; }
-    public string RoleName { get; set; }
+    public string Role { get; set; }
     public int Payment { get; set; }
 
     public string Description { get; set; }
