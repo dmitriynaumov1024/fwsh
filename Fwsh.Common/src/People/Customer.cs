@@ -6,19 +6,17 @@ using System.Linq;
 
 public class Customer : Person
 {
-    public int DiscountPercent { get; set; }
-
     public bool IsOrganization { get; set; }
     public string OrgName { get; set; }
-       
-    public string Password { get; set; }
 
-    public ICollection<ProductionOrder> ProductionOrders { get; set; }
+    public int DiscountPercent { get; set; }
+
+    public ICollection<ProdOrder> ProdOrders { get; set; }
     public ICollection<RepairOrder> RepairOrders { get; set; }
 
     public Customer() : base()
     {
-        this.ProductionOrders = new HashSet<ProductionOrder>();
+        this.ProdOrders = new HashSet<ProdOrder>();
         this.RepairOrders = new HashSet<RepairOrder>();
     }
 
@@ -26,8 +24,8 @@ public class Customer : Person
     {
         double discountPerOneOrder = this.IsOrganization ? 0.25 : 2.0;
 
-        double discount = this.ProductionOrders
-            .Where(order => order.Status == OrderStatus.ReceivedAndPaid)
+        double discount = this.ProdOrders
+            .Where(order => order.Status == OrderStatus.Received)
             .Count() * discountPerOneOrder;
 
         return (int)Math.Clamp(discount, 0, PriceFormation.MaxDiscountPercent);

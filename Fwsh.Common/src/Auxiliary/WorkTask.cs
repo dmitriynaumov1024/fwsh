@@ -2,11 +2,13 @@ namespace Fwsh.Common;
 
 using System;
 
-public class WorkTask
+public abstract class WorkTask
 {
     public int Id { get; set; }
     public int? WorkerId { get; set; }
+    
     public string Status { get; set; }
+    public bool IsActive { get; set; } 
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? StartedAt { get; set; }

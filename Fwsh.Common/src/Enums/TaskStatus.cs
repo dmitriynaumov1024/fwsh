@@ -13,7 +13,7 @@ public static class TaskStatus
         Finished = "finished",
         Impossible = "impossible";
 
-    public static readonly List<string> KnownValues = new List<string> 
+    public static readonly ICollection<string> KnownValues = new List<string> 
     {
         Unknown, Assigned, Rejected, Working, Finished, Impossible
     };

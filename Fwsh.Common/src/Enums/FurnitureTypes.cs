@@ -8,14 +8,15 @@ public static class FurnitureTypes
     public static readonly string 
         Unknown = "unknown",
         Sofa = "sofa",
-        Corner = "corner",
+        Minisofa = "minisofa",
         Ottoman = "ottoman",
+        Corner = "corner",
         Armchair = "armchair",
         Pouffe = "pouffe";
 
-    public static readonly List<string> KnownValues = new List<string> 
+    public static readonly ICollection<string> KnownValues = new List<string> 
     {
-        Unknown, Sofa, Corner, Ottoman, Armchair, Pouffe
+        Unknown, Sofa, Minisofa, Ottoman, Corner, Armchair, Pouffe
     };
 
     public static bool Contains(string value) => KnownValues.Contains(value);

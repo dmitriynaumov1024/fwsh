@@ -4,50 +4,28 @@ using System;
 
 public class Dimensions
 {
-    public int Length { get; set; }
     public int Width { get; set; }
+    public int Length { get; set; }
     public int Height { get; set; }
 
-    public string ToConventionalString()
-    {
-        return String.Format("{0}x{1}x{2}", this.Length, this.Width, this.Height);
-    }
+    public string MeasureUnit { get; set; }
 
-    public static bool TryParse (string source, out Dimensions outResult)
+    public static Dimensions ParseWLH (string dimString) 
     {
-        string[] dims = source.Split('x');
-        
-        int length = 0, 
-            width = 0, 
-            height = 0;
-        
-        bool success = false;
+        if (dimString == null || dimString.Length < 2) return null;
 
-        if (dims.Length > 0) success |= int.TryParse(dims[0], out length);
+        string[] wlh = dimString.Split(';');
         
-        if (dims.Length > 1) success &= int.TryParse(dims[1], out width);
-        
-        if (dims.Length > 2) success &= int.TryParse(dims[2], out height);
-        
-        if (success) outResult = new Dimensions { 
-            Length = length,
-            Width = width,
-            Height = height
+        return new Dimensions {
+            Width  = wlh.Length > 0 ? int.Parse(wlh[0]) : 0,
+            Length = wlh.Length > 1 ? int.Parse(wlh[1]) : 0,
+            Height = wlh.Length > 2 ? int.Parse(wlh[2]) : 0,
+            MeasureUnit = wlh.Length > 3 && MeasureUnits.Contains(wlh[3]) ? wlh[3] : null
         };
-        else outResult = null;
-
-        return success;
     }
 
-    public static Dimensions Parse (string source)
+    public static string StringifyWLH (Dimensions dim) 
     {
-        var result = new Dimensions();
-        
-        if (Dimensions.TryParse(source, out result)) {
-            return result;
-        }
-        else {
-            throw new ArgumentException("expected 1 to 3 integers separated by 'x'");
-        }
+        return String.Format ("{0};{1};{2};{3}", dim.Width, dim.Length, dim.Height, dim.MeasureUnit);
     }
 }

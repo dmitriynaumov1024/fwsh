@@ -14,19 +14,23 @@ public class TaskPrototype
     public int Payment { get; set; }
 
     public string Description { get; set; }
-    public string InstructionUrl { get; set; }
 
     public virtual Design Design { get; set; }
 
-    public virtual ICollection<TaskPart> Parts { get; set; }
-    public virtual ICollection<TaskMaterial> Materials { get; set; }
-    public virtual ICollection<TaskFabric> Fabrics { get; set; }
+    public virtual ICollection<ResourceQuantity> Resources { get; set; }
+
+    public virtual IEnumerable<ResourceQuantity> Parts => 
+        Resources.Where(r => r.Item.Type == ResourceTypes.Part);
+
+    public virtual IEnumerable<ResourceQuantity> Materials => 
+        Resources.Where(r => r.Item.Type == ResourceTypes.Material);
+
+    public virtual IEnumerable<ResourceQuantity> Fabrics => 
+        Resources.Where(r => r.Item.Type == ResourceTypes.Fabric);
 
     public TaskPrototype()
     {
-        this.Parts = new HashSet<TaskPart>();
-        this.Materials = new HashSet<TaskMaterial>();
-        this.Fabrics = new HashSet<TaskFabric>();
+        this.Resources = new HashSet<ResourceQuantity>();
     }
 
     public int CalculateResourcePrice ()

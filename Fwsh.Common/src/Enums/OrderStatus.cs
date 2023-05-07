@@ -11,14 +11,14 @@ public static class OrderStatus
         Delayed = "delayed",
         Working = "working",
         Finished = "finished",
-        ReceivedAndPaid = "receivedpaid",
+        Received = "received",
         Rejected = "rejected",
         Impossible = "impossible";
 
-    public static readonly List<string> KnownValues = new List<string> 
+    public static readonly ICollection<string> KnownValues = new List<string> 
     {
         Unknown, Submitted, Delayed, Working, Finished, 
-        ReceivedAndPaid, Rejected, Impossible
+        Received, Rejected, Impossible
     };
 
     public static bool Contains(string value) => KnownValues.Contains(value);
