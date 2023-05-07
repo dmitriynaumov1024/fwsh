@@ -3,6 +3,9 @@
     <h2 class="mar-b-1">
         {{locale.login.welcomeBack}}
     </h2>
+    <p v-if="props.description" class="mar-b-2">
+        {{props.description}}
+    </p>
     <div class="fancy-input mar-b-1">
         <label for="input-phone">{{locale.profile.phone}}</label>
         <input id="input-phone" type="text" 
@@ -35,6 +38,7 @@ import { ref, reactive, inject } from "vue"
 const locale = inject("locale")
 
 const props = defineProps({
+    description: String,
     badFields: {
         type: Object,
         default: { }

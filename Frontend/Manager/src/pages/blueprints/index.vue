@@ -18,8 +18,17 @@
 </template>
 
 <script setup>
-import { inject } from "vue"
+import { useRouter } from "vue-router"
+import { inject, onMounted } from "vue"
 import { Bread, Crumb } from "@common/comp/layout"
 
 const locale = inject("locale")
+const storage = inject("storage")
+
+const router = useRouter()
+
+onMounted(() => setTimeout(()=> {
+    if (! storage.tmp?.profile) router.replace("/login?next=/blueprints")
+}, 120))
+
 </script>

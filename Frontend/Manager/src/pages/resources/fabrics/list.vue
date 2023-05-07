@@ -30,7 +30,10 @@
             </div>
         </template>
         <template v-slot:repeating="{ item }">
-            <FabricView :mat="item" @click="()=> goToItem(data, item)" class="card pad-1 mar-b-1" />
+            <FabricView :mat="item" 
+                @click-details="()=>goToItem(item)"
+                @click-quantity="()=> selectItem(data, item)" 
+                class="card-card pad-1 mar-b-1" />
         </template>
     </Pagination>
     <Modal v-if="data.selectedItem">
@@ -67,7 +70,11 @@ function goToPage (page) {
     if (page != null) router.push(`/resources/fabrics/list?${qs.stringify(query)}`)
 }
 
-function goToItem (data, item) {
+function goToItem (item) {
+    router.push(`/resources/fabrics/edit/${item.id}`)
+}
+
+function selectItem (data, item) {
     if (data.selectedItem) return
     console.log("Should go to "+item.id)
     data.selectedItem = item

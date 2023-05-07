@@ -1,8 +1,9 @@
 <template>
-<div class="">
+<div class="mini-resource-view">
     <table class="kntable stripes">
         <tr>
-            <td><b>{{part.item.name}}</b>&ensp;<span class="text-gray">#{{part.id}}</span></td>
+            <td clickable @click="()=> emit('click-details')">
+                <b>{{part.item.name}}</b>&ensp;<span class="text-gray">#{{part.id}}</span></td>
         </tr>
         <tr>
             <td>{{locale.resource.externalId}}</td>
@@ -14,7 +15,11 @@
         </tr>
         <tr>
             <td>{{locale.resource.inStock}}</td>
-            <td>{{part.inStock}} / {{part.normalStock}}&ensp;<pencil-icon class="inline icon-1" /></td>
+            <td><p>{{part.inStock}} / {{part.normalStock}}</p>
+                <button class="button button-inline" @click="()=> emit('click-quantity')">
+                    <pencil-icon class="inline icon-1" /> {{locale.action.update}}
+                </button>
+            </td>
         </tr>
     </table>
 </div>    
@@ -29,5 +34,10 @@ const props = defineProps({
 })
 
 const locale = inject("locale")
+
+const emit = defineEmits([
+    "click-quantity",
+    "click-details"
+])
 
 </script>

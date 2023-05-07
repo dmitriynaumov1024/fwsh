@@ -1,7 +1,7 @@
 <template>
 <div class="mar-b-2">
     <h3 class="mar-b-05">{{resource.item?.name}} <span class="text-thin text-gray">#{{resource.id}}</span></h3>
-    <table class="kntable">
+    <table class="kntable align-right">
         <tr>
             <td>{{locale.resource.externalId}}</td>
             <td>{{resource.externalId}}</td>
