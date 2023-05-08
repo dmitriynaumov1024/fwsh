@@ -5,32 +5,27 @@ using System.Collections.Generic;
 using System.Linq;
 using Fwsh.Common;
 
-public class WorkerRoleFactory : Factory<ICollection<WorkerRole>>
+public class WorkerRoleFactory : Factory<List<string>>
 {
     Random random = new Random();
     
     static string[] RoleNames = new[] {
-        Roles.Carpentry,
-        Roles.Sewing,
-        Roles.Assembly,
-        Roles.Assembly,
-        Roles.Upholstery,
-        Roles.Upholstery
+        WorkerRoles.Carpentry,
+        WorkerRoles.Sewing,
+        WorkerRoles.Assembly,
+        WorkerRoles.Assembly,
+        WorkerRoles.Upholstery,
+        WorkerRoles.Upholstery
     };
 
-    public override ICollection<WorkerRole> Next()
+    public override List<string> Next()
     {
         int roleCount = random.Next(1, 3);
         var result = new HashSet<string>();
         
-        for (int i=0; i<roleCount; i++) {
+        for (int i=0; i<roleCount; i++) 
             result.Add(random.Choice(RoleNames));
-        }
-
-        return result
-            .Select(role => new WorkerRole { 
-                RoleName = role 
-            })
-            .ToList();
+        
+        return result.ToList();
     }
 }

@@ -18,13 +18,12 @@ public class FwshDataSeeder
     Factory<string> PhoneNumber = new PhoneNumberFactory();
     Factory<string> Password = new PasswordFactory();
     Factory<string> Email = new EmailFactory(); 
+    Factory<List<string>> Roles = new WorkerRoleFactory();
     Factory<string> OrgName = new OrgNameFactory();
     Factory<string> ExternalId = new ExternalIdFactory();
-    Factory<ICollection<WorkerRole>> WorkerRoles = new WorkerRoleFactory();
     Factory<Color> Color = new ColorFactory();
     Factory<FabricType> FabricType = new FabricTypeFactory();
-    Factory<Material> Materials = new MaterialFactory();
-    Factory<Part> Parts = new PartFactory();
+
     Factory<Design> Designs = new DesignFactory();
 
     void SeedManagers (FwshDataContext context, int count)
@@ -41,7 +40,7 @@ public class FwshDataSeeder
             };
             this.CredentialsLogger?.Log("manager, {0}, {1}", manager.Phone, manager.Password);
             manager.Password = manager.Password.QuickHash();
-            manager.Roles.Add(new WorkerRole { RoleName = Roles.Management });
+            manager.Roles.Add(WorkerRoles.Management);
             context.Workers.Add(manager);
         }
     }
@@ -60,7 +59,7 @@ public class FwshDataSeeder
             };
             this.CredentialsLogger?.Log("worker, {0}, {1}", worker.Phone, worker.Password);
             worker.Password = worker.Password.QuickHash();
-            worker.Roles = this.WorkerRoles.Next();
+            worker.Roles = this.Roles.Next();
             context.Workers.Add(worker);
         }
     }
@@ -109,9 +108,14 @@ public class FwshDataSeeder
         context.FabricTypes.AddRange (this.FabricType.All());
     }
 
-    void SeedFabrics (FwshDataContext context)
+    Factory<StoredResource> Materials = new MaterialFactory();
+    Factory<StoredResource> Parts = new PartFactory();
+
+    void SeedStoredFabrics (FwshDataContext context)
     {
-        var fabrics = context.Colors.Local
+        var suppliers = context.Suppliers.Local.ToArray();
+
+        var fabricTypesAndColors = context.Colors.Local
             .Join ( context.FabricTypes.Local, 
                 color => !color.Name.Contains("wood"), fabric => true, 
                 (color, fabric) => new Tuple<Color, FabricType>(color, fabric) 
@@ -119,54 +123,21 @@ public class FwshDataSeeder
             .Where(_ => random.Probability(0.85))
             .ToList();
 
-        foreach (var (color, fabric) in fabrics) {
-            context.Fabrics.Add ( new Fabric {
-                Name = $"{fabric.Name} {color.Name}",
-                Description = fabric.Description,
-                PricePerUnit = random.Next(150, 290),
-                PhotoUrl = "/stub.jpg",
+        foreach (var (color, fabricType) in fabricTypesAndColors) {
+            context.StoredResources.Add ( new StoredResource {
+                Type = ResourceTypes.Fabric,
+                SlotName = SlotNames.Fabric,
                 Color = color,
-                FabricType = fabric
-            });
-        }
-    }
-
-    void SeedMaterials (FwshDataContext context)
-    {
-        context.Materials.AddRange(this.Materials.All()); 
-
-        var woodColors = context.Colors.Local
-            .Where(color => color.Name.Contains("wood"))
-            .ToList();
-
-        foreach (var color in woodColors) {
-            context.Materials.Add ( new Material {
-                Name = $"{color.Name} decorative slab",
+                FabricType = fabricType,
+                Name = $"{fabricType.Name} {color.Name}",
+                Description = fabricType.Description,
+                PricePerUnit = random.Next(150, 290),
                 MeasureUnit = MeasureUnits.SquareMeters,
-                IsDecorative = true,
-                PricePerUnit = 80,
-                PhotoUrl = "/stub.jpg",
-                Color = color
-            });
-        }
-    }
-
-    void SeedParts (FwshDataContext context)
-    {
-        context.Parts.AddRange(this.Parts.All());
-    }
-
-    void SeedStoredFabrics (FwshDataContext context)
-    {
-        var fabrics = context.Fabrics.Local.ToList();
-        var suppliers = context.Suppliers.Local.ToArray();
-
-        foreach (var fabric in fabrics) {
-            context.StoredFabrics.Add ( new StoredFabric {
-                Item = fabric,
+                Precision = 1,
+                PhotoUrl = "fabric-stub.jpg",
                 Supplier = random.Choice(suppliers),
                 ExternalId = this.ExternalId.Next(),
-                Quantity = random.Next(60, 98),
+                InStock = random.Next(60, 98),
                 NormalStock = 100,
                 RefillPeriodDays = 30
             });
@@ -175,16 +146,25 @@ public class FwshDataSeeder
 
     void SeedStoredMaterials (FwshDataContext context)
     {
-        var materials = context.Materials.Local.ToList();
         var suppliers = context.Suppliers.Local.ToArray();
 
+        var materials = this.Materials.All();
+
         foreach (var mat in materials) {
-            context.StoredMaterials.Add ( new StoredMaterial {
-                Item = mat,
+            context.StoredResources.Add ( new StoredResource {
+                Type = ResourceTypes.Material,
+                SlotName = mat.SlotName,
+                Name = mat.Name,
+                Description = mat.Description,
+                Color = mat.Color,
+                PhotoUrl = mat.PhotoUrl,
+                PricePerUnit = mat.PricePerUnit,
+                MeasureUnit = mat.MeasureUnit,
+                Precision = mat.Precision,
                 Supplier = random.Choice(suppliers),
                 ExternalId = this.ExternalId.Next(),
-                Quantity = (int)((double)random.Next(4400, 5000) / Math.Sqrt(mat.PricePerUnit)),
-                NormalStock = (int)((double)random.Next(4950, 6000) / Math.Sqrt(mat.PricePerUnit)),
+                InStock = Math.Round((double)random.Next(4400, 5000) / Math.Sqrt(mat.PricePerUnit), mat.Precision),
+                NormalStock = Math.Round((double)random.Next(4950, 6000) / Math.Sqrt(mat.PricePerUnit), mat.Precision),
                 RefillPeriodDays = 14
             });
         }
@@ -192,16 +172,21 @@ public class FwshDataSeeder
 
     void SeedStoredParts (FwshDataContext context)
     {
-        var parts = context.Parts.Local.ToList();
+        var parts = this.Parts.All();
         var suppliers = context.Suppliers.Local.ToArray();
 
         foreach (var part in parts) {
-            context.StoredParts.Add ( new StoredPart {
-                Item = part,
+            context.StoredResources.Add ( new StoredResource {
+                Type = ResourceTypes.Part,
+                Name = part.Name,
+                Description = part.Description,
+                PricePerUnit = part.PricePerUnit,
+                MeasureUnit = null,
+                Precision = 0,
                 Supplier = random.Choice(suppliers),
                 ExternalId = this.ExternalId.Next(),
-                Quantity = (int)((double)random.Next(3600, 4000) / Math.Sqrt(part.PricePerUnit)),
-                NormalStock = (int)((double)random.Next(3950, 4000) / Math.Sqrt(part.PricePerUnit)),
+                InStock = Math.Round((double)random.Next(1300, 3000) / Math.Sqrt(part.PricePerUnit)),
+                NormalStock = Math.Round((double)random.Next(2900, 3000) / Math.Sqrt(part.PricePerUnit)),
                 RefillPeriodDays = 30
             });
         }
@@ -212,12 +197,8 @@ public class FwshDataSeeder
         var designs = this.Designs.All();
         
         foreach (var design in designs) {
-            var photos = Enumerable.Range(0, random.Next(2, 5))
-                .Select(i => new DesignPhoto {
-                    Position = i,
-                    Url = $"/{design.NameKey}{i}.jpg"
-                });
-            design.Photos = new HashSet<DesignPhoto>(photos);
+            design.PhotoUrls = Enumerable.Range(0, random.Next(2, 5))
+                .Select(i => $"design-{design.Id}-{i}-{Guid.NewGuid()}.jpg").ToList();
         }
 
         context.Designs.AddRange(designs);
@@ -225,44 +206,29 @@ public class FwshDataSeeder
 
     void SeedTaskPrototypes (FwshDataContext context)
     {
+        var res = context.StoredResources.Local;
+
         var designs = context.Designs.Local.ToList();
+
+        var screwPart = res.Where(p => p.Name.Contains("Screw 55mm")).FirstOrDefault();
         
-        // context.Fabrics.Add ( new Fabric {
-        //     Id = -1,
-        //     Name = "default",
-        //     ColorId = -1,
-        //     FabricTypeId = -1
-        // });
+        var wood = res.Where(m => m.Name == "Wood").FirstOrDefault();
 
-        var screwPart = context.Parts.Local
-            .Where(p => p.Name.Contains("Screw 55mm")).FirstOrDefault();
-        
-        var wood = context.Materials.Local
-            .Where(m => m.Name == "Wood").FirstOrDefault();
+        var woodenSlab = res.Where(m => m.Name.Contains("slab")).FirstOrDefault();
 
-        var woodenSlab = context.Materials.Local
-            .Where(m => m.Name.Contains("slab")).FirstOrDefault();
+        var pvaGlue = res.Where(m => m.Name.Contains("PVA")).FirstOrDefault();
 
-        var pvaGlue = context.Materials.Local
-            .Where(m => m.Name.Contains("PVA")).FirstOrDefault();
+        var foam50 = res.Where(m => m.Name.Contains("Foam 50mm")).FirstOrDefault();
 
-        var foam50 = context.Materials.Local
-            .Where(m => m.Name.Contains("Foam 50mm")).FirstOrDefault();
+        var syntp = res.Where(m => m.Name == "Synthepone").FirstOrDefault();
 
-        var syntp = context.Materials.Local
-            .Where(m => m.Name == "Synthepone").FirstOrDefault();
+        var interlin = res.Where(m => m.Name.Contains("Interlining")).FirstOrDefault();
 
-        var interlin = context.Materials.Local
-            .Where(m => m.Name.Contains("Interlining")).FirstOrDefault();
+        var foamGlue = res.Where(m => m.Name.Contains("Foam glue")).FirstOrDefault();
 
-        var foamGlue = context.Materials.Local
-            .Where(m => m.Name.Contains("Foam glue")).FirstOrDefault();
+        var joints = res.Where(p => p.Name.Contains("mechanism")).ToArray();
 
-        var joints = context.Parts.Local
-            .Where(p => p.Name.Contains("mechanism")).ToArray();
-
-        var leg = context.Parts.Local
-            .Where(p => p.Name.Contains("leg")).FirstOrDefault();
+        var leg = res.Where(p => p.Name.Contains("leg")).FirstOrDefault();
 
         foreach (var design in designs) 
         {
@@ -272,86 +238,78 @@ public class FwshDataSeeder
             double approxArea = (double)dimensions.Length 
                               * (double)dimensions.Width / 10000;
 
-            design.TaskPrototypes = new HashSet<TaskPrototype> {
+            design.Tasks = new HashSet<TaskPrototype> {
                 new TaskPrototype {
                     Precedence = 0,
-                    RoleName = Roles.Carpentry,
+                    Role = WorkerRoles.Carpentry,
                     Payment = 300,
                     Description = "Wooden frame manufacture",
-                    InstructionUrl = $"/{design.NameKey}-task-0.pdf",
-                    Materials = new HashSet<TaskMaterial> {
-                        new TaskMaterial {
+                    Resources = new HashSet<ResourceQuantity> {
+                        new ResourceQuantity {
                             Item = wood,
                             Quantity = approxArea * 0.01
                         },
-                        new TaskMaterial {
+                        new ResourceQuantity {
                             Item = pvaGlue,
                             Quantity = 0.075
-                        }
-                    },
-                    Parts = new HashSet<TaskPart> {
-                        new TaskPart {
+                        },
+                        new ResourceQuantity {
                             Item = screwPart,
-                            Quantity = (int)(approxArea * 10) + random.Next(0, 5)
+                            Quantity = (int)approxArea * 10 + random.Next(0, 5)
                         }
                     }
                 },
                 new TaskPrototype {
                     Precedence = 1,
-                    RoleName = Roles.Carpentry,
+                    Role = WorkerRoles.Carpentry,
                     Payment = 300,
                     Description = "Compound frame manufacture",
-                    InstructionUrl = $"/{design.NameKey}-task-1.pdf",
-                    Materials = new HashSet<TaskMaterial> {
-                        new TaskMaterial {
+                    Resources = new HashSet<ResourceQuantity> {
+                        new ResourceQuantity {
                             Item = wood,
                             Quantity = approxArea * 0.005
                         },
-                        new TaskMaterial {
+                        new ResourceQuantity {
                             Item = woodenSlab,
                             Quantity = approxArea 
-                        }
-                    },
-                    Parts = new HashSet<TaskPart> {
-                        new TaskPart {
+                        },
+                        new ResourceQuantity {
                             Item = screwPart,
-                            Quantity = (int)(approxArea * 12) + random.Next(0, 5)
+                            Quantity = (int)approxArea * 12 + random.Next(0, 5)
                         }
                     }
                 },
                 new TaskPrototype {
                     Precedence = 1,
-                    RoleName = Roles.Sewing,
+                    Role = WorkerRoles.Sewing,
                     Payment = 300,
                     Description = "Cover manufacture",
-                    InstructionUrl = $"/{design.NameKey}-task-2.pdf",
-                    Fabrics = new HashSet<TaskFabric> {
-                        new TaskFabric {
-                            // FabricId = -1,
+                    Resources = new HashSet<ResourceQuantity> {
+                        new ResourceQuantity {
+                            SlotName = SlotNames.Fabric,
                             Quantity = approxArea * 2
                         }
                     } 
                 },
                 new TaskPrototype {
                     Precedence = 2,
-                    RoleName = Roles.Upholstery,
+                    Role = WorkerRoles.Upholstery,
                     Payment = 300,
                     Description = "Upholstery",
-                    InstructionUrl = $"/{design.NameKey}-task-3.pdf",
-                    Materials = new HashSet<TaskMaterial> {
-                        new TaskMaterial {
+                    Resources = new HashSet<ResourceQuantity> {
+                        new ResourceQuantity {
                             Item = foamGlue,
                             Quantity = 0.025 * approxArea
                         },
-                        new TaskMaterial {
+                        new ResourceQuantity {
                             Item = foam50,
                             Quantity = approxArea * 1.8
                         },
-                        new TaskMaterial {
+                        new ResourceQuantity {
                             Item = syntp,
                             Quantity = approxArea * 1.5
                         },
-                        new TaskMaterial {
+                        new ResourceQuantity {
                             Item = interlin,
                             Quantity = approxArea * 2
                         }
@@ -359,16 +317,15 @@ public class FwshDataSeeder
                 },
                 new TaskPrototype {
                     Precedence = 3,
-                    RoleName = Roles.Assembly,
+                    Role = WorkerRoles.Assembly,
                     Payment = 250,
                     Description = "Final assembly",
-                    InstructionUrl = $"/{design.NameKey}-task-4.pdf",
-                    Parts = new HashSet<TaskPart> {
-                        new TaskPart {
+                    Resources = new HashSet<ResourceQuantity> {
+                        new ResourceQuantity {
                             Item = leg,
                             Quantity = random.Next(4, 6)
                         },
-                        new TaskPart {
+                        new ResourceQuantity {
                             Item = random.Choice(joints),
                             Quantity = 2
                         }
@@ -387,10 +344,6 @@ public class FwshDataSeeder
 
         this.SeedColors(context);
         this.SeedFabricTypes(context);
-
-        this.SeedParts(context);
-        this.SeedMaterials(context);
-        this.SeedFabrics(context);
 
         this.SeedStoredParts(context);
         this.SeedStoredMaterials(context);

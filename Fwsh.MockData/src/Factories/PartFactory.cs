@@ -5,42 +5,42 @@ using System.Collections.Generic;
 using System.Linq;
 using Fwsh.Common;
 
-public class PartFactory : Factory<Part>
+public class PartFactory : Factory<StoredResource>
 {
-    static Part[] data = new[] {
-        new Part {
+    static StoredResource[] data = new[] {
+        new StoredResource {
             Name = "Bolt 6x40",
             PricePerUnit = 0.4
         },
-        new Part {
+        new StoredResource {
             Name = "Screw 55mm",
             PricePerUnit = 0.2
         },
-        new Part {
+        new StoredResource {
             Name = "Screw 75mm",
             PricePerUnit = 0.3
         },
-        new Part {
+        new StoredResource {
             Name = "Basic hinge",
             PricePerUnit = 22
         },
-        new Part {
+        new StoredResource {
             Name = "Spring mechanism",
             PricePerUnit = 45
         },
-        new Part {
+        new StoredResource {
             Name = "Hinge mechanism",
             PricePerUnit = 80
         },
-        new Part {
+        new StoredResource {
             Name = "Swing mechanism",
             PricePerUnit = 60
         },
-        new Part {
+        new StoredResource {
             Name = "Plastic leg",
             PricePerUnit = 4
         },
-        new Part {
+        new StoredResource {
             Name = "Metal tube joint",
             PricePerUnit = 5
         }
@@ -48,7 +48,7 @@ public class PartFactory : Factory<Part>
 
     public override int? FixedSize => data.Length;
 
-    public override Part Next() => data[0];
+    public override StoredResource Next() => data[0];
 
-    public override Part[] All() => data.ToArray();
+    public override StoredResource[] All() => data.ToArray();
 }

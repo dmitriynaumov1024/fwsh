@@ -11,7 +11,8 @@ public class FullNameFactory : Factory<Tuple<string, string, string>>
         "Іваненко", "Петренко", "Юхименко", "Коваль", 
         "Мельник", "Сидоренко", "Терненко", "Євтушенко",
         "Науменко", "Мельниченко", "Тимченко", "Сергієнко", 
-        "Васильчук", "Іванчук", "Парасюк", "Тютюнник"
+        "Васильчук", "Іванчук", "Парасюк", "Тютюнник",
+        "Багач", "Лиходій", "Федоренко"
     };
 
     static string[] MaleNames = new[]{
@@ -36,10 +37,8 @@ public class FullNameFactory : Factory<Tuple<string, string, string>>
     };
 
     public override Tuple<string, string, string> Next()
-    {
-        bool halfProbability = random.Next(0, 100) >= 50;
-        
-        if (halfProbability) {
+    {        
+        if (random.Probability(0.7)) {
             return new (
                 random.Choice(Surnames),
                 random.Choice(MaleNames),
