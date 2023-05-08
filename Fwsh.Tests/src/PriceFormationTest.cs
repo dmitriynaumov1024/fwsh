@@ -33,14 +33,14 @@ public class PriceFormationTest
         int initialPrice = 1000;
         var customer = new Customer();
         for (int i=0; i<5; i++) {
-            customer.ProductionOrders.Add (new ProductionOrder() { 
-                Status = OrderStatus.ReceivedAndPaid
+            customer.ProdOrders.Add (new ProdOrder() { 
+                Status = OrderStatus.Received
             });
         }
         customer.UpdateDiscountPercent();
         Console.Write("Discount for individual\n  with {4} orders\ndiscount: -{0}% \n  {1} -> {2} -> {3}\n", 
             customer.DiscountPercent, initialPrice, initialPrice.WithMargin(), 
-            initialPrice.WithMargin().WithDiscountFor(customer), customer.ProductionOrders.Count);
+            initialPrice.WithMargin().WithDiscountFor(customer), customer.ProdOrders.Count);
     }
 
     [Test]
@@ -51,13 +51,13 @@ public class PriceFormationTest
             IsOrganization = true
         };
         for (int i=0; i<5; i++) {
-            customer.ProductionOrders.Add (new ProductionOrder() { 
-                Status = OrderStatus.ReceivedAndPaid
+            customer.ProdOrders.Add (new ProdOrder() { 
+                Status = OrderStatus.Received
             });
         }
         customer.UpdateDiscountPercent();
         Console.Write("Discount for organization\n  with {4} orders\ndiscount: -{0}% \n  {1} -> {2} -> {3}\n", 
             customer.DiscountPercent, initialPrice, initialPrice.WithMargin(), 
-            initialPrice.WithMargin().WithDiscountFor(customer), customer.ProductionOrders.Count);
+            initialPrice.WithMargin().WithDiscountFor(customer), customer.ProdOrders.Count);
     }
 }
