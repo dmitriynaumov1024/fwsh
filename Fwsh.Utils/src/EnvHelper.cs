@@ -29,5 +29,11 @@ public static class env
         return result ?? Environment.GetEnvironmentVariable(key);
     }
 
+    public static bool isTrue (string key)
+    {
+        string result = get(key)?.ToLower();
+        return result == "true" || result == "1";
+    }
+
     public static bool isDevelopment = get("ENVIRONMENT_TYPE")?.ToLower() == "development";
 }
