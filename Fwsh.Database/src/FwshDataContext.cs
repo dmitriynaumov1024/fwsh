@@ -6,6 +6,8 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Fwsh.Common;
+using Fwsh.Logging;
+using Fwsh.Utils;
 
 public class FwshDataContext : DbContext
 {
@@ -41,37 +43,56 @@ public class FwshDataContext : DbContext
 
     protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
     {
-        if (this.Configure != null) {
-            this.Configure(optionsBuilder);
+        if (this.Configure != null) this.Configure(optionsBuilder);
+
+        this.ConfigureLogging(optionsBuilder);
+    }
+
+    void ConfigureLogging (DbContextOptionsBuilder optionsBuilder)
+    {
+        var loggingCategories = new List<string>();
+        if (env.isTrue("DB_LOG_QUERIES")) loggingCategories.Add(DbLoggerCategory.Query.Name);
+        if (env.isTrue("DB_LOG_UPDATES")) loggingCategories.Add(DbLoggerCategory.Update.Name); 
+
+        if (loggingCategories.Count > 0) {
+            Logger logger = env.get("DB_LOGFILE")?.ToLower() switch {
+                null => new ConsoleLogger(),
+                "console" => new ConsoleLogger(),
+                string filename => FileLogger.To(filename)
+            };
+
+            if (env.isDevelopment) optionsBuilder.EnableSensitiveDataLogging();
+            optionsBuilder.LogTo(message => logger.Log(message));
         }
     }
 
     protected override void OnModelCreating (ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Design>(entity => {
-            entity.HasKey(d => d.Id);
+        modelBuilder.Entity<Design>(design => {
+            design.HasKey(d => d.Id);
+            design.HasIndex(d => d.NameKey).IsUnique();
+            design.Property(d => d.DimCompact).HasConversion<DimensionsConverter>();
+            design.Property(d => d.DimExpanded).HasConversion<DimensionsConverter>();
+            design.Property(d => d.PhotoUrls).HasConversion<StringListConverter>();
+        });
 
-            entity.HasIndex(d => d.NameKey)
-                .IsUnique();
-
-            entity.Property(d => d.DimCompact)
-                .HasConversion<DimensionsConverter>();
-
-            entity.Property(d => d.DimExpanded)
-                .HasConversion<DimensionsConverter>();
+        modelBuilder.Entity<TaskPrototype>(task => {
+            task.Ignore(t => t.Parts);
+            task.Ignore(t => t.Materials);
+            task.Ignore(t => t.Fabrics);
         });
 
         modelBuilder.Entity<Customer>(customer => {
-            customer.HasIndex(c => c.Phone)
-                .IsUnique();
+            customer.HasIndex(c => c.Phone).IsUnique();
         });
 
         modelBuilder.Entity<Worker>(worker => {
-            worker.HasIndex(c => c.Phone)
-                .IsUnique();
+            worker.HasIndex(w => w.Phone).IsUnique();
+            worker.Property(w => w.Roles).HasConversion<StringListConverter>();
+        });
 
-            worker.Property(w => w.Roles)
-                .HasConversion<StringListConverter>();
+        modelBuilder.Entity<RepairOrder>(order => {
+            order.Property(o => o.PhotoUrls).HasConversion<StringListConverter>();
         });
     }
 }
