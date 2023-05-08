@@ -1,6 +1,7 @@
 namespace Fwsh.Common;
 
 using System;
+using System.Collections.Generic;
 
 public abstract class WorkTask
 {
@@ -15,6 +16,8 @@ public abstract class WorkTask
     public DateTime? FinishedAt { get; set; }
 
     public virtual Worker Worker { get; set; }
+
+    public virtual ICollection<ResourceQuantity> Resources { get; set; }
 
     public bool TrySetStatus (string status)
     {

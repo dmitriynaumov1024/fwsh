@@ -10,6 +10,16 @@ public class Dimensions
 
     public string MeasureUnit { get; set; }
 
+    public Dimensions() { }
+
+    public Dimensions (int width, int length, int height, string measureUnit = null) 
+    { 
+        this.Width = width;
+        this.Length = length;
+        this.Height = height;
+        this.MeasureUnit = measureUnit;
+    }
+
     public static Dimensions ParseWLH (string dimString) 
     {
         if (dimString == null || dimString.Length < 2) return null;
