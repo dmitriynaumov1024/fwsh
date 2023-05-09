@@ -29,7 +29,7 @@ public class ManagerAuthController : FwshController
     }
 
     [HttpPost("signup")]
-    public IActionResult Signup (WorkerSignupRequest request)
+    public IActionResult Signup (ManagerSignupRequest request)
     {
         // forbid manager signup in prod. environment
         if (!env.isDevelopment) {
@@ -44,29 +44,17 @@ public class ManagerAuthController : FwshController
         }
 
         bool phoneAlreadyExists = dataContext.Workers
-            .Where(c => c.Phone == request.Phone)
-            .FirstOrDefault() != null; 
+            .FirstOrDefault(c => c.Phone == request.Phone) != null; 
 
         if (phoneAlreadyExists) {
             return BadRequest(new BadFieldResult("phone"));
         }
 
-        var storedWorker = new Worker() {
-            Surname = request.Surname,
-            Name = request.Name,
-            Patronym = request.Patronym,
-            Phone = request.Phone,
-            Email = request.Email,
-            Password = request.Password.QuickHash(),
-            Roles = new HashSet<WorkerRole> { 
-                new WorkerRole { RoleName = Roles.Management } 
-            }
-        };
-
         try {
-            dataContext.Workers.Add(storedWorker);
+            var manager = request.Create();
+            dataContext.Workers.Add(manager);
             dataContext.SaveChanges();
-            int id = storedWorker.Id;
+            int id = manager.Id;
             return Ok(new CreationResult(id, $"Successfully created {id}"));
         }
         catch (Exception ex) {
@@ -78,20 +66,18 @@ public class ManagerAuthController : FwshController
     [HttpPost("login")]
     public IActionResult Login (LoginRequest request)
     {
-        var storedWorker = dataContext.Workers
-            .Include(w => w.Roles)
-            .Where(c => c.Phone == request.Phone)
-            .FirstOrDefault();
+        var manager = dataContext.Workers
+            .FirstOrDefault(c => c.Phone == request.Phone);
         
-        bool isManager = storedWorker != null 
-            && storedWorker.Roles.Any(role => role.RoleName == Roles.Management);
+        bool isManager = manager != null 
+            && manager.Roles.Contains(WorkerRoles.Management);
 
         if (!isManager) {
             return NotFound(new BadFieldResult("phone"));
         }
 
-        if (storedWorker.Password == request.Password.QuickHash()) {
-            user.ConfirmedId = storedWorker.Id;
+        if (manager.Password == request.Password.QuickHash()) {
+            user.ConfirmedId = manager.Id;
             user.ConfirmedRole = UserRole.Manager;
             return Ok(new SuccessResult("Successfully logged in"));
         }

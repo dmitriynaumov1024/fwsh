@@ -6,32 +6,31 @@ using System.Linq;
 
 using Fwsh.Common;
 
-public class ProductionOrderResult : OrderResult, IResultBuilder<ProductionOrderResult>
+public class ProdOrderResult : OrderResult, IResultBuilder<ProdOrderResult>
 {
-    private ProductionOrder order;
+    private ProdOrder order;
 
     public int Quantity { get; set; }
     public int PricePerOne { get; set; }
-    public int PriceTotal { get; set; }
 
     public int DesignId { get; set; }
     public int FabricId { get; set; }
-    public int? DecorMaterialId { get; set; }
+    public int? DecorId { get; set; }
 
     public DesignResult Design { get; set; }
-    public FabricResult Fabric { get; set; }
-    public MaterialResult DecorMaterial { get; set; }
+    public ResourceResult Fabric { get; set; }
+    public ResourceResult Decor { get; set; }
 
-    public ProductionOrderResult () { }
+    public ProdOrderResult () { }
 
-    public ProductionOrderResult (ProductionOrder order)
+    public ProdOrderResult (ProdOrder order)
     {
         this.order = order;
     }
     
-    public ProductionOrderResult Mini () 
+    public ProdOrderResult Mini () 
     {
-        var result = new ProductionOrderResult() {
+        var result = new ProdOrderResult() {
             Id = order.Id,
             CustomerId = order.CustomerId,
             Status = order.Status,
@@ -41,10 +40,10 @@ public class ProductionOrderResult : OrderResult, IResultBuilder<ProductionOrder
             ReceivedAt = order.ReceivedAt,
             Quantity = order.Quantity,
             PricePerOne = order.PricePerOne,
-            PriceTotal = order.PriceTotal,
+            Price = order.Price,
             DesignId = order.DesignId,
             FabricId = order.FabricId,
-            DecorMaterialId = order.DecorMaterialId
+            DecorId = order.DecorId
         };
 
         if (order.Design != null) 
@@ -53,15 +52,15 @@ public class ProductionOrderResult : OrderResult, IResultBuilder<ProductionOrder
         return result;
     }
 
-    public ProductionOrderResult ForCustomer ()
+    public ProdOrderResult ForCustomer ()
     {
         var result = Mini();
 
         if (order.Fabric != null) 
-            result.Fabric = new FabricResult(order.Fabric);
+            result.Fabric = new ResourceResult(order.Fabric);
         
-        if (order.DecorMaterial != null)
-            result.DecorMaterial = new MaterialResult(order.DecorMaterial);
+        if (order.Decor != null)
+            result.Decor = new ResourceResult(order.Decor);
         
         result.Notifications = order.Notifications
             .OrderBy(n => n.Id)
@@ -71,13 +70,13 @@ public class ProductionOrderResult : OrderResult, IResultBuilder<ProductionOrder
         return result;
     }
 
-    public ProductionOrderResult ForWorker ()
+    public ProdOrderResult ForWorker ()
     {
         var result = ForCustomer();
         return result;
     }
 
-    public ProductionOrderResult ForManager ()
+    public ProdOrderResult ForManager ()
     {
         var result = ForWorker();
         result.Customer ??= new CustomerResult(order.Customer);

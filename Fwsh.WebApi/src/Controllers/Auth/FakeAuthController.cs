@@ -23,12 +23,13 @@ public class FakeAuthController : FwshController
     [HttpGet("become-{rolename}")]
     public IActionResult Become (string rolename)
     {
+        // Forbid this in Production mode
         if (!env.isDevelopment) { 
             return NotFound (new MessageResult("Not found"));
         }
         if (Enum.TryParse<UserRole>(rolename, true, out UserRole role)) {
             user.ConfirmedRole = role;
-            return Ok (new MessageResult($"Now you are {rolename}"));
+            return Ok (new SuccessResult($"Now you are {rolename}"));
         }
         return BadRequest (new MessageResult($"Unrecognized role {rolename}"));
     }

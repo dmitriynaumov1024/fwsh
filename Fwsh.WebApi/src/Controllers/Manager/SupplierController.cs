@@ -22,6 +22,7 @@ using Fwsh.WebApi.Utils;
 public class SupplierController : FwshController
 {
     const int PAGESIZE = 10;
+    const int MAX_SIZE = 100;
 
     public SupplierController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
@@ -40,6 +41,30 @@ public class SupplierController : FwshController
         IQueryable<Supplier> suppliers = dataContext.Suppliers;
 
         return Ok (suppliers.Paginate((int)page, PAGESIZE, supplier => new SupplierResult(supplier)));
+    }
+
+    [HttpGet("search")]
+    public IActionResult Search (string query)
+    {
+        if (query == null || query.Length < 2 || query.Trim().Length < 2)
+            return BadRequest(new BadFieldResult("query"));
+
+        query = query.Trim().ToLower();
+
+        IEnumerable<Supplier> suppliers = dataContext.Suppliers.ToList();
+        suppliers = suppliers.Where (s =>
+            s.Surname.ToLower().Equals(query)
+            || s.Surname.ToLower().Contains(query)
+            || s.Name.ToLower().Equals(query) 
+            || s.Name.ToLower().Contains(query)
+            || s.Name.ToLower().Equals(query)
+            || s.OrgName.ToLower().Contains(query)
+            || s.Phone.Contains(query)
+            || s.Email.Contains(query));
+
+        return Ok (new ListResult<SupplierResult>() { 
+            Items = suppliers.Select(supplier => new SupplierResult(supplier)).ToList()
+        });
     }
 
     [HttpGet("view/{id}")]

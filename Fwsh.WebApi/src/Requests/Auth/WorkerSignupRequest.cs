@@ -2,12 +2,14 @@ namespace Fwsh.WebApi.Requests.Auth;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
-using Fwsh.WebApi.Requests;
+
+using Fwsh.Common;
 using Fwsh.WebApi.Validation;
 using Fwsh.Utils;
 
-public class WorkerSignupRequest : Request
+public class WorkerSignupRequest : Request, CreationRequest<Worker>
 {
     public string Surname { get; set; }
     public string Name { get; set; }
@@ -39,6 +41,20 @@ public class WorkerSignupRequest : Request
 
         validator.Property("roles", this.Roles)
                 .NotNull().CountInRange(0, 4);
+    }
+
+    public Worker Create ()
+    {
+        return new Worker() {
+            Surname = this.Surname,
+            Name = this.Name,
+            Patronym = this.Patronym,
+            Phone = this.Phone,
+            Email = this.Email,
+            Password = this.Password.QuickHash(),
+            Roles = new HashSet<string>(this.Roles)
+                .Where(WorkerRoles.KnownWorkerRoles.Contains).ToList()
+        };
     }
 
     static Regex PhoneRegex = new Regex(@"^\+?[0-9]{10,14}$");

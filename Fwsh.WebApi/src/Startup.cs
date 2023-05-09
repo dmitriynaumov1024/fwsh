@@ -55,8 +55,8 @@ public class Startup
         var logger = serviceProvider.GetService<Logger>();
 
         // create first manager account if there is nothing yet
-        bool managerExists = dataContext.Workers.Include(w => w.Roles)
-            .Where(w => w.Roles.Any(r => r.RoleName == Roles.Management))
+        bool managerExists = dataContext.Workers
+            .Where(w => w.Roles.Contains(WorkerRoles.Management))
             .Count() > 0;
 
         if (! managerExists) {
@@ -65,9 +65,7 @@ public class Startup
                 Phone = env.get("MGR_LOGIN") ?? "admin",
                 Password = env.get("MGR_PASSWORD").QuickHash()
             };
-            manager.Roles.Add ( new WorkerRole() { 
-                RoleName = Roles.Management 
-            });
+            manager.Roles.Add(WorkerRoles.Management);
             dataContext.Workers.Add(manager);
             dataContext.SaveChanges();
             logger.Log("Created default manager");

@@ -33,9 +33,10 @@ public class FabricController : FwshController
     [HttpGet("list")]
     public IActionResult List (int? color = null, int? fabrictype = null, int? page = null, bool reverse = false)
     {
-        IQueryable<Fabric> fabrics = dataContext.Fabrics
+        IQueryable<StoredResource> fabrics = dataContext.StoredResources
             .Include(f => f.Color)
-            .Include(f => f.FabricType);
+            .Include(f => f.FabricType)
+            .Where(f => f.SlotName == SlotNames.Fabric);
 
         if (color is int colorid) {
             fabrics = fabrics.Where(f => f.ColorId == colorid);
@@ -48,12 +49,12 @@ public class FabricController : FwshController
                 fabrics.OrderByDescending(f => f.Id) :
                 fabrics.OrderBy(f => f.Id);
             return Ok ( fabrics.Paginate ( 
-                pagenumber, PAGESIZE, fabric => new FabricResult(fabric)
+                pagenumber, PAGESIZE, fabric => new ResourceResult(fabric)
             ));
         }
         else {
             return Ok ( fabrics.Listiate (
-                MAXSIZE, fabric => new FabricResult(fabric)
+                MAXSIZE, fabric => new ResourceResult(fabric)
             ));
         }
     }

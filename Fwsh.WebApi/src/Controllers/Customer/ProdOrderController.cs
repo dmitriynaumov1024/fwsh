@@ -21,66 +21,55 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("customer/orders/production")]
-public class ProductionOrderController : FwshController
+public class ProdOrderController : FwshController
 {
     const int PAGESIZE = 10;
 
-    public ProductionOrderController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    public ProdOrderController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;
         this.logger = logger;
         this.user = user;
     }
 
-    protected IActionResult GetOrderList (int? page, Expression<Func<ProductionOrder, bool>> condition)
+    protected IActionResult GetOrderList (int? page, Expression<Func<ProdOrder, bool>> condition)
     {
         if (page == null) {
             return BadRequest(new BadFieldResult("page"));
         }
 
-        IQueryable<ProductionOrder> orders = dataContext.ProductionOrders
+        IQueryable<ProdOrder> orders = dataContext.ProdOrders
             .Include(order => order.Design)
             .Where(order => order.CustomerId == user.ConfirmedId)
             .Where(condition);
 
         return Ok ( orders.OrderByDescending(order => order.Id).Paginate (
-            (int)page, PAGESIZE, order => new ProductionOrderResult(order).Mini()
+            (int)page, PAGESIZE, order => new ProdOrderResult(order).Mini()
         ));
     }
 
     [HttpGet("list")]
     public IActionResult List (int? page = null)
     {
-        return GetOrderList (page, order => 
-               order.Status == OrderStatus.Unknown
-            || order.Status == OrderStatus.Submitted 
-            || order.Status == OrderStatus.Working 
-            || order.Status == OrderStatus.Delayed 
-            || order.Status == OrderStatus.Finished
-        );
+        return GetOrderList (page, order => order.IsActive == true);
     }
 
     [HttpGet("archive")]
     public IActionResult Archive (int? page = null)
     {
-        return GetOrderList (page, order => 
-               order.Status == OrderStatus.ReceivedAndPaid
-            || order.Status == OrderStatus.Rejected 
-            || order.Status == OrderStatus.Impossible
-        );
+        return GetOrderList (page, order => order.IsActive == false);
     }
 
     [HttpGet("view/{id}")]
     public IActionResult View (int id) 
     {
-        var order = dataContext.ProductionOrders
+        var order = dataContext.ProdOrders
             .Include(order => order.Fabric.FabricType)
             .Include(order => order.Fabric.Color)
-            .Include(order => order.DecorMaterial.Color)
+            .Include(order => order.Decor.Color)
             .Include(order => order.Customer)
             .Include(order => order.Notifications)
             .Include(order => order.Design)
-            .ThenInclude(design => design.Photos)
             .Where(order => order.Id == id && order.CustomerId == user.ConfirmedId)
             .FirstOrDefault();
 
@@ -88,13 +77,13 @@ public class ProductionOrderController : FwshController
             return NotFound (new BadFieldResult("id"));
         }
 
-        return Ok (new ProductionOrderResult(order).ForCustomer());
+        return Ok (new ProdOrderResult(order).ForCustomer());
     }
 
     [HttpPost("create")]
-    public IActionResult Create (ProductionOrderRequest request)
+    public IActionResult Create (ProdOrderRequest request)
     {
-        var order = new ProductionOrder() {
+        var order = new ProdOrder() {
             Status = OrderStatus.Unknown,
             CustomerId = user.ConfirmedId
         };
@@ -115,9 +104,9 @@ public class ProductionOrderController : FwshController
     }
 
     [HttpPost("update/{id}")]
-    public IActionResult Update (int id, ProductionOrderRequest request)
+    public IActionResult Update (int id, ProdOrderRequest request)
     {
-        var order = dataContext.ProductionOrders
+        var order = dataContext.ProdOrders
             .FirstOrDefault(order => order.Id == id && order.CustomerId == user.ConfirmedId);
 
         if (order == null) {
@@ -145,7 +134,7 @@ public class ProductionOrderController : FwshController
         }
     }
 
-    protected IActionResult OnApplyRequest (ProductionOrder order, ProductionOrderRequest request)
+    protected IActionResult OnApplyRequest (ProdOrder order, ProdOrderRequest request)
     {
         if (request.Validate().State.HasBadFields) {
             return BadRequest (new BadFieldResult(request.State.BadFields));
@@ -160,35 +149,33 @@ public class ProductionOrderController : FwshController
             return BadRequest (new BadFieldResult("designId"));
         }
 
-        var fabric = dataContext.Fabrics.Find(request.FabricId);
+        var fabric = dataContext.StoredResources
+            .FirstOrDefault(f => f.SlotName == SlotNames.Fabric && f.Id == request.FabricId);
 
         if (fabric == null) {
             return BadRequest (new BadFieldResult("fabricId"));
         }
 
-        var decorMaterial = dataContext.Materials
-            .FirstOrDefault(m => m.IsDecorative && m.Id == request.DecorMaterialId);
+        var decor = dataContext.StoredResources
+            .FirstOrDefault(m => m.SlotName == SlotNames.Decor && m.Id == request.DecorId);
 
-        if (decorMaterial == null && design.DecorMaterialQuantity > 0) {
-            return BadRequest (new BadFieldResult("decorMaterialId"));
-        }
-        if (decorMaterial != null && ! decorMaterial.IsDecorative) {
+        if (decor == null && design.DecorUsage > 0) {
             return BadRequest (new BadFieldResult("decorMaterialId"));
         }
 
         var customer = dataContext.Customers
-            .Include(customer => customer.ProductionOrders)
+            .Include(customer => customer.ProdOrders)
             .FirstOrDefault(customer => customer.Id == user.ConfirmedId);
 
         customer.UpdateDiscountPercent();
 
         int fixedDesignPrice = (int)(design.Price 
-            + fabric.PricePerUnit * design.FabricQuantity 
-            + (decorMaterial?.PricePerUnit ?? 0) * design.DecorMaterialQuantity);
+            + fabric.PricePerUnit * design.FabricUsage
+            + (decor?.PricePerUnit ?? 0) * design.DecorUsage);
 
         request.ApplyTo(order);
 
-        order.DecorMaterialId = decorMaterial?.Id;
+        order.DecorId = decor?.Id;
         order.PricePerOne = fixedDesignPrice.WithDiscountFor(customer);
 
         return null; // null means nothing gone wrong
@@ -197,8 +184,7 @@ public class ProductionOrderController : FwshController
     [HttpPost("confirm-submit/{id}")]
     public IActionResult ConfirmSubmit (int id)
     {
-        var order = dataContext.ProductionOrders
-            .Include(order => order.Fabric)
+        var order = dataContext.ProdOrders
             .FirstOrDefault(order => order.Id == id && order.CustomerId == user.ConfirmedId);
 
         if (order == null) {
@@ -215,8 +201,7 @@ public class ProductionOrderController : FwshController
 
         try {
             order.Status = OrderStatus.Submitted;
-            dataContext.ProductionOrders.Update(order);
-            dataContext.ProductionOrderEvents.Add(new ProductionOrderEvent(order));
+            dataContext.ProdOrders.Update(order);
             dataContext.SaveChanges();
             return Ok ( new SuccessResult (
                 $"Successfully confirmed submission of Production Order {id}"
@@ -233,7 +218,7 @@ public class ProductionOrderController : FwshController
     [HttpDelete("delete/{id}")]
     public IActionResult Delete (int id)
     {
-        var order = dataContext.ProductionOrders
+        var order = dataContext.ProdOrders
             .Where(order => order.Id == id && order.CustomerId == user.ConfirmedId)
             .FirstOrDefault();
 
@@ -262,14 +247,14 @@ public class ProductionOrderController : FwshController
     [HttpPost("read-notifications")]
     public IActionResult ReadNotifications (int? order = null, int? id = null, int? last = null)
     {
-        IQueryable<ProductionNotification> notifications = dataContext.ProductionOrders
+        IQueryable<ProdNotification> notifications = dataContext.ProdOrders
             .Include(n => n.Notifications)
             .Where(order => order.CustomerId == user.ConfirmedId)
             .SelectMany(order => order.Notifications)
             .Where(n => n.IsRead == false);
 
         if (order is int orderId) {
-            notifications = notifications.Where(n => n.ProductionOrderId == orderId);
+            notifications = notifications.Where(n => n.ProdOrderId == orderId);
             if (id is int notificationId) {
                 notifications = notifications.Where(n => n.Id == notificationId);    
             }
@@ -287,7 +272,7 @@ public class ProductionOrderController : FwshController
         try {
             var selectedNotifications = notifications.ToList();
             foreach (var n in selectedNotifications) n.IsRead = true;
-            dataContext.ProductionNotifications.UpdateRange(selectedNotifications);
+            dataContext.ProdNotifications.UpdateRange(selectedNotifications);
             dataContext.SaveChanges();
             return Ok ( new SuccessResult (
                 $"Production order {order}: Notification " 

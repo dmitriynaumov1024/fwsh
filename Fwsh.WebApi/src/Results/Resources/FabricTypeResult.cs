@@ -12,6 +12,10 @@ public class FabricTypeResult : Result
     public string Description { get; set; }
     public DateTime CreatedAt { get; set; } 
 
+    public int DaysSinceCreated => (DateTime.UtcNow - this.CreatedAt).Days;
+
+    public FabricTypeResult () { }
+
     public FabricTypeResult (FabricType fabricType) 
     {
         this.Id = fabricType.Id;

@@ -20,15 +20,14 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("resources/parts")]
-public class PartController : ResourceController<int, Part, StoredPart, StoredPartResult>
+public class PartController : ResourceController
 {
-    protected override DbSet<StoredPart> dbSet => 
-        dataContext.StoredParts;
+    protected override string typeName => ResourceTypes.Part;
 
-    protected override IQueryable<StoredPart> dbQueryableSet => 
-        dataContext.StoredParts
+    protected override IQueryable<StoredResource> dbQueryableSet => 
+        dataContext.StoredResources
             .Include(r => r.Supplier)
-            .Include(r => r.Item);
+            .Where(r => r.Type == ResourceTypes.Part);
 
     public PartController (FwshDataContext dataContext, Logger logger, FwshUser user)
     : base (dataContext, logger, user) 
@@ -36,37 +35,15 @@ public class PartController : ResourceController<int, Part, StoredPart, StoredPa
 
     }
 
-    protected override IResultBuilder<StoredPartResult> ResultBuilder (StoredPart part)
-    {
-        return new StoredPartResult(part);
-    }
-
     [HttpPost("create")]
-    public IActionResult Create (PartCreationRequest request)
+    public IActionResult Create (StoredPartRequest request)
     {
         return base.OnCreate(request);
     }
 
     [HttpPost("update/{id}")]
-    public IActionResult Update (int id, PartUpdateRequest request)
+    public IActionResult Update (int id, StoredPartRequest request)
     {
         return base.OnUpdate(id, request);
     }
-
-    [HttpPost("set-quantity/{id}")]
-    public IActionResult SetQuantity (int id, [FromBody] int quantity)
-    {
-        var storedResource = dbSet.Find(id);
-
-        if (storedResource == null) {
-            return NotFound ( new BadFieldResult("id") );
-        }
-
-        if (quantity > storedResource.NormalStock * 3 || quantity < 0) {
-            return BadRequest(new BadFieldResult("quantity"));
-        } 
-
-        return base.OnSetQuantity(id, storedResource, quantity);
-    }
-
 }

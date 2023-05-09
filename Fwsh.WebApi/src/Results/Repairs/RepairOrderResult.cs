@@ -10,9 +10,6 @@ public class RepairOrderResult : OrderResult, IResultBuilder<RepairOrderResult>
 {
     private RepairOrder order;
 
-    public int Price { get; set; }
-    public int Prepayment { get; set; }
-
     public List<string> PhotoUrls { get; set; }
     public string Description { get; set; }
 
@@ -34,7 +31,8 @@ public class RepairOrderResult : OrderResult, IResultBuilder<RepairOrderResult>
             FinishedAt = order.FinishedAt,
             ReceivedAt = order.ReceivedAt,
             Price = order.Price,
-            Prepayment = order.Prepayment
+            Payment = order.Payment,
+            PhotoUrls = order.PhotoUrls
         };
     }
 

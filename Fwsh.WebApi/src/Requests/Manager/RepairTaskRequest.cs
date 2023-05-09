@@ -8,14 +8,14 @@ public class RepairTaskRequest : Request,
     CreationRequest<RepairTask>, UpdateRequest<RepairTask>
 {
     public int OrderId { get; set; }
-    public string RoleName { get; set; }
+    public string Role { get; set; }
     public int Payment { get; set; }
     public string Status { get; set; }
 
     protected override void OnValidation (ObjectValidator validator)
     {
-        validator.Property("roleName", this.RoleName)
-            .Condition(Roles.KnownWorkerRoles.Contains(this.RoleName));
+        validator.Property("role", this.Role)
+            .Condition(WorkerRoles.KnownWorkerRoles.Contains(this.Role));
 
         validator.Property("payment", this.Payment)
             .ValueInRange(1, 999);
@@ -34,7 +34,7 @@ public class RepairTaskRequest : Request,
     public void ApplyTo (RepairTask task)
     {
         task.OrderId = this.OrderId;
-        task.RoleName = this.RoleName;
+        task.Role = this.Role;
         task.Payment = this.Payment;
         task.Status = this.Status ?? TaskStatus.Unknown;
     }

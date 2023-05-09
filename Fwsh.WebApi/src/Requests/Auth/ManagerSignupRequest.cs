@@ -1,19 +1,18 @@
 namespace Fwsh.WebApi.Requests.Auth;
 
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using Fwsh.Common;
 using Fwsh.WebApi.Validation;
 using Fwsh.Utils;
 
-public class CustomerSignupRequest : Request, CreationRequest<Customer>
+public class ManagerSignupRequest : Request, CreationRequest<Worker>
 {
     public string Surname { get; set; }
     public string Name { get; set; }
     public string Patronym { get; set; }
-    public bool IsOrganization { get; set; }
-    public string OrgName { get; set; }
     public string Phone { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
@@ -29,11 +28,6 @@ public class CustomerSignupRequest : Request, CreationRequest<Customer>
         validator.Property("patronym", this.Patronym)
                 .NotNull().LengthInRange(4, 28);
 
-        if (this.IsOrganization) {
-            validator.Property("orgName", this.OrgName)
-                .NotNull().LengthInRange(2, 32);
-        }
-
         validator.Property("phone", this.Phone)
                 .NotNull().Match(PhoneRegex);
 
@@ -44,17 +38,16 @@ public class CustomerSignupRequest : Request, CreationRequest<Customer>
                 .NotNull().LengthInRange(8, 64);
     }
 
-    public Customer Create ()
+    public Worker Create ()
     {
-        return new Customer() {
+        return new Worker() {
             Surname = this.Surname,
             Name = this.Name,
             Patronym = this.Patronym,
-            OrgName = this.OrgName,
-            IsOrganization = this.IsOrganization,
             Phone = this.Phone,
             Email = this.Email,
-            Password = this.Password.QuickHash()
+            Password = this.Password.QuickHash(),
+            Roles = new List<string> { WorkerRoles.Management }
         };
     }
 

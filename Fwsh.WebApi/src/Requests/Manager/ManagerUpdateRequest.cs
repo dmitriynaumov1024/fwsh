@@ -1,21 +1,20 @@
-namespace Fwsh.WebApi.Requests.Worker;
+namespace Fwsh.WebApi.Requests.Manager;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.RegularExpressions;
 
 using Fwsh.Common;
 using Fwsh.WebApi.Validation;
 using Fwsh.Utils;
 
-public class WorkerUpdateRequest : Request, UpdateRequest<Worker>
+public class ManagerUpdateRequest : Request, UpdateRequest<Worker>
 {
     public string Surname { get; set; }
     public string Name { get; set; }
     public string Patronym { get; set; }
     public string Password { get; set; }
     public string OldPassword { get; set; }
-    public List<string> Roles { get; set; } = new List<string>();
 
     protected override void OnValidation (ObjectValidator validator)
     {
@@ -33,9 +32,6 @@ public class WorkerUpdateRequest : Request, UpdateRequest<Worker>
 
         validator.Property("oldPassword", this.OldPassword)
                 .NotNull();
-                
-        validator.Property("roles", this.Roles)
-                .NotNull().CountInRange(0, 4);
     }
 
     public void ApplyTo (Worker worker)
@@ -44,8 +40,5 @@ public class WorkerUpdateRequest : Request, UpdateRequest<Worker>
         worker.Name = this.Name;
         worker.Patronym = this.Patronym;
         worker.Password = this.Password.QuickHash();
-
-        worker.Roles = new HashSet<string>(this.Roles)
-            .Where(WorkerRoles.KnownWorkerRoles.Contains).ToList();
     }
 }

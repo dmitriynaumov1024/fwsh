@@ -12,6 +12,8 @@ using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Controllers;
+using Fwsh.WebApi.Requests;
+using Fwsh.WebApi.Requests.Auth;
 using Fwsh.WebApi.Requests.Customer;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
@@ -40,36 +42,54 @@ public class ProfileController : FwshController
         return Ok (new CustomerResult(customer)); 
     }
 
-    [HttpPost("update")]
-    public IActionResult Update (CustomerUpdateRequest request)
+    IActionResult OnUpdate (Customer customer, UpdateRequest<Customer> request)
     {
-        if (request.Validate().State.HasBadFields) {
-            return BadRequest (new BadFieldResult(request.State.BadFields));
-        }
-        if (! request.State.IsValid) {
-            return BadRequest (new MessageResult(request.State.Message ?? "Something went wrong"));
-        }
-
-        int id = user.ConfirmedId;
-        var customer = dataContext.Customers.Find(id);
-
-        if (customer == null) {
-            return NotFound (new MessageResult($"Can not update own profile"));
-        }
-        if (customer.Password != request.OldPassword.QuickHash()) {
-            return BadRequest (new BadFieldResult("oldPassword"));
-        }
-
         try {
             request.ApplyTo(customer);
             dataContext.Customers.Update(customer);
             dataContext.SaveChanges();
-            return Ok (new SuccessResult("Profile updated successfully"));
+            return Ok (new SuccessResult("Successfully updated profile"));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
             return ServerError (new FailResult("Something went wrong while trying to update profile"));
         }
+    }
+
+    [HttpPost("update")]
+    public IActionResult Update (CustomerUpdateRequest request)
+    {
+        if (request.Validate().State.HasBadFields)
+            return BadRequest (new BadFieldResult(request.State.BadFields));
+
+        int id = user.ConfirmedId;
+        var customer = dataContext.Customers.Find(id);
+
+        if (customer == null) 
+            return NotFound (new MessageResult($"Can not update own profile"));
+
+        if (request.OldPassword.QuickHash() != customer.Password) 
+            return BadRequest(new BadFieldResult("oldPassword"));
+        
+        return OnUpdate(customer, request);
+    }
+
+    [HttpPost("set-password")]
+    public IActionResult SetPassword (PasswordUpdateRequest request)
+    {
+        if (request.Validate().State.HasBadFields)
+            return BadRequest (new BadFieldResult(request.State.BadFields));
+
+        int id = user.ConfirmedId;
+        var customer = dataContext.Customers.Find(id);
+
+        if (customer == null) 
+            return NotFound (new MessageResult($"Can not update own profile"));
+
+        if (request.OldPassword.QuickHash() != customer.Password) 
+            return BadRequest(new BadFieldResult("oldPassword"));
+
+        return OnUpdate(customer, request);
     }
 
     [HttpPost("logout")]

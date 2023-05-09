@@ -36,16 +36,16 @@ public class MaterialController : FwshController
             return BadRequest(new BadFieldResult("page"));
         }
 
-        IQueryable<Material> materials = dataContext.Materials
+        IQueryable<StoredResource> materials = dataContext.StoredResources
             .Include(m => m.Color)
-            .Where(m => m.IsDecorative);
+            .Where(m => m.SlotName == SlotNames.Decor);
         
         materials = reverse ? 
             materials.OrderByDescending(m => m.Id) :
             materials.OrderBy(m => m.Id);
 
         return Ok ( materials.Paginate ( 
-            page, PAGESIZE, mat => new MaterialResult(mat) 
+            page, PAGESIZE, mat => new ResourceResult(mat) 
         ));
     }
 

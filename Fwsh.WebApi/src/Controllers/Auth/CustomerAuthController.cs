@@ -37,17 +37,6 @@ public class CustomerAuthController : FwshController
             return BadRequest(new MessageResult(request.State.Message ?? "Something went wrong"));
         }
 
-        var storedCustomer = new Customer() {
-            Surname = request.Surname,
-            Name = request.Name,
-            Patronym = request.Patronym,
-            OrgName = request.OrgName,
-            IsOrganization = request.OrgName != null && request.OrgName.Length > 1,
-            Phone = request.Phone,
-            Email = request.Email,
-            Password = request.Password.QuickHash()
-        };
-
         bool phoneAlreadyExists = dataContext.Customers
             .Where(c => c.Phone == request.Phone)
             .FirstOrDefault() != null; 
@@ -57,13 +46,10 @@ public class CustomerAuthController : FwshController
         }
         
         try {
-            dataContext.Customers.Add(storedCustomer);
+            var customer = request.Create();
+            dataContext.Customers.Add(customer);
             dataContext.SaveChanges();
-            int id = storedCustomer.Id;
-            Task.Run(() => {
-                dataContext.SignupEvents.Add(new SignupEvent { CustomerId = id });
-                dataContext.SaveChanges();
-            });
+            int id = customer.Id;
             return Ok(new CreationResult(id, $"Successfully created {id}"));
         }
         catch (Exception ex) {
@@ -75,15 +61,14 @@ public class CustomerAuthController : FwshController
     [HttpPost("login")]
     public IActionResult Login (LoginRequest request)
     {
-        var storedCustomer = dataContext.Customers
-            .Where(c => c.Phone == request.Phone)
-            .FirstOrDefault();
+        var customer = dataContext.Customers
+            .FirstOrDefault(c => c.Phone == request.Phone);
 
-        if (storedCustomer == null) {
+        if (customer == null) {
             return NotFound(new BadFieldResult("phone"));
         }
-        if (storedCustomer.Password == request.Password.QuickHash()) {
-            user.ConfirmedId = storedCustomer.Id;
+        if (customer.Password == request.Password.QuickHash()) {
+            user.ConfirmedId = customer.Id;
             user.ConfirmedRole = UserRole.Customer;
             return Ok(new SuccessResult("Successfully logged in"));
         }

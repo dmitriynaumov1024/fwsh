@@ -45,7 +45,6 @@ public class RepairOrderController : FwshController
         }
 
         IQueryable<RepairOrder> orders = dataContext.RepairOrders
-            .Include(order => order.Photos)
             .Where(order => order.CustomerId == user.ConfirmedId)
             .Where(condition);
 
@@ -57,23 +56,13 @@ public class RepairOrderController : FwshController
     [HttpGet("list")]
     public IActionResult List (int? page = null)
     {
-        return GetOrderList (page, order => 
-               order.Status == OrderStatus.Unknown
-            || order.Status == OrderStatus.Submitted 
-            || order.Status == OrderStatus.Working 
-            || order.Status == OrderStatus.Delayed 
-            || order.Status == OrderStatus.Finished
-        );
+        return GetOrderList (page, order => order.IsActive == true);
     }
 
     [HttpGet("archive")]
     public IActionResult Archive (int? page = null)
     {
-        return GetOrderList (page, order => 
-               order.Status == OrderStatus.ReceivedAndPaid
-            || order.Status == OrderStatus.Rejected 
-            || order.Status == OrderStatus.Impossible
-        );
+        return GetOrderList (page, order => order.IsActive == false);
     }
 
     [HttpGet("view/{id}")]
@@ -81,7 +70,6 @@ public class RepairOrderController : FwshController
     {
         var order = dataContext.RepairOrders
             .Include(order => order.Customer)
-            .Include(order => order.Photos)
             .Include(order => order.Notifications)
             .Where(order => order.Id == id && order.CustomerId == user.ConfirmedId)
             .FirstOrDefault();
@@ -130,7 +118,6 @@ public class RepairOrderController : FwshController
         }
 
         var order = dataContext.RepairOrders
-            .Include(order => order.Photos)
             .FirstOrDefault(order => order.Id == id && order.CustomerId == user.ConfirmedId);
 
         if (order == null) {
@@ -170,7 +157,6 @@ public class RepairOrderController : FwshController
         try {
             order.Status = OrderStatus.Submitted;
             dataContext.RepairOrders.Update(order);
-            dataContext.RepairOrderEvents.Add(new RepairOrderEvent(order));
             dataContext.SaveChanges();
             return Ok ( new SuccessResult (
                 $"Successfully confirmed submission of Repair Order {id}"
@@ -188,7 +174,6 @@ public class RepairOrderController : FwshController
     public IActionResult AttachPhotos (int orderId)
     {
         var order = dataContext.RepairOrders
-            .Include(order => order.Photos)
             .Where(order => order.Id == orderId && order.CustomerId == user.ConfirmedId)
             .FirstOrDefault();
 
@@ -199,17 +184,14 @@ public class RepairOrderController : FwshController
         var requestPhotos = this.Request.Form.Files.ToList();
 
         int count = 0, 
-            pos = order.Photos.Count > 0 ? order.Photos.Max(p => p.Position) + 1 : 1;
+            pos = order.PhotoUrls.Count;
 
         foreach (var photo in requestPhotos) {
-            if (order.Photos.Count >= MAX_PHOTOS) break;
+            if (order.PhotoUrls.Count >= MAX_PHOTOS) break;
             string ext = photo.FileName.Split('.').LastOrDefault();
             string url = $"repair-order-{order.Id}-{pos}-{Guid.NewGuid()}.{ext}"; 
             if (storage.TrySave(photo.OpenReadStream(), url)) {
-                order.Photos.Add(new RepairOrderPhoto { 
-                    Url = url, 
-                    Position = pos 
-                });
+                order.PhotoUrls.Add(url);
                 count += 1;
                 pos += 1;
             }
@@ -230,7 +212,6 @@ public class RepairOrderController : FwshController
     public IActionResult Delete (int id = 0)
     {
         var order = dataContext.RepairOrders
-            .Include(order => order.Photos)
             .Where(order => order.Id == id && order.CustomerId == user.ConfirmedId)
             .FirstOrDefault();
 
@@ -245,8 +226,8 @@ public class RepairOrderController : FwshController
             return BadRequest (new FailResult("Order status does not allow deletion"));
         }
 
-        foreach (var photo in order.Photos) {
-            if (photo.Url != null) storage.TryDelete(photo.Url);
+        foreach (var photoUrl in order.PhotoUrls) {
+            if (photoUrl != null) storage.TryDelete(photoUrl);
         }
 
         try {

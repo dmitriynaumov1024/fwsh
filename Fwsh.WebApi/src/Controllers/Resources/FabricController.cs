@@ -21,18 +21,16 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("resources/fabrics")]
-public class FabricController : ResourceController<double, Fabric, StoredFabric, StoredFabricResult>
+public class FabricController : ResourceController
 {
-    private FileStorageProvider storage;
+    protected override string typeName => ResourceTypes.Fabric;
 
-    protected override DbSet<StoredFabric> dbSet => 
-        dataContext.StoredFabrics;
-
-    protected override IQueryable<StoredFabric> dbQueryableSet => 
-        dataContext.StoredFabrics
+    protected override IQueryable<StoredResource> dbQueryableSet => 
+        dataContext.StoredResources
             .Include(r => r.Supplier)
-            .Include(r => r.Item.FabricType)
-            .Include(f => f.Item.Color);
+            .Include(r => r.FabricType)
+            .Include(r => r.Color)
+            .Where(r => r.Type == ResourceTypes.Fabric);
 
     public FabricController (FwshDataContext dataContext, Logger logger, FwshUser user, FileStorageProvider storage)
     : base (dataContext, logger, user) 
@@ -40,64 +38,15 @@ public class FabricController : ResourceController<double, Fabric, StoredFabric,
         this.storage = storage;
     }
 
-    protected override IResultBuilder<StoredFabricResult> ResultBuilder (StoredFabric fabric)
-    {
-        return new StoredFabricResult(fabric);
-    }
-
     [HttpPost("create")]
-    public IActionResult Create (FabricCreationRequest request)
+    public IActionResult Create (StoredFabricRequest request)
     {
         return base.OnCreate(request);
     }
 
     [HttpPost("update/{id}")]
-    public IActionResult Update (int id, FabricUpdateRequest request)
+    public IActionResult Update (int id, StoredFabricRequest request)
     {
         return base.OnUpdate(id, request);
-    }
-
-    [HttpPost("attach-photo/{id}")]
-    public IActionResult AttachPhoto (int id)
-    {
-        Fabric fabric = dataContext.Fabrics.Find(id);
-        
-        if (fabric == null) 
-            return BadRequest (new BadFieldResult("id"));
-
-        var photo = this.Request.Form.Files.FirstOrDefault();
-
-        if (photo == null)
-            return BadRequest (new BadFieldResult("photo"));
-
-        try {
-            storage.TryDelete(fabric.PhotoUrl);
-            string ext = photo.FileName.Split('.').LastOrDefault();
-            string url = $"fabric-{fabric.Id}-{Guid.NewGuid()}.{ext}";
-            storage.TrySave(photo.OpenReadStream(), url);
-            fabric.PhotoUrl = url;
-            dataContext.SaveChanges();
-            return Ok(new SuccessResult("Successfully attached photo to Fabric"));
-        }
-        catch (Exception ex) {
-            logger.Error(ex.ToString());
-            return ServerError(new FailResult("Something went wrong while trying to attach photo"));
-        }
-    }
-
-    [HttpPost("set-quantity/{id}")]
-    public IActionResult SetQuantity (int id, [FromBody] double quantity)
-    {
-        var storedResource = dbSet.Find(id);
-
-        if (storedResource == null) {
-            return NotFound ( new BadFieldResult("id") );
-        }
-
-        if (quantity > storedResource.NormalStock * 3 || quantity < 0) {
-            return BadRequest(new BadFieldResult("quantity"));
-        } 
-
-        return base.OnSetQuantity(id, storedResource, quantity);
     }
 }

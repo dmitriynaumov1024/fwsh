@@ -134,18 +134,11 @@ public class ColorController : FwshController
             return NotFound (new BadFieldResult("id"));
         }
 
-        int fabricCount = dataContext.Fabrics
-            .Where(fabric => fabric.ColorId == id).Count();
+        int dependencyCount = dataContext.StoredResources
+            .Where(r => r.ColorId == id).Count();
 
-        if (fabricCount > 0) {
-            return BadRequest(new FailResult($"Can not delete Color {id} because of {fabricCount} dependent Fabrics"));
-        }
-
-        int matCount = dataContext.Materials
-            .Where(mat => mat.ColorId == id).Count();
-
-        if (matCount > 0) {
-            return BadRequest(new FailResult($"Can not delete Color {id} because of {matCount} dependent Materials"));
+        if (dependencyCount > 0) {
+            return BadRequest(new FailResult($"Can not delete Color {id} because of {dependencyCount} dependent resources"));
         }
 
         try {

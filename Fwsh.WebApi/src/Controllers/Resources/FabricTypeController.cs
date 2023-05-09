@@ -134,7 +134,7 @@ public class FabricTypeController : FwshController
             return NotFound (new BadFieldResult("id"));
         }
 
-        int fabricCount = dataContext.Fabrics
+        int fabricCount = dataContext.StoredResources
             .Where(fabric => fabric.FabricTypeId == id).Count();
 
         if (fabricCount > 0) {

@@ -20,15 +20,15 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
     public Dimensions DimCompact { get; set; }
     public Dimensions DimExpanded { get; set; }
 
-    public double FabricQuantity { get; set; }
-    public double DecorMaterialQuantity { get; set; }
+    public double FabricUsage { get; set; }
+    public double DecorUsage { get; set; }
 
     public int Price { get; set; }
 
     public DateTime CreatedAt { get; set; }
     public int DaysSinceCreated => (DateTime.UtcNow - this.CreatedAt).Days;
 
-    public DateTime? PriceRecalculatedAt { get; set; }
+    public DateTime? RecalculatedAt { get; set; }
 
     // TaskPrototypes { get; set; }
     public List<string> PhotoUrls { get; set; }
@@ -50,9 +50,7 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
             IsVisible = design.IsVisible,
             Price = design.Price,
             CreatedAt = design.CreatedAt,
-            PhotoUrls = new List<string> {
-                design.Photos.MinBy(p => p.Position)?.Url
-            }
+            PhotoUrls = design.PhotoUrls
         };
     }
 
@@ -70,17 +68,16 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
             IsTransformable = design.IsTransformable,
             DimCompact = design.DimCompact,
             DimExpanded = design.DimExpanded,
-            PhotoUrls = design.Photos
-                .OrderBy(p => p.Position)
-                .Select(p => p.Url).ToList()
+            PhotoUrls = design.PhotoUrls
         };
     }
 
     public DesignResult ForWorker () 
     {
         var result = this.ForCustomer();
-        result.FabricQuantity = design.FabricQuantity;
-        result.DecorMaterialQuantity = design.DecorMaterialQuantity;
+        result.FabricUsage = design.FabricUsage;
+        result.DecorUsage = design.DecorUsage;
+        result.RecalculatedAt = design.RecalculatedAt;
         return result;
     }
 

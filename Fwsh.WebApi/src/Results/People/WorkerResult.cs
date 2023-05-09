@@ -3,6 +3,7 @@ namespace Fwsh.WebApi.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Fwsh.Common;
 
 public class WorkerResult : PersonResult
@@ -11,7 +12,6 @@ public class WorkerResult : PersonResult
 
     public WorkerResult (Worker worker) : base(worker) 
     { 
-        this.Roles = worker.Roles
-            .Select(r => r.RoleName).ToList();
+        this.Roles = worker.Roles.ToList();
     }
 }

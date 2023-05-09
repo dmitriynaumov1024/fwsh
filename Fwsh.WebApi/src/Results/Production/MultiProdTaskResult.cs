@@ -6,37 +6,37 @@ using System.Linq;
 
 using Fwsh.Common;
 
-public class MultiProductionTaskResult : Result, IResultBuilder<MultiProductionTaskResult>
+public class MultiProdTaskResult : Result, IResultBuilder<MultiProdTaskResult>
 {
-    private IEnumerable<ProductionTask> tasks;
-    private ProductionTask task;
+    private IEnumerable<ProdTask> tasks;
+    private ProdTask task;
     private int count;
 
     public int Quantity { get; set; }
-    public int OrderId { get; set; }
+    public int? OrderId { get; set; }
     public int PrototypeId { get; set; }
     public int? WorkerId { get; set; }
     public IEnumerable<int> Ids { get; set; }
     public IEnumerable<string> Status { get; set; }
 
-    public ProductionOrderResult Order { get; set; }
+    public ProdOrderResult Order { get; set; }
     public TaskPrototypeResult Prototype { get; set; }
     public WorkerResult Worker { get; set; }
 
-    public MultiProductionTaskResult () { }
+    public MultiProdTaskResult () { }
 
-    public MultiProductionTaskResult (IEnumerable<ProductionTask> tasks)
+    public MultiProdTaskResult (IEnumerable<ProdTask> tasks)
     {
         this.tasks = tasks;
         this.task = tasks.First();
         this.count = tasks.Count();
     }
     
-    public MultiProductionTaskResult Mini () 
+    public MultiProdTaskResult Mini () 
     {
-        var result = new MultiProductionTaskResult() {
+        var result = new MultiProdTaskResult() {
             Quantity = count,
-            OrderId = task.OrderId,
+            OrderId = task.Furniture?.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
             Ids = tasks.Select(t => t.Id).ToList(),
@@ -52,24 +52,24 @@ public class MultiProductionTaskResult : Result, IResultBuilder<MultiProductionT
         return result;
     }
 
-    public MultiProductionTaskResult ForCustomer ()
+    public MultiProdTaskResult ForCustomer ()
     {
         return null;
     }
 
-    public MultiProductionTaskResult ForWorker ()
+    public MultiProdTaskResult ForWorker ()
     {
-        var result = new MultiProductionTaskResult() {
+        var result = new MultiProdTaskResult() {
             Quantity = count,
-            OrderId = task.OrderId,
+            OrderId = task.Furniture?.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
             Ids = tasks.Select(t => t.Id).ToList(),
             Status = new HashSet<string>(tasks.Select(t => t.Status))
         };
 
-        if (task.Order != null) 
-            result.Order = new ProductionOrderResult(task.Order).ForWorker();
+        if (task.Furniture.Order != null) 
+            result.Order = new ProdOrderResult(task.Furniture.Order).ForWorker();
 
         if (task.Prototype != null) 
             result.Prototype = new TaskPrototypeResult(task.Prototype).ForWorker();
@@ -77,7 +77,7 @@ public class MultiProductionTaskResult : Result, IResultBuilder<MultiProductionT
         return result;
     }
 
-    public MultiProductionTaskResult ForManager ()
+    public MultiProdTaskResult ForManager ()
     {
         var result = ForWorker();
 

@@ -38,7 +38,6 @@ public class RepairOrderController : FwshController
         }
 
         IQueryable<RepairOrder> orders = dataContext.RepairOrders
-            .Include(order => order.Photos)
             .Where(condition);
 
         return Ok ( orders.OrderBy(order => order.Id).Paginate (
@@ -49,23 +48,13 @@ public class RepairOrderController : FwshController
     [HttpGet("list")]
     public IActionResult List (int? page = null)
     {
-        return GetOrderList (page, order => 
-            order.Status == OrderStatus.Submitted 
-            || order.Status == OrderStatus.Working
-            || order.Status == OrderStatus.Delayed 
-            || order.Status == OrderStatus.Finished
-        );
+        return GetOrderList (page, order => order.IsActive);
     }
 
     [HttpGet("archive")]
     public IActionResult Archive (int? page = null)
     {
-        return GetOrderList (page, order => 
-            order.Status == OrderStatus.ReceivedAndPaid
-            || order.Status == OrderStatus.Rejected 
-            || order.Status == OrderStatus.Impossible
-            || order.Status == OrderStatus.Unknown
-        );
+        return GetOrderList (page, order => order.IsActive == false);
     }
 
     [HttpGet("view/{id}")]
@@ -74,7 +63,6 @@ public class RepairOrderController : FwshController
         var order = dataContext.RepairOrders
             .Include(order => order.Customer)
             .Include(order => order.Notifications)
-            .Include(order => order.Photos)
             .Where(order => order.Id == id)
             .FirstOrDefault();
 

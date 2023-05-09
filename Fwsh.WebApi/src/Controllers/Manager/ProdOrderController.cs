@@ -19,24 +19,24 @@ using Fwsh.WebApi.Utils;
 
 [ApiController]
 [Route("manager/orders/production")]
-public class ProductionOrderController : FwshController
+public class ProdOrderController : FwshController
 {
     const int PAGESIZE = 10;
 
-    public ProductionOrderController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    public ProdOrderController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;
         this.logger = logger;
         this.user = user;
     }
 
-    protected IActionResult GetOrderList (int? page, int? design, Expression<Func<ProductionOrder, bool>> condition)
+    protected IActionResult GetOrderList (int? page, int? design, Expression<Func<ProdOrder, bool>> condition)
     {
         if (page == null) {
             return BadRequest(new BadFieldResult("page"));
         }
 
-        IQueryable<ProductionOrder> orders = dataContext.ProductionOrders
+        IQueryable<ProdOrder> orders = dataContext.ProdOrders
             .Include(order => order.Design)
             .Where(condition);
 
@@ -45,50 +45,39 @@ public class ProductionOrderController : FwshController
         }
 
         return Ok ( orders.OrderBy(order => order.Id).Paginate (
-            (int)page, PAGESIZE, order => new ProductionOrderResult(order).Mini()
+            (int)page, PAGESIZE, order => new ProdOrderResult(order).Mini()
         ));
     }
 
     [HttpGet("list")]
     public IActionResult List (int? page = null, int? design = null)
     {
-        return GetOrderList (page, design, order => 
-            order.Status == OrderStatus.Submitted 
-            || order.Status == OrderStatus.Working 
-            || order.Status == OrderStatus.Delayed 
-            || order.Status == OrderStatus.Finished
-        );
+        return GetOrderList (page, design, order => order.IsActive);
     }
 
     [HttpGet("archive")]
     public IActionResult Archive (int? page = null, int? design = null)
     {
-        return GetOrderList (page, design, order => 
-            order.Status == OrderStatus.ReceivedAndPaid
-            || order.Status == OrderStatus.Rejected 
-            || order.Status == OrderStatus.Impossible
-            || order.Status == OrderStatus.Unknown
-        );
+        return GetOrderList (page, design, order => order.IsActive == false);
     }
 
     [HttpGet("view/{id}")]
     public IActionResult View (int id) 
     {
-        var order = dataContext.ProductionOrders
+        var order = dataContext.ProdOrders
             .Include(order => order.Fabric.FabricType)
             .Include(order => order.Fabric.Color)
-            .Include(order => order.DecorMaterial.Color)
+            .Include(order => order.Decor.Color)
             .Include(order => order.Customer)
             .Include(order => order.Notifications)
             .Include(order => order.Design)
-            .ThenInclude(design => design.Photos)
             .FirstOrDefault(order => order.Id == id);
 
         if (order == null) {
             return NotFound(new BadFieldResult("id"));
         }
 
-        return Ok ( new ProductionOrderResult(order).ForManager() );
+        return Ok ( new ProdOrderResult(order).ForManager() );
     }
 
     [HttpPost("set-status/{id}")]
@@ -97,7 +86,7 @@ public class ProductionOrderController : FwshController
         if (! OrderStatus.Contains(status)) 
             return BadRequest(new BadFieldResult("status"));
 
-        var order = dataContext.ProductionOrders
+        var order = dataContext.ProdOrders
             .FirstOrDefault(order => order.Id == id);
 
         if (order == null) 
@@ -105,9 +94,9 @@ public class ProductionOrderController : FwshController
 
         try {
             order.TrySetStatus(status);
-            dataContext.ProductionOrders.Update(order);
+            dataContext.ProdOrders.Update(order);
             dataContext.SaveChanges();
-            return Ok ( new SuccessResult($"Successfully set status '{status}' for ProductionOrder {id}") );
+            return Ok ( new SuccessResult($"Successfully set status '{status}' for ProdOrder {id}") );
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
@@ -118,27 +107,27 @@ public class ProductionOrderController : FwshController
     [HttpPost("notify/{id}")]
     public IActionResult Notify (int id, [FromBody] string notificationText)
     {
-        var notification = new ProductionNotification() {
-            ProductionOrderId = id,
+        var notification = new ProdNotification() {
+            ProdOrderId = id,
             Text = notificationText
         };
 
         try {
-            dataContext.ProductionNotifications.Add(notification);
+            dataContext.ProdNotifications.Add(notification);
             dataContext.SaveChanges();
-            return Ok ( new SuccessResult($"Successfully notified ProductionOrder {id}") );
+            return Ok ( new SuccessResult($"Successfully notified ProdOrder {id}") );
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return ServerError ( new FailResult($"Something went wrong while trying to notify ProductionOrder {id}") );
+            return ServerError ( new FailResult($"Something went wrong while trying to notify ProdOrder {id}") );
         }
     }
 
     [HttpGet("preview-tasks/{id}")]
     public IActionResult PreviewTasks (int id)
     {
-        var order = dataContext.ProductionOrders
-            .Include(order => order.Design.TaskPrototypes)
+        var order = dataContext.ProdOrders
+            .Include(order => order.Design.Tasks)
             .FirstOrDefault(order => order.Id == id);
 
         if (order == null) {
@@ -150,10 +139,10 @@ public class ProductionOrderController : FwshController
         } 
 
         var tasks = Enumerable.Range(0, order.Quantity)
-            .SelectMany (_ => order.Design.TaskPrototypes
-                .Select (tp => new ProductionTask() {
+            .SelectMany (_ => order.Design.Tasks
+                .Select (tp => new ProdTask() {
                     Status = TaskStatus.Unknown,
-                    OrderId = order.Id,
+                    FurnitureId = 0,
                     PrototypeId = tp.Id,
                     WorkerId = null,
                     Prototype = tp
@@ -168,7 +157,7 @@ public class ProductionOrderController : FwshController
 
         var groupedTasks = tasks
             .GroupBy(t => new { PrototypeId = t.PrototypeId, WorkerId = t.WorkerId })
-            .Select(g => new MultiProductionTaskResult(g).Mini());
+            .Select(g => new MultiProdTaskResult(g).Mini());
 
         return Ok(groupedTasks);
     }

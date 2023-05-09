@@ -6,13 +6,13 @@ using System.Linq;
 
 using Fwsh.Common;
 
-public class ProductionTaskResult : Result, IResultBuilder<ProductionTaskResult>
+public class ProdTaskResult : Result, IResultBuilder<ProdTaskResult>
 {
     private ResultBuildingContext rbcontext;
-    private ProductionTask task;
+    private ProdTask task;
 
     public int Id { get; set; }
-    public int OrderId { get; set; }
+    public int? OrderId { get; set; }
     public int PrototypeId { get; set; }
     public int? WorkerId { get; set; }
     public string Status { get; set; }
@@ -21,23 +21,23 @@ public class ProductionTaskResult : Result, IResultBuilder<ProductionTaskResult>
     public DateTime? StartedAt { get; set; }
     public DateTime? FinishedAt { get; set; }
 
-    public ProductionOrderResult Order { get; set; }
+    public ProdOrderResult Order { get; set; }
     public TaskPrototypeResult Prototype { get; set; }
     public WorkerResult Worker { get; set; }
 
-    public ProductionTaskResult () { }
+    public ProdTaskResult () { }
 
-    public ProductionTaskResult (ProductionTask task, ResultBuildingContext rbcontext = null)
+    public ProdTaskResult (ProdTask task, ResultBuildingContext rbcontext = null)
     {
         this.rbcontext = rbcontext ?? new ResultBuildingContext();
         this.task = task;
     }
     
-    public ProductionTaskResult Mini () 
+    public ProdTaskResult Mini () 
     {
-        var result = new ProductionTaskResult() {
+        var result = new ProdTaskResult() {
             Id = task.Id,
-            OrderId = task.OrderId,
+            OrderId = task.Furniture?.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
             Status = task.Status,
@@ -54,16 +54,16 @@ public class ProductionTaskResult : Result, IResultBuilder<ProductionTaskResult>
         return result;
     }
 
-    public ProductionTaskResult ForCustomer ()
+    public ProdTaskResult ForCustomer ()
     {
         return null;
     }
 
-    public ProductionTaskResult ForWorker ()
+    public ProdTaskResult ForWorker ()
     {
-        var result = new ProductionTaskResult() {
+        var result = new ProdTaskResult() {
             Id = task.Id,
-            OrderId = task.OrderId,
+            OrderId = task.Furniture.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
             Status = task.Status,
@@ -72,8 +72,8 @@ public class ProductionTaskResult : Result, IResultBuilder<ProductionTaskResult>
             FinishedAt = task.FinishedAt
         };
 
-        if (task.Order != null) 
-            result.Order = new ProductionOrderResult(task.Order).ForWorker();
+        if (task.Furniture.Order != null) 
+            result.Order = new ProdOrderResult(task.Furniture.Order).ForWorker();
 
         if (task.Prototype != null && !rbcontext.Contains(task.Prototype)) {
             rbcontext.Add(task.Prototype);
@@ -83,7 +83,7 @@ public class ProductionTaskResult : Result, IResultBuilder<ProductionTaskResult>
         return result;
     }
 
-    public ProductionTaskResult ForManager ()
+    public ProdTaskResult ForManager ()
     {
         var result = ForWorker();
 

@@ -37,10 +37,7 @@ public class RepairTaskController : FwshController
         IQueryable<RepairTask> tasks = dataContext.RepairTasks
             .Include(t => t.Order)
             .Include(t => t.Worker)
-            .Where(t => t.Order.Status == OrderStatus.Submitted 
-                     || t.Order.Status == OrderStatus.Delayed
-                     || t.Order.Status == OrderStatus.Working 
-                     || t.Order.Status == OrderStatus.Finished );
+            .Where(t => t.Order.IsActive);
 
         if (order is int orderId) {
             tasks = tasks.Where(t => t.OrderId == orderId);
@@ -75,9 +72,7 @@ public class RepairTaskController : FwshController
         IQueryable<RepairTask> tasks = dataContext.RepairTasks
             .Include(t => t.Order)
             .Include(t => t.Worker)
-            .Where(t => t.Order.Status == OrderStatus.ReceivedAndPaid
-                     || t.Order.Status == OrderStatus.Rejected
-                     || t.Order.Status == OrderStatus.Impossible );
+            .Where(t => t.Order.IsActive == false);
 
         if (order is int orderId) {
             tasks = tasks.Where(t => t.OrderId == orderId);

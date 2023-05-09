@@ -12,7 +12,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
-using Fwsh.WebApi.Controllers;
+using Fwsh.WebApi.Requests;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
@@ -22,6 +22,7 @@ using Fwsh.WebApi.Utils;
 public class WorkerController : FwshController
 {
     const int PAGESIZE = 10;
+    const int MAX_SIZE = 100;
 
     public WorkerController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
@@ -37,21 +38,42 @@ public class WorkerController : FwshController
             return BadRequest(new BadFieldResult("page"));
         }
 
-        IQueryable<Worker> workers = dataContext.Workers
-            .Include(worker => worker.Roles);
+        IQueryable<Worker> workers = dataContext.Workers;
 
         if (role != null) {
-            workers = workers.Where(worker => worker.Roles.Any(r => r.RoleName == role));
+            workers = workers.Where(worker => worker.Roles.Contains(role));
         }
 
         return Ok (workers.Paginate((int)page, PAGESIZE, worker => new WorkerResult(worker)));
+    }
+
+    [HttpGet("search")]
+    public IActionResult Search (string query)
+    {
+        if (query == null || query.Length < 2 || query.Trim().Length < 2)
+            return BadRequest(new BadFieldResult("query"));
+
+        query = query.Trim().ToLower();
+
+        IEnumerable<Worker> workers = dataContext.Workers.ToList();
+        
+        workers = workers.Where(w => 
+               w.Surname.ToLower().Equals(query)
+            || w.Surname.ToLower().Contains(query) 
+            || w.Name.ToLower().Equals(query)
+            || w.Name.ToLower().Contains(query)
+            || w.Phone.Contains(query)
+            || w.Email.Contains(query));
+
+        return Ok (new ListResult<WorkerResult>() {
+            Items = workers.Select(worker => new WorkerResult(worker)).ToList()
+        });
     }
 
     [HttpGet("view/{id}")]
     public IActionResult View (int id) 
     {
         var worker = dataContext.Workers
-            .Include(worker => worker.Roles)
             .FirstOrDefault(worker => worker.Id == id);
 
         if (worker == null) {

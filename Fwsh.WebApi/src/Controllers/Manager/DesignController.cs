@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 using Fwsh.Utils;
 using Fwsh.Common;
@@ -39,8 +40,7 @@ public class DesignController : FwshController
     [HttpGet("list")]
     public IActionResult List (int? page = null, string type = null) 
     {
-        IQueryable<Design> designs = dataContext.Designs
-            .Include(d => d.Photos);
+        IQueryable<Design> designs = dataContext.Designs;
 
         if (type != null) {
             designs = designs.Where(d => d.Type == type);
@@ -59,9 +59,7 @@ public class DesignController : FwshController
     public IActionResult View (int id)
     {
         Design design = dataContext.Designs
-            .Include(d => d.Photos)
-            .Where(d => d.Id == id)
-            .FirstOrDefault();
+            .FirstOrDefault(d => d.Id == id);
 
         if (design == null) {
             return NotFound(new BadFieldResult("id"));
@@ -128,9 +126,9 @@ public class DesignController : FwshController
     public IActionResult Recalculate (int? id = null) 
     {
         IQueryable<Design> designs = dataContext.Designs
-            .Include(d => d.TaskPrototypes).ThenInclude(t => t.Parts).ThenInclude(p => p.Item)
-            .Include(d => d.TaskPrototypes).ThenInclude(t => t.Materials).ThenInclude(m => m.Item)
-            .Include(d => d.TaskPrototypes).ThenInclude(t => t.Fabrics).ThenInclude(f => f.Item);
+            .Include(d => d.Tasks)
+            .ThenInclude(t => t.Resources)
+            .ThenInclude(p => p.Item);
         
         if (id != null) 
             designs = designs.Where(design => design.Id == id);
@@ -182,7 +180,6 @@ public class DesignController : FwshController
     public IActionResult AttachPhotos (int designId) 
     {
         Design design = dataContext.Designs
-            .Include(d => d.Photos)
             .FirstOrDefault(d => d.Id == designId);
 
         if (design == null) {
@@ -192,17 +189,14 @@ public class DesignController : FwshController
         var requestPhotos = this.Request.Form.Files.ToList();
 
         int count = 0, 
-            pos = design.Photos.Count > 0 ? design.Photos.Max(p => p.Position) + 1 : 1;
+            pos = design.PhotoUrls.Count + 1;
 
         foreach (var photo in requestPhotos) {
-            if (design.Photos.Count >= MAX_PHOTOS) break;
+            if (design.PhotoUrls.Count >= MAX_PHOTOS) break;
             string ext = photo.FileName.Split('.').LastOrDefault();
             string url = $"design-{design.Id}-{pos}-{Guid.NewGuid()}.{ext}"; 
             if (storage.TrySave(photo.OpenReadStream(), url)) {
-                design.Photos.Add(new DesignPhoto { 
-                    Url = url, 
-                    Position = pos 
-                });
+                design.PhotoUrls.Add(url);
                 count += 1;
                 pos += 1;
             }
@@ -223,14 +217,13 @@ public class DesignController : FwshController
     public IActionResult DeletePhotos (int designId, [FromBody] IList<string> urls)
     {
         Design design = dataContext.Designs
-            .Include(d => d.Photos)
             .FirstOrDefault(d => d.Id == designId);
 
         int count = 0;
-        foreach (var photo in design.Photos.ToList()) {
-            if (urls.Contains(photo.Url)) {
-                storage.TryDelete(photo.Url);
-                design.Photos.Remove(photo);
+        foreach (var photoUrl in design.PhotoUrls) {
+            if (urls.Contains(photoUrl)) {
+                storage.TryDelete(photoUrl);
+                design.PhotoUrls.Remove(photoUrl);
                 count += 1;
             }
         }
@@ -250,20 +243,16 @@ public class DesignController : FwshController
     public IActionResult Delete (int id) 
     {
         Design design = dataContext.Designs
-            .Include(design => design.Photos)
-            .Include(design => design.TaskPrototypes)
-                .ThenInclude(task => task.Parts)
-            .Include(design => design.TaskPrototypes)
-                .ThenInclude(task => task.Fabrics)
-            .Include(design => design.TaskPrototypes)
-                .ThenInclude(task => task.Materials)
+            .Include(design => design.Tasks)
+            .ThenInclude(task => task.Resources)
             .FirstOrDefault(design => design.Id == id);
 
         if (design == null) {
             return NotFound(new BadFieldResult("id"));
         }
 
-        bool canDelete = dataContext.ProductionOrders
+        bool canDelete = dataContext.ProdOrders
+            .Where(order => order.IsActive == true)
             .Where(order => order.DesignId == design.Id)
             .Count() == 0;
 
@@ -271,12 +260,8 @@ public class DesignController : FwshController
             return BadRequest(new FailResult($"Can not delete Design {id} because of dependent production orders"));
         }
 
-        foreach (var photo in design.Photos) {
-            if (photo.Url != null) storage.TryDelete(photo.Url);
-        }
-
-        foreach (var task in design.TaskPrototypes) {
-            if (task.InstructionUrl != null) storage.TryDelete(task.InstructionUrl);
+        foreach (var photoUrl in design.PhotoUrls) {
+            storage.TryDelete(photoUrl);
         }
 
         try {

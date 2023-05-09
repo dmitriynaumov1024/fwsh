@@ -38,31 +38,17 @@ public class WorkerAuthController : FwshController
         }
 
         bool phoneAlreadyExists = dataContext.Workers
-            .Where(c => c.Phone == request.Phone)
-            .FirstOrDefault() != null; 
+            .FirstOrDefault(c => c.Phone == request.Phone) != null; 
 
         if (phoneAlreadyExists) {
             return BadRequest(new BadFieldResult("phone"));
         }
 
-        var storedWorker = new Worker() {
-            Surname = request.Surname,
-            Name = request.Name,
-            Patronym = request.Patronym,
-            Phone = request.Phone,
-            Email = request.Email,
-            Password = request.Password.QuickHash(),
-            Roles = new HashSet<WorkerRole> ( 
-                new HashSet<string>(request.Roles)
-                    .Where(role => Roles.KnownWorkerRoles.Contains(role))
-                    .Select(role => new WorkerRole() { RoleName = role })
-            )
-        };
-
         try {
-            dataContext.Workers.Add(storedWorker);
+            var worker = request.Create();
+            dataContext.Workers.Add(worker);
             dataContext.SaveChanges();
-            int id = storedWorker.Id;
+            int id = worker.Id;
             return Ok(new CreationResult(id, $"Successfully created {id}"));
         }
         catch (Exception ex) {
@@ -74,15 +60,14 @@ public class WorkerAuthController : FwshController
     [HttpPost("login")]
     public IActionResult Login (LoginRequest request)
     {
-        var storedWorker = dataContext.Workers
-            .Where(c => c.Phone == request.Phone)
-            .FirstOrDefault();
+        var worker = dataContext.Workers
+            .FirstOrDefault(c => c.Phone == request.Phone);
 
-        if (storedWorker == null) {
+        if (worker == null) {
             return NotFound(new BadFieldResult("phone"));
         }
-        if (storedWorker.Password == request.Password.QuickHash()) {
-            user.ConfirmedId = storedWorker.Id;
+        if (worker.Password == request.Password.QuickHash()) {
+            user.ConfirmedId = worker.Id;
             user.ConfirmedRole = UserRole.Worker;
             return Ok(new SuccessResult("Successfully logged in"));
         }

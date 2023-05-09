@@ -15,16 +15,15 @@ public class TaskPrototypeResult : Result, IResultBuilder<TaskPrototypeResult>
     public string DesignType { get; set; }
     public string DesignName { get; set; }
     public int Precedence { get; set; }
-    public string RoleName { get; set; }
+    public string Role { get; set; }
     public int Payment { get; set; }
     public string Description { get; set; }
-    public string InstructionUrl { get; set; }
 
     public DesignResult Design { get; set; }
 
-    public List<TaskPart> Parts { get; set; }
-    public List<TaskMaterial> Materials { get; set; }
-    public List<TaskFabric> Fabrics { get; set; }
+    public List<ResourceQuantity> Parts { get; set; }
+    public List<ResourceQuantity> Materials { get; set; }
+    public List<ResourceQuantity> Fabrics { get; set; }
 
     public TaskPrototypeResult() { }
 
@@ -42,7 +41,7 @@ public class TaskPrototypeResult : Result, IResultBuilder<TaskPrototypeResult>
             DesignType = task.Design?.Type,
             DesignName = task.Design?.DisplayName,
             Precedence = task.Precedence,
-            RoleName = task.RoleName,
+            Role = task.Role,
             Payment = task.Payment,
             Description = task.Description
         };
@@ -61,10 +60,9 @@ public class TaskPrototypeResult : Result, IResultBuilder<TaskPrototypeResult>
             DesignType = task.Design?.Type,
             DesignName = task.Design?.DisplayName,
             Precedence = task.Precedence,
-            RoleName = task.RoleName,
+            Role = task.Role,
             Payment = task.Payment,
             Description = task.Description,
-            InstructionUrl = task.InstructionUrl,
             Parts = task.Parts.ToList(),
             Materials = task.Materials.ToList(),
             Fabrics = task.Fabrics.ToList()
