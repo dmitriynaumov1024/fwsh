@@ -88,7 +88,6 @@ public class FwshDataContext : DbContext
 
         modelBuilder.Entity<Worker>(worker => {
             worker.HasIndex(w => w.Phone).IsUnique();
-            worker.Property(w => w.Roles).HasConversion<StringListConverter>();
         });
 
         modelBuilder.Entity<RepairOrder>(order => {

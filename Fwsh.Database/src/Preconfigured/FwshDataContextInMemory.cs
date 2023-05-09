@@ -2,6 +2,8 @@ namespace Fwsh.Database;
 
 using System;
 using Microsoft.EntityFrameworkCore;
+
+using Fwsh.Common;
 using Fwsh.Utils;
 
 public class FwshDataContextInMemory : FwshDataContext
@@ -13,5 +15,14 @@ public class FwshDataContextInMemory : FwshDataContext
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseSnakeCaseNamingConvention();
         optionsBuilder.UseInMemoryDatabase(env.get("DB_DATABASE"));
+    }
+
+    protected override void OnModelCreating (ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Worker>(worker => {
+            worker.Property(w => w.Roles).HasConversion<StringListConverter>();
+        });
     }
 }

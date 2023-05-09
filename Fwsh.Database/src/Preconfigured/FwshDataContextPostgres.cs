@@ -37,4 +37,9 @@ public class FwshDataContextPostgres : FwshDataContext
             env.get("DB_USER"), env.get("DB_PASSWORD")
         ));
     }
+
+    protected override void OnModelCreating (ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+    }
 }
