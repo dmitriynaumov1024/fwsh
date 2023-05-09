@@ -20,13 +20,13 @@ public class TaskPrototype
     public virtual ICollection<ResourceQuantity> Resources { get; set; }
 
     public virtual IEnumerable<ResourceQuantity> Parts => 
-        Resources.Where(r => r.Item.Type == ResourceTypes.Part);
+        this.Resources.Where(r => r.Item != null && r.Item.Type == ResourceTypes.Part);
 
     public virtual IEnumerable<ResourceQuantity> Materials => 
-        Resources.Where(r => r.Item.Type == ResourceTypes.Material);
+        this.Resources.Where(r => r.Item != null && r.Item.Type == ResourceTypes.Material || r.SlotName == SlotNames.Decor);
 
     public virtual IEnumerable<ResourceQuantity> Fabrics => 
-        Resources.Where(r => r.Item.Type == ResourceTypes.Fabric);
+        this.Resources.Where(r => r.Item != null && r.Item.Type == ResourceTypes.Fabric || r.SlotName == SlotNames.Fabric);
 
     public TaskPrototype()
     {
