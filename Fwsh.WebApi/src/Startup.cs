@@ -56,16 +56,16 @@ public class Startup
 
         // create first manager account if there is nothing yet
         bool managerExists = dataContext.Workers
-            .Where(w => w.Roles.Contains(WorkerRoles.Management))
+            .Where(E.Worker.IsManager)
             .Count() > 0;
 
         if (! managerExists) {
             var manager = new Worker() {
                 Name = "Default Manager",
                 Phone = env.get("MGR_LOGIN") ?? "admin",
-                Password = env.get("MGR_PASSWORD").QuickHash()
+                Password = env.get("MGR_PASSWORD").QuickHash(),
+                Roles = new[] { WorkerRoles.Management }
             };
-            manager.Roles.Add(WorkerRoles.Management);
             dataContext.Workers.Add(manager);
             dataContext.SaveChanges();
             logger.Log("Created default manager");

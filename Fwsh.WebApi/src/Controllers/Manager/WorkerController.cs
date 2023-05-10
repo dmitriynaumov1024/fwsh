@@ -41,7 +41,7 @@ public class WorkerController : FwshController
         IQueryable<Worker> workers = dataContext.Workers;
 
         if (role != null) {
-            workers = workers.Where(worker => worker.Roles.Contains(role));
+            workers = workers.Where(E.Worker.HasRole(role));
         }
 
         return Ok (workers.Paginate((int)page, PAGESIZE, worker => new WorkerResult(worker)));

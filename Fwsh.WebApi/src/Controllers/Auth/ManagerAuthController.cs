@@ -69,8 +69,7 @@ public class ManagerAuthController : FwshController
         var manager = dataContext.Workers
             .FirstOrDefault(c => c.Phone == request.Phone);
         
-        bool isManager = manager != null 
-            && manager.Roles.Contains(WorkerRoles.Management);
+        bool isManager = manager != null && manager.IsManager;
 
         if (!isManager) {
             return NotFound(new BadFieldResult("phone"));
