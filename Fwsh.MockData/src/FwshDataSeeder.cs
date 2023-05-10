@@ -40,7 +40,7 @@ public class FwshDataSeeder
             };
             this.CredentialsLogger?.Log("manager, {0}, {1}", manager.Phone, manager.Password);
             manager.Password = manager.Password.QuickHash();
-            manager.Roles.Add(WorkerRoles.Management);
+            manager.Roles = new[] { WorkerRoles.Management };
             context.Workers.Add(manager);
         }
     }
