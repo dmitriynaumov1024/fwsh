@@ -20,9 +20,5 @@ public class FwshDataContextInMemory : FwshDataContext
     protected override void OnModelCreating (ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Worker>(worker => {
-            worker.Property(w => w.Roles).HasConversion<StringListConverter>();
-        });
     }
 }

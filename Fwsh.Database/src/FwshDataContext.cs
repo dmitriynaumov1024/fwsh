@@ -88,6 +88,7 @@ public class FwshDataContext : DbContext
 
         modelBuilder.Entity<Worker>(worker => {
             worker.HasIndex(w => w.Phone).IsUnique();
+            worker.Ignore(w => w.Roles);
         });
 
         modelBuilder.Entity<RepairOrder>(order => {
