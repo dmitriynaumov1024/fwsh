@@ -8,6 +8,8 @@ public abstract class WorkTask
     public int Id { get; set; }
     public int? WorkerId { get; set; }
     
+    public int Payment { get; set; }
+
     public string Status { get; set; }
     public bool IsActive { get; set; } 
 

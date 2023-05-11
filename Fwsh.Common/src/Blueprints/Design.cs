@@ -44,11 +44,15 @@ public class Design
 
     public void UpdateResourceQuantities()
     {
-        this.FabricUsage = this.Tasks
-            .Sum(task => task.Fabrics.Where(f => f.SlotName == SlotNames.Fabric).Sum(f => f.Quantity));
+        this.FabricUsage = this.Tasks.Sum ( task => task.Fabrics
+            .Where(f => f.SlotName == SlotNames.Fabric)
+            .Sum(f => f.ExpectQuantity)
+        );
 
-        this.DecorUsage = this.Tasks
-            .Sum(task => task.Materials.Where(m => m.SlotName == SlotNames.Decor).Sum(m => m.Quantity));
+        this.DecorUsage = this.Tasks.Sum ( task => task.Materials
+            .Where(m => m.SlotName == SlotNames.Decor)
+            .Sum(m => m.ExpectQuantity)
+        );
     }
 
     public int CalculateResourcePrice()
@@ -59,6 +63,20 @@ public class Design
     public int CalculatePayment()
     {
         return this.Tasks.Sum(task => task.Payment);
+    }
+
+    public ProdFurniture CreateFurniture (ProdOrder order)
+    {
+        return new ProdFurniture() {
+            Order = order,
+            Design = this,
+            Fabric = order.Fabric,
+            Decor = order.Decor,
+            Status = OrderStatus.Delayed,
+            Tasks = new HashSet<ProdTask> (
+                this.Tasks.Select(t => t.CreateProdTask(order))
+            )
+        };
     }
 }
 

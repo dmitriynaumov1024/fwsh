@@ -8,13 +8,14 @@ public class ResourceQuantity
     public int? ItemId { get; set; }
     public string SlotName { get; set; } = SlotNames.Unknown;
     public string ItemName { get; set; }
-    public double Quantity { get; set; }
-    
+    public double ExpectQuantity { get; set; }
+    public double ActualQuantity { get; set; }
+
     public virtual Resource Item { get; set; }
 
-    public int CalculateResourcePrice() 
-    {
-        if (this.Item == null) return 0;
-        return (int)Math.Ceiling(this.Item.PricePerUnit * this.Quantity);
-    }
+    public int ExpectPrice => (this.Item == null)? 0 : 
+        (int)Math.Ceiling(this.Item.PricePerUnit * this.ExpectQuantity);
+
+    public int ActualPrice => (this.Item == null)? 0 :
+        (int)Math.Ceiling(this.Item.PricePerUnit * this.ActualQuantity);
 }

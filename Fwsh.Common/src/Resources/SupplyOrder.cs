@@ -9,11 +9,11 @@ public class SupplyOrder
     public int ItemId { get; set; }
     public string ExternalId { get; set; }
 
-    public double RequestQuantity { get; set; }
-    public double RequestPricePerUnit { get; set; }
+    public double ExpectQuantity { get; set; }
+    public double ExpectPricePerUnit { get; set; }
 
-    public double ResultQuantity { get; set; }
-    public double ResultPricePerUnit { get; set; }
+    public double ActualQuantity { get; set; }
+    public double ActualPricePerUnit { get; set; }
 
     public string Status { get; set; } = OrderStatus.Unknown;
     public bool IsActive { get; set; }

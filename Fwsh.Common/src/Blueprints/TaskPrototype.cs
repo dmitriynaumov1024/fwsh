@@ -35,8 +35,26 @@ public class TaskPrototype
 
     public int CalculateResourcePrice ()
     {
-        return this.Parts.Sum(part => part.CalculateResourcePrice())
-            + this.Materials.Sum(mat => mat.CalculateResourcePrice())
-            + this.Fabrics.Sum(fab => fab.CalculateResourcePrice());
+        return this.Parts.Sum(part => part.ExpectPrice)
+            + this.Materials.Sum(mat => mat.ExpectPrice)
+            + this.Fabrics.Sum(fab => fab.ExpectPrice);
+    }
+
+    public ProdTask CreateProdTask (ProdOrder order)
+    {
+        return new ProdTask() {
+            Prototype = this,
+            Status = TaskStatus.Unknown,
+            Payment = this.Payment,
+            Resources = this.Resources.Select(res => new ResourceQuantity {
+                ItemName = res.Item?.Name ?? res.ItemName,
+                SlotName = res.SlotName,
+                Item = (res.SlotName == SlotNames.Decor)? order.Decor :
+                       (res.SlotName == SlotNames.Fabric)? order.Fabric :
+                       res.Item,
+                ExpectQuantity = res.ExpectQuantity,
+                ActualQuantity = 0
+            }).ToList()
+        };
     }
 }

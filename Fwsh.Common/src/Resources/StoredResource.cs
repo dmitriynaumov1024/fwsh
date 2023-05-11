@@ -10,8 +10,9 @@ public class StoredResource
 
     public double InStock { get; set; }
     public double NormalStock { get; set; }
-
+    public int SupplyOrderCount { get; set; }
     public int RefillPeriodDays { get; set; }
+
     public DateTime LastRefilledAt { get; set; } = DateTime.UtcNow;
     public DateTime LastCheckedAt { get; set; } = DateTime.UtcNow;
 
