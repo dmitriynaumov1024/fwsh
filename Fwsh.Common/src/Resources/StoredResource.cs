@@ -2,8 +2,9 @@ namespace Fwsh.Common;
 
 using System;
 
-public class StoredResource : Resource
-{   
+public class StoredResource
+{
+    public int Id { get; set; }
     public int? SupplierId { get; set; }
     public string ExternalId { get; set; }
 

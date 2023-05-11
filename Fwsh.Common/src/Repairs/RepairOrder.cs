@@ -7,7 +7,7 @@ public class RepairOrder : Order
 {
     public string Description { get; set; }
 
-    public virtual List<string> PhotoUrls { get; set; }
+    public virtual IReadOnlyList<string> PhotoUrls { get; set; }
     public virtual ICollection<RepairNotification> Notifications { get; set; }
     public virtual ICollection<RepairTask> Tasks { get; set; }
     

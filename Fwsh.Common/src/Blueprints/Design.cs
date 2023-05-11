@@ -28,7 +28,7 @@ public class Design
     public DateTime RecalculatedAt { get; set; } = DateTime.UtcNow;
 
     public virtual ICollection<TaskPrototype> Tasks { get; set; }
-    public virtual List<string> PhotoUrls { get; set; }
+    public virtual IReadOnlyList<string> PhotoUrls { get; set; }
 
     public Design()
     {

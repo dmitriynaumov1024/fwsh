@@ -10,7 +10,7 @@ public class ResourceQuantity
     public string ItemName { get; set; }
     public double Quantity { get; set; }
     
-    public virtual StoredResource Item { get; set; }
+    public virtual Resource Item { get; set; }
 
     public int CalculateResourcePrice() 
     {

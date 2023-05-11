@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class Worker : Person
 {
     private string _rolesString;
-    private IReadOnlyCollection<string> _roles;
+    private IReadOnlyList<string> _roles;
 
     public string RolesString { 
         get { 
@@ -18,7 +18,7 @@ public class Worker : Person
         }
     }
 
-    public IReadOnlyCollection<string> Roles {
+    public IReadOnlyList<string> Roles {
         get { 
             if (_roles == null) _roles = (_rolesString ?? String.Empty).Split(";");
             return _roles; 

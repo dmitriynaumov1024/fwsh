@@ -22,5 +22,5 @@ public class SupplyOrder
     public DateTime? ReceivedAt { get; set; }
 
     public virtual Supplier Supplier { get; set; }
-    public virtual StoredResource Item { get; set; }
+    public virtual Resource Item { get; set; }
 }
