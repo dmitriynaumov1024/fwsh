@@ -6,7 +6,7 @@ using Fwsh.Common;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.Validation;
 
-public class ResourceRequest : Request, CreationRequest<StoredResource>, UpdateRequest<StoredResource>
+public class ResourceRequest : Request, CreationRequest<Resource>, UpdateRequest<Resource>
 {
     public string Name { get; set; }
     public string SlotName { get; set; }
@@ -14,6 +14,7 @@ public class ResourceRequest : Request, CreationRequest<StoredResource>, UpdateR
     public string MeasureUnit { get; set; }
     public double PricePerUnit { get; set; }
     public int Precision { get; set; }
+
     public double InStock { get; set; }
     public double NormalStock { get; set; }
     public int RefillPeriodDays { get; set; }
@@ -55,14 +56,14 @@ public class ResourceRequest : Request, CreationRequest<StoredResource>, UpdateR
                 .ValueInRange(2, 365);
     }
 
-    public virtual StoredResource Create ()
+    public virtual Resource Create ()
     {
-        var result = new StoredResource();
+        var result = new Resource();
         this.ApplyTo(result);
         return result;
     }
 
-    public virtual void ApplyTo (StoredResource res) 
+    public virtual void ApplyTo (Resource res) 
     {
         res.Type = this.Type;
         res.SlotName = this.SlotName;
@@ -71,10 +72,14 @@ public class ResourceRequest : Request, CreationRequest<StoredResource>, UpdateR
         res.MeasureUnit = this.MeasureUnit;
         res.Precision = this.Precision;
         res.PricePerUnit = this.PricePerUnit;
-        res.InStock = Math.Round(this.InStock, this.Precision);
-        res.NormalStock = Math.Round(this.NormalStock, this.Precision);
-        res.RefillPeriodDays = this.RefillPeriodDays;
-        res.SupplierId = this.SupplierId;
-        res.ExternalId = this.ExternalId;
+
+        if (res.Stored == null) res.Stored = new StoredResource();
+        if (res.Stored is StoredResource st) {
+            st.InStock = Math.Round(this.InStock, this.Precision);
+            st.NormalStock = Math.Round(this.NormalStock, this.Precision);
+            st.RefillPeriodDays = this.RefillPeriodDays;
+            st.SupplierId = this.SupplierId;
+            st.ExternalId = this.ExternalId;
+        }
     }
 }

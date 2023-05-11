@@ -24,9 +24,10 @@ public class PartController : ResourceController
 {
     protected override string typeName => ResourceTypes.Part;
 
-    protected override IQueryable<StoredResource> dbQueryableSet => 
-        dataContext.StoredResources
-            .Include(r => r.Supplier)
+    protected override IQueryable<Resource> dbQueryableSet => 
+        dataContext.Resources
+            .Include(r => r.Stored)
+            .Include(r => r.Stored.Supplier)
             .Where(r => r.Type == ResourceTypes.Part);
 
     public PartController (FwshDataContext dataContext, Logger logger, FwshUser user)
@@ -36,13 +37,13 @@ public class PartController : ResourceController
     }
 
     [HttpPost("create")]
-    public IActionResult Create (StoredPartRequest request)
+    public IActionResult Create (PartRequest request)
     {
         return base.OnCreate(request);
     }
 
     [HttpPost("update/{id}")]
-    public IActionResult Update (int id, StoredPartRequest request)
+    public IActionResult Update (int id, PartRequest request)
     {
         return base.OnUpdate(id, request);
     }

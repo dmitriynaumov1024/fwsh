@@ -28,8 +28,8 @@ public abstract class ResourceController : FwshController
 
     protected virtual string typeName => ResourceTypes.Resource;
 
-    protected virtual DbSet<StoredResource> dbSet => dataContext.StoredResources; 
-    protected abstract IQueryable<StoredResource> dbQueryableSet { get; }
+    protected virtual DbSet<Resource> dbSet => dataContext.Resources; 
+    protected abstract IQueryable<Resource> dbQueryableSet { get; }
 
     protected virtual bool canCreate => user.ConfirmedRole >= UserRole.Manager;
     protected virtual bool canUpdate => user.ConfirmedRole >= UserRole.Manager;
@@ -82,7 +82,7 @@ public abstract class ResourceController : FwshController
                 return BadRequest(new BadFieldResult(request.State.BadFields));
             }
 
-            StoredResource newResource = request.Create();
+            Resource newResource = request.Create();
 
             dbSet.Add(newResource);
             dataContext.SaveChanges();
@@ -106,20 +106,18 @@ public abstract class ResourceController : FwshController
             return BadRequest(new BadFieldResult(request.State.BadFields));
         }
 
-        StoredResource existingResource = dbQueryableSet
-            .Where(item => item.Id == id)
-            .FirstOrDefault();
+        Resource resource = dbQueryableSet.FirstOrDefault(r => r.Id == id);
         
-        if (existingResource == null) {
+        if (resource == null) {
             return BadRequest(new BadFieldResult("id"));
         }
 
-        request.ApplyTo(existingResource);
+        request.ApplyTo(resource);
 
         try {
-            dbSet.Update(existingResource);
+            dbSet.Update(resource);
             dataContext.SaveChanges();
-            string message = $"Successfully updated {typeName} with id={existingResource.Id}";
+            string message = $"Successfully updated {typeName} with id={resource.Id}";
             return Ok ( new SuccessResult(message) );
         }
         catch (Exception ex) {
@@ -132,7 +130,7 @@ public abstract class ResourceController : FwshController
     [HttpPost("attach-photo/{id}")]
     public IActionResult AttachPhoto (int id)
     {
-        StoredResource res = dataContext.StoredResources.Find(id);
+        Resource res = dataContext.Resources.Find(id);
         
         if (res == null) 
             return BadRequest (new BadFieldResult("id"));
@@ -148,7 +146,7 @@ public abstract class ResourceController : FwshController
             string url = $"{typeName.ToLower()}-{res.Id}-{Guid.NewGuid()}.{ext}";
             storage.TrySave(photo.OpenReadStream(), url);
             res.PhotoUrl = url;
-            dataContext.StoredResources.Update(res);
+            dataContext.Resources.Update(res);
             dataContext.SaveChanges();
             return Ok(new SuccessResult("Successfully attached photo to resource"));
         }
@@ -161,20 +159,20 @@ public abstract class ResourceController : FwshController
     [HttpPost("set-quantity/{id}")]
     public IActionResult SetQuantity (int id, [FromBody] double quantity)
     {
-        var storedResource = dbSet.Find(id);
+        var resource = dbQueryableSet.FirstOrDefault(r => r.Id == id);
 
-        if (storedResource == null) {
+        if (resource == null) {
             return NotFound ( new BadFieldResult("id") );
         }
 
-        if (quantity > storedResource.NormalStock * 3 || quantity < 0) {
+        if (quantity > resource.Stored.NormalStock * 3 || quantity < 0) {
             return BadRequest(new BadFieldResult("quantity"));
         } 
 
         try {
-            storedResource.InStock = Math.Round(quantity, storedResource.Precision);
-            storedResource.LastCheckedAt = DateTime.UtcNow;
-            dbSet.Update(storedResource);
+            resource.Stored.InStock = Math.Round(quantity, resource.Precision);
+            resource.Stored.LastCheckedAt = DateTime.UtcNow;
+            dbSet.Update(resource);
             dataContext.SaveChanges();
             return Ok (new SuccessResult("Successfully updated stock quantity"));
         }

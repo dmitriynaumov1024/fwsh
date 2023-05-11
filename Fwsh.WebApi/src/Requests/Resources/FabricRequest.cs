@@ -5,7 +5,7 @@ using System;
 using Fwsh.Common;
 using Fwsh.WebApi.Validation;
 
-public class StoredFabricRequest : ResourceRequest
+public class FabricRequest : ResourceRequest
 {
     public int? ColorId { get; set; }
     public int? FabricTypeId { get; set; }
@@ -26,7 +26,7 @@ public class StoredFabricRequest : ResourceRequest
             .Condition(this.SlotName == null || this.SlotName == SlotNames.Fabric);
     }
 
-    public override void ApplyTo (StoredResource fabric)
+    public override void ApplyTo (Resource fabric)
     {
         base.ApplyTo(fabric);
         fabric.ColorId = this.ColorId;

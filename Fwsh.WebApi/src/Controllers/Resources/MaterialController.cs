@@ -25,9 +25,10 @@ public class MaterialController : ResourceController
 {
     protected override string typeName => ResourceTypes.Material;
 
-    protected override IQueryable<StoredResource> dbQueryableSet => 
-        dataContext.StoredResources
-            .Include(r => r.Supplier)
+    protected override IQueryable<Resource> dbQueryableSet => 
+        dataContext.Resources
+            .Include(r => r.Stored)
+            .Include(r => r.Stored.Supplier)
             .Include(r => r.Color)
             .Where(r => r.Type == ResourceTypes.Material);
 
@@ -38,13 +39,13 @@ public class MaterialController : ResourceController
     }
 
     [HttpPost("create")]
-    public IActionResult Create (StoredMaterialRequest request)
+    public IActionResult Create (MaterialRequest request)
     {
         return base.OnCreate(request);
     }
 
     [HttpPost("update/{id}")]
-    public IActionResult Update (int id, StoredMaterialRequest request)
+    public IActionResult Update (int id, MaterialRequest request)
     {
         return base.OnUpdate(id, request);
     }

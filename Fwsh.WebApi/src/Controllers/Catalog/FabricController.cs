@@ -33,7 +33,7 @@ public class FabricController : FwshController
     [HttpGet("list")]
     public IActionResult List (int? color = null, int? fabrictype = null, int? page = null, bool reverse = false)
     {
-        IQueryable<StoredResource> fabrics = dataContext.StoredResources
+        IQueryable<Resource> fabrics = dataContext.Resources
             .Include(f => f.Color)
             .Include(f => f.FabricType)
             .Where(f => f.SlotName == SlotNames.Fabric);

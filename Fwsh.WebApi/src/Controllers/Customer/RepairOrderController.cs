@@ -182,22 +182,23 @@ public class RepairOrderController : FwshController
         }
 
         var requestPhotos = this.Request.Form.Files.ToList();
+        var photoUrls = order.PhotoUrls.ToList();
 
-        int count = 0, 
-            pos = order.PhotoUrls.Count;
+        int count = 0, pos = order.PhotoUrls.Count;
 
         foreach (var photo in requestPhotos) {
-            if (order.PhotoUrls.Count >= MAX_PHOTOS) break;
+            if (photoUrls.Count >= MAX_PHOTOS) break;
             string ext = photo.FileName.Split('.').LastOrDefault();
             string url = $"repair-order-{order.Id}-{pos}-{Guid.NewGuid()}.{ext}"; 
             if (storage.TrySave(photo.OpenReadStream(), url)) {
-                order.PhotoUrls.Add(url);
+                photoUrls.Add(url);
                 count += 1;
                 pos += 1;
             }
         }
 
         try {
+            order.PhotoUrls = photoUrls;
             dataContext.RepairOrders.Update(order);
             dataContext.SaveChanges();
             return Ok(new SuccessResult($"Successfully attached {count} photos to Repair Order {orderId}"));

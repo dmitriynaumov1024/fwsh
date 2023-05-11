@@ -134,7 +134,7 @@ public class ColorController : FwshController
             return NotFound (new BadFieldResult("id"));
         }
 
-        int dependencyCount = dataContext.StoredResources
+        int dependencyCount = dataContext.Resources
             .Where(r => r.ColorId == id).Count();
 
         if (dependencyCount > 0) {

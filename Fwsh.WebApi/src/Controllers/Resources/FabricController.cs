@@ -25,9 +25,10 @@ public class FabricController : ResourceController
 {
     protected override string typeName => ResourceTypes.Fabric;
 
-    protected override IQueryable<StoredResource> dbQueryableSet => 
-        dataContext.StoredResources
-            .Include(r => r.Supplier)
+    protected override IQueryable<Resource> dbQueryableSet => 
+        dataContext.Resources
+            .Include(r => r.Stored)
+            .Include(r => r.Stored.Supplier)
             .Include(r => r.FabricType)
             .Include(r => r.Color)
             .Where(r => r.Type == ResourceTypes.Fabric);
@@ -39,13 +40,13 @@ public class FabricController : ResourceController
     }
 
     [HttpPost("create")]
-    public IActionResult Create (StoredFabricRequest request)
+    public IActionResult Create (FabricRequest request)
     {
         return base.OnCreate(request);
     }
 
     [HttpPost("update/{id}")]
-    public IActionResult Update (int id, StoredFabricRequest request)
+    public IActionResult Update (int id, FabricRequest request)
     {
         return base.OnUpdate(id, request);
     }

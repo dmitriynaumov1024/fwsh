@@ -8,10 +8,10 @@ using Fwsh.Common;
 
 public class WorkerResult : PersonResult
 {
-    public List<string> Roles { get; set; }
+    public IReadOnlyList<string> Roles { get; set; }
 
     public WorkerResult (Worker worker) : base(worker) 
     { 
-        this.Roles = worker.Roles.ToList();
+        this.Roles = worker.Roles;
     }
 }

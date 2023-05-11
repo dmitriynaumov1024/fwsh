@@ -187,22 +187,23 @@ public class DesignController : FwshController
         }
 
         var requestPhotos = this.Request.Form.Files.ToList();
+        var photoUrls = design.PhotoUrls.ToList();
 
-        int count = 0, 
-            pos = design.PhotoUrls.Count + 1;
+        int count = 0, pos = design.PhotoUrls.Count + 1;
 
         foreach (var photo in requestPhotos) {
-            if (design.PhotoUrls.Count >= MAX_PHOTOS) break;
+            if (photoUrls.Count >= MAX_PHOTOS) break;
             string ext = photo.FileName.Split('.').LastOrDefault();
             string url = $"design-{design.Id}-{pos}-{Guid.NewGuid()}.{ext}"; 
             if (storage.TrySave(photo.OpenReadStream(), url)) {
-                design.PhotoUrls.Add(url);
+                photoUrls.Add(url);
                 count += 1;
                 pos += 1;
             }
         }
 
         try {
+            design.PhotoUrls = photoUrls;
             dataContext.Designs.Update(design);
             dataContext.SaveChanges();
             return Ok(new SuccessResult($"Successfully attached {count} photos to Design {designId}"));
@@ -220,15 +221,18 @@ public class DesignController : FwshController
             .FirstOrDefault(d => d.Id == designId);
 
         int count = 0;
-        foreach (var photoUrl in design.PhotoUrls) {
+        var photoUrls = design.PhotoUrls.ToList();
+
+        foreach (var photoUrl in photoUrls) {
             if (urls.Contains(photoUrl)) {
                 storage.TryDelete(photoUrl);
-                design.PhotoUrls.Remove(photoUrl);
+                photoUrls.Remove(photoUrl);
                 count += 1;
             }
         }
 
         try {
+            design.PhotoUrls = photoUrls;
             dataContext.Designs.Update(design);
             dataContext.SaveChanges();
             return Ok(new SuccessResult($"Successfully deleted {count} photos of Design {designId}"));

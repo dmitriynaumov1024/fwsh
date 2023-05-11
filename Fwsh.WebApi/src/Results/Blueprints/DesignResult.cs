@@ -31,7 +31,7 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
     public DateTime? RecalculatedAt { get; set; }
 
     // TaskPrototypes { get; set; }
-    public List<string> PhotoUrls { get; set; }
+    public IReadOnlyList<string> PhotoUrls { get; set; }
 
     public DesignResult () { }
 

@@ -10,7 +10,7 @@ public class RepairOrderResult : OrderResult, IResultBuilder<RepairOrderResult>
 {
     private RepairOrder order;
 
-    public List<string> PhotoUrls { get; set; }
+    public IReadOnlyList<string> PhotoUrls { get; set; }
     public string Description { get; set; }
 
     public RepairOrderResult() { }

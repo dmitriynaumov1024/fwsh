@@ -36,7 +36,7 @@ public class MaterialController : FwshController
             return BadRequest(new BadFieldResult("page"));
         }
 
-        IQueryable<StoredResource> materials = dataContext.StoredResources
+        IQueryable<Resource> materials = dataContext.Resources
             .Include(m => m.Color)
             .Where(m => m.SlotName == SlotNames.Decor);
         

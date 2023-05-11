@@ -3,6 +3,8 @@ namespace Fwsh.WebApi.Results;
 using System;
 using Fwsh.Common;
 
+// StoredResourceResult preserves its structure from datamodel-v2
+//
 public class StoredResourceResult : ResourceResult
 {
     public int? SupplierId { get; set; }
@@ -22,19 +24,22 @@ public class StoredResourceResult : ResourceResult
 
     public StoredResourceResult () { }
 
-    public StoredResourceResult (StoredResource res) : base(res)
+    public StoredResourceResult (Resource res) : base(res)
     { 
-        this.SupplierId = res.SupplierId;
-        this.ExternalId = res.ExternalId;
-        this.InStock = res.InStock;
-        this.NormalStock = res.NormalStock;
-        this.RefillPeriodDays = res.RefillPeriodDays;
-        this.LastRefilledAt = res.LastRefilledAt;
-        this.LastCheckedAt = res.LastCheckedAt;
-        this.IsTimeToRefill = res.IsTimeToRefill;
-        this.NeedsRefill = res.NeedsRefill;
-        
-        if (res.Supplier != null) 
-            this.Supplier = new SupplierResult(res.Supplier);
+        if (res.Stored is StoredResource st) {
+            this.SupplierId = st.SupplierId;
+            this.ExternalId = st.ExternalId;
+            this.InStock = st.InStock;
+            this.NormalStock = st.NormalStock;
+            this.RefillPeriodDays = st.RefillPeriodDays;
+            this.LastRefilledAt = st.LastRefilledAt;
+            this.LastCheckedAt = st.LastCheckedAt;
+            this.IsTimeToRefill = st.IsTimeToRefill;
+            this.NeedsRefill = st.NeedsRefill;
+
+            if (st.Supplier != null) {
+                this.Supplier = new SupplierResult(st.Supplier);
+            }
+        }
     }
 }

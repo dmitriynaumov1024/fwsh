@@ -149,14 +149,14 @@ public class ProdOrderController : FwshController
             return BadRequest (new BadFieldResult("designId"));
         }
 
-        var fabric = dataContext.StoredResources
+        var fabric = dataContext.Resources
             .FirstOrDefault(f => f.SlotName == SlotNames.Fabric && f.Id == request.FabricId);
 
         if (fabric == null) {
             return BadRequest (new BadFieldResult("fabricId"));
         }
 
-        var decor = dataContext.StoredResources
+        var decor = dataContext.Resources
             .FirstOrDefault(m => m.SlotName == SlotNames.Decor && m.Id == request.DecorId);
 
         if (decor == null && design.DecorUsage > 0) {

@@ -3,7 +3,7 @@ namespace Fwsh.WebApi.Requests.Resources;
 using Fwsh.Common;
 using Fwsh.WebApi.Validation;
 
-public class StoredMaterialRequest : ResourceRequest
+public class MaterialRequest : ResourceRequest
 {
     public int? ColorId { get; set; }
 
@@ -21,7 +21,7 @@ public class StoredMaterialRequest : ResourceRequest
         }
     }
     
-    public override void ApplyTo (StoredResource mat)
+    public override void ApplyTo (Resource mat)
     {
         base.ApplyTo(mat);
         mat.ColorId = this.ColorId;
