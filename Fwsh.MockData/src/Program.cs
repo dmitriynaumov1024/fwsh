@@ -19,8 +19,11 @@ public class Program
         }
 
         FwshDataContext context = new FwshDataContextPostgres();
-        FwshDataSeeder seeder = new FwshDataSeeder() {
-            CredentialsLogger = credentialsLogger
+        
+        Seeder[] seeders = new Seeder[] {
+            new PeopleSeeder() { CredentialsLogger = credentialsLogger },
+            new ResourceSeeder(),
+            new BlueprintSeeder()
         };
 
         context.Database.EnsureDeleted();
@@ -28,7 +31,7 @@ public class Program
 
         if (args.Contains("seed")) {
             Console.WriteLine("\n -- SEEDING DATABASE -- \n");
-            seeder.Seed(context);
+            foreach (var seeder in seeders) seeder.Seed(context);
             context.SaveChanges();
         }
 

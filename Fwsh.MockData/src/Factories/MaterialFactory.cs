@@ -5,70 +5,70 @@ using System.Collections.Generic;
 using System.Linq;
 using Fwsh.Common;
 
-public class MaterialFactory : Factory<StoredResource>
+public class MaterialFactory : Factory<Resource>
 {
-    static StoredResource[] data = new[] {
-        new StoredResource {
+    static Resource[] data = new[] {
+        new Resource {
             Name = "Foam 50mm",
             MeasureUnit = MeasureUnits.SquareMeters,
             Precision = 1,
             PricePerUnit = 45
         },
-        new StoredResource {
+        new Resource {
             Name = "Foam 25mm",
             MeasureUnit = MeasureUnits.SquareMeters,
             Precision = 1,
             PricePerUnit = 24
         },
-        new StoredResource {
+        new Resource {
             Name = "Foam 80mm",
             MeasureUnit = MeasureUnits.SquareMeters,
             Precision = 1,
             PricePerUnit = 80
         },
-        new StoredResource {
+        new Resource {
             Name = "Wood",
             MeasureUnit = MeasureUnits.CubicMeters,
             Precision = 5,
             PricePerUnit = 4000
         },
-        new StoredResource {
+        new Resource {
             Name = "Wooden slab",
             MeasureUnit = MeasureUnits.SquareMeters,
             Precision = 1,
             PricePerUnit = 60
         },
-        new StoredResource {
+        new Resource {
             Name = "Plywood 3-layer",
             MeasureUnit = MeasureUnits.SquareMeters,
             Precision = 1,
             PricePerUnit = 40
         },
-        new StoredResource {
+        new Resource {
             Name = "PVA glue",
             MeasureUnit = MeasureUnits.Liters,
             Precision = 3,
             PricePerUnit = 90
         },
-        new StoredResource {
+        new Resource {
             Name = "Foam glue",
             MeasureUnit = MeasureUnits.Liters,
             Precision = 3,
             PricePerUnit = 140
         },
-        new StoredResource {
+        new Resource {
             Name = "Synthepone",
             MeasureUnit = MeasureUnits.SquareMeters,
             Precision = 1,
             PricePerUnit = 20
         },
-        new StoredResource {
+        new Resource {
             Name = "Interlining fabric",
             MeasureUnit = MeasureUnits.SquareMeters,
             Precision = 1,
             PricePerUnit = 15
         },
-        new StoredResource {
+        new Resource {
             Color = new Color {
                 Name = "Oak wood",
                 RgbCode = "#c4c399"
@@ -79,7 +79,7 @@ public class MaterialFactory : Factory<StoredResource>
             Precision = 1,
             PricePerUnit = 84
         },
-        new StoredResource {
+        new Resource {
             Color = new Color {
                 Name = "Dark walnut wood",
                 RgbCode = "#695050"
@@ -90,7 +90,7 @@ public class MaterialFactory : Factory<StoredResource>
             Precision = 1,
             PricePerUnit = 89
         },
-        new StoredResource {
+        new Resource {
             Color = new Color {
                 Name = "Birch wood",
                 RgbCode = "#f0f3e0"
@@ -101,7 +101,7 @@ public class MaterialFactory : Factory<StoredResource>
             Precision = 1,
             PricePerUnit = 85
         },
-        new StoredResource {
+        new Resource {
             Color = new Color {
                 Name = "Alder wood",
                 RgbCode = "#ecb889"
@@ -116,7 +116,7 @@ public class MaterialFactory : Factory<StoredResource>
 
     public override int? FixedSize => data.Length;
 
-    public override StoredResource Next() => data[0];
+    public override Resource Next() => data[0];
 
-    public override StoredResource[] All() => data.ToArray();
+    public override Resource[] All() => data.ToArray();
 }
