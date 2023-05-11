@@ -12,27 +12,27 @@ public class SupplyOrderRequest : Request, CreationRequest<SupplyOrder>, UpdateR
     public int ItemId { get; set; }
     public string ExternalId { get; set; }
 
-    public double RequestQuantity { get; set; }
-    public double RequestPricePerUnit { get; set; }
+    public double ExpectQuantity { get; set; }
+    public double ExpectPricePerUnit { get; set; }
 
-    public double ResultQuantity { get; set; }
-    public double ResultPricePerUnit { get; set; }
+    public double ActualQuantity { get; set; }
+    public double ActualPricePerUnit { get; set; }
 
     protected override void OnValidation (ObjectValidator validator)
     {
         validator.Property("externalId", this.ExternalId)
             .LengthInRange(0, 20);
 
-        validator.Property("requestQuantity", this.RequestQuantity)
+        validator.Property("expectQuantity", this.ExpectQuantity)
             .ValueInRange(1, 99999);
 
-        validator.Property("requestPricePerUnit", this.RequestPricePerUnit)
+        validator.Property("expectPricePerUnit", this.ExpectPricePerUnit)
             .ValueInRange(0.01, 99999);
 
-        validator.Property("resultQuantity", this.ResultQuantity)
+        validator.Property("actualQuantity", this.ActualQuantity)
             .ValueInRange(1, 99999);
 
-        validator.Property("resultPricePerUnit", this.ResultPricePerUnit)
+        validator.Property("actualPricePerUnit", this.ActualPricePerUnit)
             .ValueInRange(0.01, 99999);
     }
 
@@ -48,10 +48,10 @@ public class SupplyOrderRequest : Request, CreationRequest<SupplyOrder>, UpdateR
         order.SupplierId = this.SupplierId;
         order.ItemId = this.ItemId;
         order.ExternalId = this.ExternalId;
-        order.RequestQuantity = this.RequestQuantity;
-        order.RequestPricePerUnit = this.RequestPricePerUnit;
-        order.ResultQuantity = this.ResultQuantity;
-        order.ResultPricePerUnit = this.ResultPricePerUnit;
+        order.ExpectQuantity = this.ExpectQuantity;
+        order.ExpectPricePerUnit = this.ExpectPricePerUnit;
+        order.ActualQuantity = this.ActualQuantity;
+        order.ActualPricePerUnit = this.ActualPricePerUnit;
     }
 
 }

@@ -13,6 +13,7 @@ public class StoredResourceResult : ResourceResult
     public double InStock { get; set; }
     public double NormalStock { get; set; }
 
+    public int SupplyOrderCount { get; set; }
     public int RefillPeriodDays { get; set; }
     public DateTime LastRefilledAt { get; set; }
     public DateTime LastCheckedAt { get; set; }
@@ -31,6 +32,7 @@ public class StoredResourceResult : ResourceResult
             this.ExternalId = st.ExternalId;
             this.InStock = st.InStock;
             this.NormalStock = st.NormalStock;
+            this.SupplyOrderCount = st.SupplyOrderCount;
             this.RefillPeriodDays = st.RefillPeriodDays;
             this.LastRefilledAt = st.LastRefilledAt;
             this.LastCheckedAt = st.LastCheckedAt;

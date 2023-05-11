@@ -68,6 +68,8 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
             IsTransformable = design.IsTransformable,
             DimCompact = design.DimCompact,
             DimExpanded = design.DimExpanded,
+            FabricUsage = (design.FabricUsage > 0)? 1 : 0,
+            DecorUsage = (design.DecorUsage > 0)? 1 : 0,
             PhotoUrls = design.PhotoUrls
         };
     }

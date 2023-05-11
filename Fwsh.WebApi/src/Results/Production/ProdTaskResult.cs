@@ -15,6 +15,7 @@ public class ProdTaskResult : Result, IResultBuilder<ProdTaskResult>
     public int? OrderId { get; set; }
     public int PrototypeId { get; set; }
     public int? WorkerId { get; set; }
+    public int Payment { get; set; }
     public string Status { get; set; }
 
     public DateTime CreatedAt { get; set; }
@@ -40,6 +41,7 @@ public class ProdTaskResult : Result, IResultBuilder<ProdTaskResult>
             OrderId = task.Furniture?.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
+            Payment = task.Payment,
             Status = task.Status,
             CreatedAt = task.CreatedAt,
             StartedAt = task.StartedAt,
@@ -66,6 +68,7 @@ public class ProdTaskResult : Result, IResultBuilder<ProdTaskResult>
             OrderId = task.Furniture.OrderId,
             PrototypeId = task.PrototypeId,
             WorkerId = task.WorkerId,
+            Payment = task.Payment,
             Status = task.Status,
             CreatedAt = task.CreatedAt,
             StartedAt = task.StartedAt,
