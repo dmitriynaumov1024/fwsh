@@ -23,18 +23,18 @@ public class FwshDataContext : DbContext
     public DbSet<Color> Colors { get; set; }
     public DbSet<FabricType> FabricTypes { get; set; }
 
-    public DbSet<StoredResource> StoredResources { get; set; }
+    public DbSet<Resource> Resources { get; set; }
     public DbSet<SupplyOrder> SupplyOrders { get; set; }
 
     public DbSet<ProdOrder> ProdOrders { get; set; }
     public DbSet<ProdFurniture> ProdFurniture { get; set; }
     public DbSet<ProdTask> ProdTasks { get; set; }
-    public DbSet<ProdNotification> ProdNotifications { get; set; }
 
     public DbSet<RepairOrder> RepairOrders { get; set; }
-    public DbSet<RepairNotification> RepairNotifications { get; set; }
     public DbSet<RepairTask> RepairTasks { get; set; }
 
+    public DbSet<ProdNotification> ProdNotifications { get; set; }
+    public DbSet<RepairNotification> RepairNotifications { get; set; }
 
     public FwshDataContext(Action<DbContextOptionsBuilder> configure = null) : base()
     { 
@@ -50,6 +50,8 @@ public class FwshDataContext : DbContext
 
     void ConfigureLogging (DbContextOptionsBuilder optionsBuilder)
     {
+        if (env.get("DB_LOGFILE") == null) return;
+
         var loggingCategories = new List<string>();
         if (env.isTrue("DB_LOG_QUERIES")) loggingCategories.Add(DbLoggerCategory.Query.Name);
         if (env.isTrue("DB_LOG_UPDATES")) loggingCategories.Add(DbLoggerCategory.Update.Name); 
@@ -68,6 +70,12 @@ public class FwshDataContext : DbContext
 
     protected override void OnModelCreating (ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Resource>(resource => {
+            // HasForeignKey<TDependentEntity>
+            // Type param is necessary to know who is the dependent entity here
+            resource.HasOne(r => r.Stored).WithOne().HasForeignKey<StoredResource>(stored => stored.Id);
+        });
+
         modelBuilder.Entity<Design>(design => {
             design.HasKey(d => d.Id);
             design.HasIndex(d => d.NameKey).IsUnique();
