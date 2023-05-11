@@ -73,15 +73,15 @@ public class BlueprintSeeder : Seeder
                     Resources = new HashSet<ResourceQuantity> {
                         new ResourceQuantity {
                             Item = wood,
-                            Quantity = approxArea * 0.01
+                            ExpectQuantity = approxArea * 0.01
                         },
                         new ResourceQuantity {
                             Item = pvaGlue,
-                            Quantity = 0.075
+                            ExpectQuantity = 0.075
                         },
                         new ResourceQuantity {
                             Item = screwPart,
-                            Quantity = (int)approxArea * 10 + random.Next(0, 5)
+                            ExpectQuantity = (int)approxArea * 10 + random.Next(0, 5)
                         }
                     }
                 },
@@ -93,15 +93,15 @@ public class BlueprintSeeder : Seeder
                     Resources = new HashSet<ResourceQuantity> {
                         new ResourceQuantity {
                             Item = wood,
-                            Quantity = approxArea * 0.005
+                            ExpectQuantity = approxArea * 0.005
                         },
                         new ResourceQuantity {
                             Item = woodenSlab,
-                            Quantity = approxArea 
+                            ExpectQuantity = approxArea 
                         },
                         new ResourceQuantity {
                             Item = screwPart,
-                            Quantity = (int)approxArea * 12 + random.Next(0, 5)
+                            ExpectQuantity = (int)approxArea * 12 + random.Next(0, 5)
                         }
                     }
                 },
@@ -113,7 +113,7 @@ public class BlueprintSeeder : Seeder
                     Resources = new HashSet<ResourceQuantity> {
                         new ResourceQuantity {
                             SlotName = SlotNames.Fabric,
-                            Quantity = approxArea * 2
+                            ExpectQuantity = approxArea * 2 + 1.5
                         }
                     } 
                 },
@@ -125,19 +125,19 @@ public class BlueprintSeeder : Seeder
                     Resources = new HashSet<ResourceQuantity> {
                         new ResourceQuantity {
                             Item = foamGlue,
-                            Quantity = 0.025 * approxArea
+                            ExpectQuantity = 0.025 * approxArea
                         },
                         new ResourceQuantity {
                             Item = foam50,
-                            Quantity = approxArea * 1.8
+                            ExpectQuantity = approxArea * 1.8
                         },
                         new ResourceQuantity {
                             Item = syntp,
-                            Quantity = approxArea * 1.5
+                            ExpectQuantity = approxArea * 1.5
                         },
                         new ResourceQuantity {
                             Item = interlin,
-                            Quantity = approxArea * 2
+                            ExpectQuantity = approxArea * 2
                         }
                     }
                 },
@@ -149,11 +149,11 @@ public class BlueprintSeeder : Seeder
                     Resources = new HashSet<ResourceQuantity> {
                         new ResourceQuantity {
                             Item = leg,
-                            Quantity = random.Next(4, 6)
+                            ExpectQuantity = random.Next(4, 6)
                         },
                         new ResourceQuantity {
                             Item = random.Choice(joints),
-                            Quantity = 2
+                            ExpectQuantity = 2
                         }
                     }
                 }
@@ -168,11 +168,14 @@ public class BlueprintSeeder : Seeder
                     Resources = new HashSet<ResourceQuantity> {
                         new ResourceQuantity {
                             SlotName = SlotNames.Decor,
-                            Quantity = approxArea * 0.1
+                            ExpectQuantity = approxArea * 0.25
                         }
                     }
                 });
             }
+
+            design.UpdateResourceQuantities();
+            design.UpdatePrice();
         }
     }
 

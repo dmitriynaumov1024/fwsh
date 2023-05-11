@@ -120,15 +120,17 @@ public class ResourceSeeder : Seeder
     {
         var resources = context.Resources.Local
             .Where(res => res.Stored.NeedsRefill)
+            .Where(_ => random.Probability(0.6))
             .ToList();
 
         foreach (var res in resources) {
             context.SupplyOrders.Add ( new SupplyOrder {
                 Item = res,
                 Supplier = res.Stored.Supplier,
-                RequestQuantity = res.Stored.NormalStock,
-                RequestPricePerUnit = res.PricePerUnit
+                ExpectQuantity = res.Stored.NormalStock,
+                ExpectPricePerUnit = res.PricePerUnit
             });
+            res.Stored.SupplyOrderCount += 1;
         }
     }
 

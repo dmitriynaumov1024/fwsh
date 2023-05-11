@@ -23,7 +23,9 @@ public class Program
         Seeder[] seeders = new Seeder[] {
             new PeopleSeeder() { CredentialsLogger = credentialsLogger },
             new ResourceSeeder(),
-            new BlueprintSeeder()
+            new BlueprintSeeder(),
+            new ProductionSeeder(),
+            new RepairSeeder()
         };
 
         context.Database.EnsureDeleted();
