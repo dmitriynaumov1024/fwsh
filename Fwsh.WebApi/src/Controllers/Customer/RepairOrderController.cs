@@ -45,6 +45,7 @@ public class RepairOrderController : FwshController
         }
 
         IQueryable<RepairOrder> orders = dataContext.RepairOrders
+            .Include(order => order.Notifications.Where(n => !n.IsRead).Take(1))
             .Where(order => order.CustomerId == user.ConfirmedId)
             .Where(condition);
 
@@ -156,6 +157,7 @@ public class RepairOrderController : FwshController
 
         try {
             order.Status = OrderStatus.Submitted;
+            order.IsActive = true;
             dataContext.RepairOrders.Update(order);
             dataContext.SaveChanges();
             return Ok ( new SuccessResult (

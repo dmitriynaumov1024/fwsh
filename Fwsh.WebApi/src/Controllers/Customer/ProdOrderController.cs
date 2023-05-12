@@ -40,6 +40,7 @@ public class ProdOrderController : FwshController
 
         IQueryable<ProdOrder> orders = dataContext.ProdOrders
             .Include(order => order.Design)
+            .Include(order => order.Notifications.Where(n => !n.IsRead).Take(1))
             .Where(order => order.CustomerId == user.ConfirmedId)
             .Where(condition);
 
@@ -201,6 +202,7 @@ public class ProdOrderController : FwshController
 
         try {
             order.Status = OrderStatus.Submitted;
+            order.IsActive = true;
             dataContext.ProdOrders.Update(order);
             dataContext.SaveChanges();
             return Ok ( new SuccessResult (

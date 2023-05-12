@@ -33,6 +33,7 @@ public class ProdOrderResult : OrderResult, IResultBuilder<ProdOrderResult>
         var result = new ProdOrderResult() {
             Id = order.Id,
             CustomerId = order.CustomerId,
+            IsActive = order.IsActive,
             Status = order.Status,
             CreatedAt = order.CreatedAt,
             StartedAt = order.StartedAt,
@@ -43,7 +44,10 @@ public class ProdOrderResult : OrderResult, IResultBuilder<ProdOrderResult>
             Price = order.Price,
             DesignId = order.DesignId,
             FabricId = order.FabricId,
-            DecorId = order.DecorId
+            DecorId = order.DecorId,
+            Notifications = order.Notifications.Take(1)
+                .Select(n => new NotificationResult(n))
+                .ToList()
         };
 
         if (order.Design != null) 

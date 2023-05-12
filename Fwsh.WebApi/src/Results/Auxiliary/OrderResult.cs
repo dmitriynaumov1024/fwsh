@@ -8,10 +8,10 @@ public class OrderResult
 {
     public int Id { get; set; }
     public int CustomerId { get; set; }
-    public string Status { get; set; }
     public int Price { get; set; }
     public int Payment { get; set; }
-    
+    public bool IsActive { get; set; }
+    public string Status { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? StartedAt { get; set; }
     public DateTime? FinishedAt { get; set; }
