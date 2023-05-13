@@ -19,4 +19,11 @@ public static class PriceFormationExtensions
         int discount = 100 - Math.Min(MaxDiscountPercent, customer.DiscountPercent);
         return (int)Math.Ceiling(discount * (double)price / 100);
     }
+
+    public static double DefaultPrice (this ResourceQuantity res) 
+    {
+        return (res.SlotName == SlotNames.Decor)? PriceFormation.DefaultDecorPrice :
+               (res.SlotName == SlotNames.Fabric)? PriceFormation.DefaultFabricPrice : 
+                0;
+    }
 }
