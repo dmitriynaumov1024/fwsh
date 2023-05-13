@@ -7,3 +7,13 @@ export { useLocalStorage } from "./lib/useLocalStorage.js"
 export { useLocale } from "./lib/useLocale.js"
 
 export { defineRoutes } from "./lib/defineRoutes.js"
+
+export {
+    OrderStatus,
+    TaskStatus,
+    FurnitureTypes,
+    MeasureUnits,
+    ResourceTypes,
+    SlotNames,
+    WorkerRoles,
+} from "./lib/enums.js"

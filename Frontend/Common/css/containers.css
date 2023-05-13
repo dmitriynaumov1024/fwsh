@@ -32,6 +32,10 @@
   border: var(--border);
 }
 
+.card-card.selected {
+  border-color: var(--color-accent);
+}
+
 @media screen and (min-width: 490px) 
 {
   .card {

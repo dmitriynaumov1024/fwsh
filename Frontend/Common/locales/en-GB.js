@@ -19,6 +19,8 @@ export default nestedObjectMerge (base, {
         after: "once again."
     },
     action: {
+        back: "Back",
+        next: "Next",
         send: "Send",
         submit: "Submit",
         create: "Create",
@@ -35,13 +37,14 @@ export default nestedObjectMerge (base, {
         login: "Log in",
         logout: "Log out",
         details: "Details",
-        makeOrder: "Make order"
+        makeOrder: "Make order",
     },
     common: {
         id: "id",
         other: "Other",
         list: "List",
         archive: "Archive",
+        catalog: "Catalog",
         page: "Page",
         pleaseTryAgain: "Please try again",
         somethingWrong: "Something went wrong",
@@ -49,6 +52,22 @@ export default nestedObjectMerge (base, {
         createdAt: "Created at",
         daysSinceCreated: "Days since created",
         language: "language"
+    },
+    setVisible: {
+        [true]: "Hide",
+        [false]: "Show",
+    },
+    setVisibleResult: {
+        [false]: "Hidden from users",
+        [true]: "Visible for users"    
+    },
+    setActive: {
+        [true]: "Deactivate",
+        [false]: "Activate"
+    },
+    setActiveResult: {
+        [true]: "Activated",
+        [false]: "Deactivated"
     },
     selectLanguage: {
         title: "Site language"
@@ -87,6 +106,14 @@ export default nestedObjectMerge (base, {
     noRoute: {
         title: "Error 404",
         description: "Seems like you tried to navigate to non-existent page "
+    },
+    error: {
+        title: "Unknown error",
+        description: "Something went wrong. See console for details."
+    },
+    saveFailed: {
+        title: "Could not save changes",
+        description: "Could not save changes most likely because of server fault. Check console for problem details."
     },
     header: {
         title: "workshop",
@@ -179,23 +206,37 @@ export default nestedObjectMerge (base, {
         finished: "Finished",
         impossible: "Impossible",
         rejected: "Rejected",
+        received: "Received",
         receivedpaid: "Received and paid"
     },
     notification: {
         single: "Notification",
         plural: "Notifications",
-        new: "New notification"
+        new: "New notification",
+        readAll: "Mark all as read",
+    },
+    myOrder: {
+        single: "My order",
+        plural: "My orders"
+    },
+    myTask: {
+        single: "My task",
+        plural: "My tasks"
     },
     order: {
         single: "Order",
         plural: "Orders",
         status: "Status",
+        isActive: "Active",
+        price: "Price",
+        payment: "Payment",
         customer: "Customer",
         createdAt: "Created at",
         startedAt: "Work started at",
         finishedAt: "Finished at",
         receivedAt: "Received at",
-        notifications: "Notifications"
+        notifications: "Notifications",
+        details: "Order details"
     },
     productionOrder: {
         single: "Production order",
@@ -215,7 +256,10 @@ export default nestedObjectMerge (base, {
         description: "Description"
     },
     measureUnits: {
+        [null]: "unknown",
         unknown: "unknown",
+        mm: "mm",
+        cm: "cm",
         m: "m",
         m2: "sq.m",
         m3: "cub.m",
@@ -243,7 +287,19 @@ export default nestedObjectMerge (base, {
         lastRefilledAt: "Last refilled at",
         needsRefill: "Critical amount, needs refill",
         isTimeToRefill: "It's time to refill",
+        hasSupplyOrder: "Has active supply order",
         createdAt: "Created at",
+    },
+    resourceQuantity: {
+        single: "Resource quantity",
+        plural: "Resource quantities",
+        expectQuantity: ""
+    },
+    resourceUsage: {
+        single: "Resource usage",
+        plural: "Resource usage",
+        expectQuantity: "Expected quantity",
+        actualQuantity: "Actual quantity"
     },
     part: {
         single: "Part",
@@ -254,6 +310,11 @@ export default nestedObjectMerge (base, {
         single: "Material",
         plural: "Materials",
         create: "Create new material"
+    },
+    decor: {
+        single: "Decor material",
+        plural: "Decor materials",
+        create: "Create new decor material"
     },
     fabric: {
         catalog: "Fabric catalog",
@@ -292,6 +353,7 @@ export default nestedObjectMerge (base, {
         displayName: "Name",
         type: "Type",
         price: "Price",
+        priceStartsAt: "starting at",
         description: "Description",
         isVisible: "Visible in catalog",
         isTransformable: "Transformable",
@@ -303,8 +365,10 @@ export default nestedObjectMerge (base, {
         createdAt: "Created at"
     },
     furnitureTypes: {
+        [null]: "Not specified",
         unknown: "Unknown",
         ottoman: "Ottoman",
+        minisofa: "Minisofa",
         sofa: "Sofa",
         corner: "Corner",
         armchair: "Armchair",

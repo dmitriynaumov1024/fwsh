@@ -6,9 +6,9 @@
         </template>
     </div>
     <div v-if="items?.length" class="photo-gallery-controls flex-stripe accent-gray">
-        <button class="button button-secondary" @click="goToPrevious">&lt;</button>
+        <button class="button button-secondary" @click="goToPrevious" :disabled="data.current<=minPos">&lt;</button>
         <span class="text-center flex-grow">{{galleryInfo}}</span>
-        <button class="button button-secondary" @click="goToNext">&gt;</button>
+        <button class="button button-secondary" @click="goToNext" :disabled="data.current>=maxPos">&gt;</button>
     </div>
 </div>
 </template>
@@ -24,14 +24,17 @@ const data = reactive({
     current: 0
 })
 
+const minPos = computed(() => 0) 
+const maxPos = computed(() => props.items?.length - 1)
+
 const galleryInfo = computed(() => `${data.current + 1} / ${props.items?.length ?? 0}`)
 
 function goToPrevious() {
-    if (data.current > 0) data.current -= 1
+    if (data.current > minPos.value) data.current -= 1
 }
 
 function goToNext() {
-    if (data.current + 1 < props.items?.length) data.current += 1
+    if (data.current < maxPos.value) data.current += 1
 }
 
 </script>

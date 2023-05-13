@@ -19,6 +19,8 @@ export default nestedObjectMerge (base, {
         after: "."
     },
     action: {
+        back: "Назад",
+        next: "Далі",
         send: "Надіслати",
         submit: "Готово",
         create: "Створити",
@@ -42,6 +44,7 @@ export default nestedObjectMerge (base, {
         other: "Інше",
         list: "Список",
         archive: "Архів",
+        catalog: "Каталог",
         page: "Сторінка",
         pleaseTryAgain: "Будь ласка, спробуйте ще раз",
         somethingWrong: "Виникла проблема",
@@ -49,6 +52,22 @@ export default nestedObjectMerge (base, {
         createdAt: "Створено",
         daysSinceCreated: "Днів з моменту створення",
         language: "мова"
+    },
+    setVisible: {
+        [true]: "Сховати",
+        [false]: "Відобразити",
+    },
+    setVisibleResult: {
+        [false]: "Сховано від перегляду",
+        [true]: "Доступно для перегляду"    
+    },
+    setActive: {
+        [true]: "Активувати",
+        [false]: "Деактивувати"
+    },
+    setActiveResult: {
+        [true]: "Активно",
+        [false]: "Не активно"
     },
     selectLanguage: {
         title: "Мова сайту"
@@ -87,6 +106,14 @@ export default nestedObjectMerge (base, {
     noRoute: {
         title: "Помилка 404",
         description: "Скоріш за все, Ви намагалися переглянути неіснуючу сторінку"
+    },
+    error: {
+        title: "Виникла невідома помилка",
+        description: "Сталася помилка. Дивіться опис проблеми в консолі."
+    },
+    saveFailed: {
+        title: "Не вдалося зберегти зміни",
+        description: "Не вдалося зберегти зміни. Скоріш за все, це сталося через проблеми на сервері. Дивіться опис проблеми в консолі"
     },
     header: {
         title: "workshop",
@@ -179,23 +206,37 @@ export default nestedObjectMerge (base, {
         finished: "Завершено",
         impossible: "Неможливо",
         rejected: "Відхилено",
+        received: "Отримано",
         receivedpaid: "Отримано та оплачено"
     },
     notification: {
         single: "Сповіщення",
         plural: "Сповіщення",
-        new: "Нове сповіщення"
+        new: "Нове сповіщення",
+        readAll: "Відмітити все як прочитане",
+    },
+    myOrder: {
+        single: "Моє замовлення",
+        plural: "Мої замовлення"
+    },
+    myTask: {
+        single: "Моя задача",
+        plural: "Мої задачі"
     },
     order: {
         single: "Замовлення",
         plural: "Замовлення",
         status: "Стан замовлення",
+        isActive: "Активне",
+        price: "Вартість",
+        payment: "Сплачено",
         customer: "Покупець",
         createdAt: "Створено",
         startedAt: "Початок робіт",
         finishedAt: "Завершено",
         receivedAt: "Отримано",
-        notifications: "Сповіщення"
+        notifications: "Сповіщення",
+        details: "Деталі замовлення"
     },
     productionOrder: {
         single: "Виробниче замовлення",
@@ -212,7 +253,10 @@ export default nestedObjectMerge (base, {
         description: "Опис замовлення"
     },
     measureUnits: {
+        [null]: "невідомо",
         unknown: "невідомо",
+        mm: "мм",
+        cm: "см",
         m: "м",
         m2: "кв.м",
         m3: "куб.м",
@@ -240,7 +284,19 @@ export default nestedObjectMerge (base, {
         lastRefilledAt: "Поповнено",
         needsRefill: "Треба поповнити запас якнайшвидше",
         isTimeToRefill: "Прийшов час поповнювати",
+        hasSupplyOrder: "Буде поповнено найближчим часом",
         createdAt: "Створено",
+    },
+    resourceQuantity: {
+        single: "Кількість ресурсу",
+        plural: "Кількість ресурсів",
+        expectQuantity: ""
+    },
+    resourceUsage: {
+        single: "Використання ресурсу",
+        plural: "Використання ресурсів",
+        expectQuantity: "Заплановане використання",
+        actualQuantity: "Фактичне використання"
     },
     part: {
         single: "Деталь",
@@ -251,6 +307,11 @@ export default nestedObjectMerge (base, {
         single: "Матеріал",
         plural: "Матеріали",
         create: "Новий матеріал"
+    },
+    decor: {
+        single: "Декораційний матеріал",
+        plural: "Декораційні матеріали",
+        create: "Створити новий декор.матеріал"
     },
     fabric: {
         catalog: "Каталог тканин",
@@ -289,6 +350,7 @@ export default nestedObjectMerge (base, {
         displayName: "Найменування",
         type: "Тип",
         price: "Базова ціна",
+        priceStartsAt: "від",
         description: "Опис",
         isVisible: "Відображається в каталозі",
         isTransformable: "Трансформується",
@@ -300,8 +362,10 @@ export default nestedObjectMerge (base, {
         createdAt: "Created at"
     },
     furnitureTypes: {
+        [null]: "Будь-який",
         unknown: "Невідомо",
         ottoman: "Тахта",
+        minisofa: "Міні-диван",
         sofa: "Диван",
         corner: "Куток",
         armchair: "Крісло",

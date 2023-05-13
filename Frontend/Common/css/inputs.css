@@ -179,3 +179,31 @@ input.inline-input:focus {
 input.inline-input[invalid="true"] {
   border-bottom-color: var(--color-bad); 
 }
+
+.fancy-selectbox>header {
+  border: var(--border);
+  background-color: var(--color-back-0);
+  padding: 0.25rem 0.5rem;
+}
+
+.fancy-selectbox[active="true"]>header {
+  border-color: var(--color-accent);
+}
+
+.fancy-selectbox>main {
+  position: absolute;
+  display: none;
+  padding: 0.25rem 0.5rem;
+  width: 100%;
+  top: 110%;
+  max-height: 10rem;
+  overflow-y: auto;
+  z-index: 2;
+  border: var(--border);
+  box-shadow: var(--shadow);
+}
+
+.fancy-selectbox[active="true"]>main {
+  display: block;
+  background-color: var(--color-back-0);
+}
