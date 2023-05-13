@@ -33,14 +33,19 @@ public class ProductionSeeder : Seeder
                     Design design = random.Choice(designs);
                     int quantity = random.Next(1, 5);
                     bool orderIsActive = random.Probability(0.40);
+                    Resource fabric = random.Choice(fabrics);
+                    Resource decor = random.Choice(decors);
+                    int fixedPrice = (int)(design.Price 
+                        + fabric.PricePerUnit * design.FabricUsage 
+                        + decor.PricePerUnit * design.DecorUsage); 
                     return new ProdOrder() {
                         Customer = customer,
                         Design = design,
                         Decor = (design.DecorUsage > 0)? random.Choice(decors) : null,
                         Fabric = random.Choice(fabrics),
                         Quantity = quantity,
-                        PricePerOne = design.Price,
-                        Price = design.Price * quantity,
+                        PricePerOne = fixedPrice,
+                        Price = fixedPrice * quantity,
                         IsActive = orderIsActive,
                         Status = orderIsActive? OrderStatus.Submitted : OrderStatus.Unknown
                     };

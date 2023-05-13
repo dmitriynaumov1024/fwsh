@@ -24,7 +24,7 @@ public class BlueprintSeeder : Seeder
         foreach (var design in designs) {
             count++;
             design.PhotoUrls = Enumerable.Range(0, random.Next(2, 5))
-                .Select(i => $"design-{count}-{i}-{Guid.NewGuid()}.jpg").ToList();
+                .Select(i => $"design-{count}-stub.jpg").ToList();
         }
 
         context.Designs.AddRange(designs);
