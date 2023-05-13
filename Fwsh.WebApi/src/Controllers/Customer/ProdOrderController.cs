@@ -161,7 +161,7 @@ public class ProdOrderController : FwshController
             .FirstOrDefault(m => m.SlotName == SlotNames.Decor && m.Id == request.DecorId);
 
         if (decor == null && design.DecorUsage > 0) {
-            return BadRequest (new BadFieldResult("decorMaterialId"));
+            return BadRequest (new BadFieldResult("decorId"));
         }
 
         var customer = dataContext.Customers
@@ -170,14 +170,15 @@ public class ProdOrderController : FwshController
 
         customer.UpdateDiscountPercent();
 
-        int fixedDesignPrice = (int)(design.Price 
+        int fixedPrice = (int)(design.Price 
             + fabric.PricePerUnit * design.FabricUsage
             + (decor?.PricePerUnit ?? 0) * design.DecorUsage);
 
         request.ApplyTo(order);
 
         order.DecorId = decor?.Id;
-        order.PricePerOne = fixedDesignPrice.WithDiscountFor(customer);
+        order.PricePerOne = fixedPrice.WithDiscountFor(customer);
+        order.Price = order.PricePerOne * order.Quantity;
 
         return null; // null means nothing gone wrong
     }

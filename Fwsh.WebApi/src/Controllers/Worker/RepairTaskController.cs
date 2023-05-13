@@ -13,64 +13,56 @@ using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
 using Fwsh.WebApi.Controllers;
+using Fwsh.WebApi.Requests.Manager;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
 
 [ApiController]
-[Route("worker/tasks/production")]
-public class ProdTaskController : FwshController
+[Route("worker/tasks/repair")]
+public class RepairTaskController : FwshController
 {
     const int PAGESIZE = 20;
 
-    public ProdTaskController (FwshDataContext dataContext, Logger logger, FwshUser user)
+    public RepairTaskController (FwshDataContext dataContext, Logger logger, FwshUser user)
     {
         this.dataContext = dataContext;
         this.logger = logger;
         this.user = user;
     }
 
-    IActionResult GetTaskList (int? page, int? design, Expression<Func<ProdTask, bool>> condition)
+    IActionResult GetTaskList (int? page, Expression<Func<RepairTask, bool>> condition)
     {
         if (page == null) 
             return BadRequest(new BadFieldResult("page"));
 
-        IQueryable<ProdTask> tasks = dataContext.ProdTasks
-            .Include(t => t.Furniture.Design)
-            .Include(t => t.Furniture.Order)
-            .Include(t => t.Prototype)
+        IQueryable<RepairTask> tasks = dataContext.RepairTasks
+            .Include(t => t.Order)
             .Where(t => t.WorkerId == user.ConfirmedId)
             .Where(condition);
-        
-        if (design is int designId) 
-            tasks = tasks.Where(t => t.Furniture.DesignId == designId);  
 
         return Ok ( tasks.OrderBy(t => t.Id).Paginate ( 
-            (int)page, PAGESIZE, task => new ProdTaskResult(task).Mini()
+            (int)page, PAGESIZE, task => new RepairTaskResult(task).Mini()
         ));
     }
 
     [HttpGet("list")]
-    public IActionResult List (int? page = null, int? design = null)
+    public IActionResult List (int? page = null)
     {
-        return GetTaskList (page, design, task => task.IsActive);
+        return GetTaskList (page, task => task.IsActive);
     }
 
     [HttpGet("archive")]
-    public IActionResult Archive (int? page = null, int? design = null)
+    public IActionResult Archive (int? page = null)
     {
-        return GetTaskList (page, design, task => !task.IsActive);
+        return GetTaskList (page, task => !task.IsActive);
     }
 
     [HttpGet("view/{id}")]
     public IActionResult View (int id)
     {
-        var task = dataContext.ProdTasks
-            .Include(t => t.Furniture.Design)
-            .Include(t => t.Furniture.Fabric)
-            .Include(t => t.Furniture.Decor)
-            .Include(t => t.Furniture.Order.Customer)
-            .Include(t => t.Prototype)
+        var task = dataContext.RepairTasks
+            .Include(t => t.Order.Customer)
             .Include(t => t.Worker)
             .FirstOrDefault(t => t.Id == id && t.WorkerId == user.ConfirmedId);
 
@@ -78,14 +70,14 @@ public class ProdTaskController : FwshController
             return NotFound(new BadFieldResult("id")); 
         }
 
-        return Ok(new ProdTaskResult(task).ForWorker());
+        return Ok(new RepairTaskResult(task).ForWorker());
     }
 
     [HttpPost("set-status/{id}")]
     public IActionResult SetStatus (int id, string status)
     {
-        var task = dataContext.ProdTasks
-            .Include(task => task.Furniture.Order.Furnitures)
+        var task = dataContext.RepairTasks
+            .Include(task => task.Order)
             .ThenInclude(order => order.Tasks)
             .FirstOrDefault(task => task.Id == id && task.WorkerId == user.ConfirmedId);
 
@@ -97,7 +89,7 @@ public class ProdTaskController : FwshController
             return BadRequest(new BadFieldResult("status"));
         }
 
-        var order = task.Furniture.Order;
+        var order = task.Order;
 
         bool canChangeStatus = 
             task.Status == TaskStatus.Assigned 
@@ -118,21 +110,21 @@ public class ProdTaskController : FwshController
         try {
             task.TrySetStatus(status);
             if (task.Status == TaskStatus.Finished 
-                && order.Furnitures.All(f => f.Tasks.All(t => t.Status == TaskStatus.Finished))) {
+                && order.Tasks.All(t => t.Status == TaskStatus.Finished)) {
                 order.TrySetStatus(OrderStatus.Finished);
             }
             if (status == TaskStatus.Working) {
                 task.StartedAt ??= DateTime.UtcNow;
                 order.TrySetStatus(OrderStatus.Working);
             }
-            dataContext.ProdTasks.Update(task);
-            dataContext.ProdOrders.Update(task.Furniture.Order);
+            dataContext.RepairTasks.Update(task);
+            dataContext.RepairOrders.Update(task.Order);
             dataContext.SaveChanges();
-            return Ok (new SuccessResult($"Successfully set status '{status}' for Production Task {id}"));
+            return Ok (new SuccessResult($"Successfully set status '{status}' for Repair Task {id}"));
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return ServerError(new FailResult("Something went wrong while trying to set status for Production Task"));
+            return ServerError(new FailResult("Something went wrong while trying to set status for Repair Task"));
         }
 
     }

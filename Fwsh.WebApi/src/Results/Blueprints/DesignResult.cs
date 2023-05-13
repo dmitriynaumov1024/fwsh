@@ -49,6 +49,8 @@ public class DesignResult : Result, IResultBuilder<DesignResult>
             DisplayName = design.DisplayName,
             IsVisible = design.IsVisible,
             Price = design.Price,
+            DimCompact = design.DimCompact,
+            DimExpanded = design.DimExpanded,
             CreatedAt = design.CreatedAt,
             PhotoUrls = design.PhotoUrls
         };

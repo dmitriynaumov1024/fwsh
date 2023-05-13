@@ -163,8 +163,8 @@ public class ProdTaskController : FwshController
         return Ok(new ProdTaskResult(task).ForManager());
     }
 
-    [HttpPost("create")]
-    public IActionResult Create (int? order = null)
+    [HttpGet("preview")]
+    public IActionResult Preview (int? order = null, bool reuse = false)
     {
         if (order == null) {
             return BadRequest(new BadFieldResult("order"));
@@ -172,8 +172,11 @@ public class ProdTaskController : FwshController
 
         int orderId = (int)order;
 
-        var prodOrder = dataContext.ProdOrders
+        ProdOrder prodOrder = dataContext.ProdOrders
+            .Include(order => order.Decor)
+            .Include(order => order.Fabric)
             .Include(order => order.Design.Tasks)
+            .ThenInclude(task => task.Resources)
             .FirstOrDefault(order => order.Id == orderId);
 
         if (prodOrder == null) {
@@ -184,17 +187,67 @@ public class ProdTaskController : FwshController
             return BadRequest(new FailResult($"Can not create tasks for Production Order {orderId}"));
         } 
 
-        var tasks = Enumerable.Range(0, prodOrder.Quantity)
-            .SelectMany (_ => prodOrder.Design.Tasks
-                .Select (tp => new ProdTask() {
-                    Status = TaskStatus.Unknown,
-                    PrototypeId = tp.Id,
-                    WorkerId = null
-                })
-            );
+        int existingFurnitureCount = reuse ? 
+            dataContext.ProdFurniture
+                .Where(furn => furn.OrderId == null
+                    && furn.DesignId == prodOrder.DesignId 
+                    && furn.FabricId == prodOrder.FabricId 
+                    && furn.DecorId == prodOrder.DecorId)
+                .Take(prodOrder.Quantity).Count() : 0;
+
+
+        return Ok ( new ListResult<MultiProdTaskResult> (
+            prodOrder.Design.CreateFurniture(prodOrder).Tasks.Select(task => new MultiProdTaskResult {
+                Quantity = prodOrder.Quantity - existingFurnitureCount,
+                Prototype = new TaskPrototypeResult(task.Prototype).Mini()
+            })
+        ));
+    }
+
+    [HttpPost("create")]
+    public IActionResult Create (int? order = null, bool reuse = false)
+    {
+        if (order == null) {
+            return BadRequest(new BadFieldResult("order"));
+        }
+
+        int orderId = (int)order;
+
+        ProdOrder prodOrder = dataContext.ProdOrders
+            .Include(order => order.Decor)
+            .Include(order => order.Fabric)
+            .Include(order => order.Design.Tasks)
+            .ThenInclude(task => task.Resources)
+            .FirstOrDefault(order => order.Id == orderId);
+
+        if (prodOrder == null) {
+            return BadRequest(new BadFieldResult("order"));
+        }
+
+        if (prodOrder.Status != OrderStatus.Submitted) {
+            return BadRequest(new FailResult($"Can not create tasks for Production Order {orderId}"));
+        } 
+
+        List<ProdFurniture> existingFurniture = reuse ? 
+            dataContext.ProdFurniture
+                .Where(furn => furn.OrderId == null
+                    && furn.DesignId == prodOrder.DesignId 
+                    && furn.FabricId == prodOrder.FabricId 
+                    && furn.DecorId == prodOrder.DecorId)
+                .Take(prodOrder.Quantity).ToList() :
+            new List<ProdFurniture>();
+
+        foreach (var furniture in existingFurniture) {
+            furniture.OrderId = order;
+            prodOrder.Furnitures.Add(furniture);
+        }
+
+        prodOrder.Furnitures.AddRange (
+            Enumerable.Range(existingFurniture.Count, prodOrder.Quantity)
+                .Select(_ => prodOrder.Design.CreateFurniture(prodOrder))
+        );
 
         try {
-            dataContext.ProdTasks.AddRange(tasks);
             prodOrder.Status = OrderStatus.Delayed;
             dataContext.ProdOrders.Update(prodOrder);
             dataContext.SaveChanges();
@@ -213,7 +266,7 @@ public class ProdTaskController : FwshController
     }
 
     [HttpPost("set-status/{id}")]
-    public IActionResult SetStatus (int id, [FromBody] string status)
+    public IActionResult SetStatus (int id, string status)
     {
         var task = dataContext.ProdTasks
             .Include(task => task.Furniture)
@@ -244,6 +297,29 @@ public class ProdTaskController : FwshController
         }
 
         return Ok (new SuccessResult($"Successfully set status '{status}' for Production Task {id}"));
+    }
+
+    [HttpPost("set-active/{id}")]
+    public IActionResult SetActive (int id, bool active)
+    {
+        var task = dataContext.ProdTasks
+            .FirstOrDefault(t => t.Id == id);
+
+        if (task == null) {
+            return NotFound(new BadFieldResult("id")); 
+        }
+
+        if (active != task.IsActive) try {
+            task.IsActive = active;
+            dataContext.ProdTasks.Update(task);
+            dataContext.SaveChanges();
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong while trying to set active"));
+        }
+
+        return Ok (new SuccessResult($"Successfully set active={active} for Repair Task {id}"));
     }
 
     [HttpPost("assign/{id}")]

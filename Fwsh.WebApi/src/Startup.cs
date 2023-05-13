@@ -71,10 +71,15 @@ public class Startup
             logger.Log("Created default manager");
         }
 
+        // recalculate resource prices
+        var priceController = serviceProvider
+            .GetService<Fwsh.WebApi.Controllers.Manager.PriceFormationController>();
+        priceController.UpdateDefaultPrices();
+
         // recalculate design prices
-        var controller = serviceProvider
+        var designController = serviceProvider
             .GetService<Fwsh.WebApi.Controllers.Manager.DesignController>();
-        controller.Recalculate();
+        designController.Recalculate();
 
         serviceScope.Dispose();
         serviceProvider.Dispose();

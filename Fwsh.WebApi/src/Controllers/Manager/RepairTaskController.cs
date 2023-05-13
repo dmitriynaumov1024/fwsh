@@ -239,7 +239,7 @@ public class RepairTaskController : FwshController
     }
 
     [HttpPost("set-status/{id}")]
-    public IActionResult SetStatus (int id, [FromBody] string status)
+    public IActionResult SetStatus (int id, string status)
     {
         var task = dataContext.RepairTasks
             .Include(task => task.Order)
@@ -272,6 +272,29 @@ public class RepairTaskController : FwshController
         return Ok (new SuccessResult($"Successfully set status '{status}' for Repair Task {id}"));
     }
 
+    [HttpPost("set-active/{id}")]
+    public IActionResult SetActive (int id, bool active)
+    {
+        var task = dataContext.RepairTasks
+            .FirstOrDefault(t => t.Id == id);
+
+        if (task == null) {
+            return NotFound(new BadFieldResult("id")); 
+        }
+
+        if (active != task.IsActive) try {
+            task.IsActive = active;
+            dataContext.RepairTasks.Update(task);
+            dataContext.SaveChanges();
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError (new FailResult("Something went wrong while trying to set active"));
+        }
+
+        return Ok (new SuccessResult($"Successfully set active={active} for Repair Task {id}"));
+    }
+
     [HttpPost("assign/{id}")]
     public IActionResult Assign (int id, int? worker = null)
     {
@@ -296,6 +319,7 @@ public class RepairTaskController : FwshController
 
         try {
             task.WorkerId = worker;
+            task.IsActive = true;
             task.Status = TaskStatus.Assigned;
             dataContext.RepairTasks.Update(task);
             dataContext.SaveChanges();

@@ -157,7 +157,7 @@ public abstract class ResourceController : FwshController
     }
 
     [HttpPost("set-quantity/{id}")]
-    public IActionResult SetQuantity (int id, [FromBody] double quantity)
+    public IActionResult SetQuantity (int id, double quantity)
     {
         var resource = dbQueryableSet.FirstOrDefault(r => r.Id == id);
 

@@ -81,7 +81,7 @@ public class ProdOrderController : FwshController
     }
 
     [HttpPost("set-status/{id}")]
-    public IActionResult SetStatus (int id, [FromBody] string status)
+    public IActionResult SetStatus (int id, string status)
     {
         if (! OrderStatus.Contains(status)) 
             return BadRequest(new BadFieldResult("status"));
