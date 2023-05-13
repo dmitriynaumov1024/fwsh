@@ -4,19 +4,22 @@
 <template v-if="order">
 <Bread>
     <Crumb to="/">fwsh</Crumb>
-    <Crumb to="/orders/production/list?page=0">{{locale.productionOrder.plural}}</Crumb>
+    <Crumb :to="`/orders/production/${tab}?page=0`">{{locale.productionOrder.plural}}</Crumb>
     <Crumb last>{{locale.order.single}} #{{order.id}}</Crumb>
 </Bread>
 <ProductionOrderView :order="order" 
     @click-design="goToDesign"
     @click-read="readNotification"
-    @click-read-all="readAllNotifications" />
+    @click-read-all="readAllNotifications"
+    @click-confirm="confirmOrder"
+    @click-delete="deleteOrder" />
 </template>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router" 
 import { ref, reactive, inject, watch } from "vue" 
+import { OrderStatus } from "@common"
 import { Fetch } from "@common/comp/special"
 import { Bread, Crumb } from "@common/comp/layout"
 import ProductionOrderView from "@/comp/views/ProductionOrderView.vue"
@@ -27,7 +30,8 @@ const axios = inject("axios")
 const locale = inject("locale")
 
 const props = defineProps({
-    id: Number
+    id: Number,
+    tab: String
 })
 
 const order = ref(null)
@@ -64,6 +68,28 @@ function readAllNotifications () {
             order.value.notifications.forEach(n => {
                 n.isRead = true
             })
+        }
+    })
+}
+
+function confirmOrder () {
+    axios.post({
+        url: `/customer/orders/production/confirm-submit/${props.id}`
+    })
+    .then(({ status, data: response }) => {
+        if (status < 299 && response.success) {
+            order.value.status = OrderStatus.submitted
+        }
+    })
+}
+
+function deleteOrder () {
+    axios.delete({
+        url: `/customer/orders/production/delete/${props.id}`
+    })
+    .then(({ status, data: response }) => {
+        if (status < 299) {
+            router.push("/orders/production/list?page=0")
         }
     })
 }

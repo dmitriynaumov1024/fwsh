@@ -35,7 +35,7 @@ function onLoad (data) {
 }
 
 function makeOrder (design) {
-    console.log("Should make order")
+    router.push(`/orders/production/create?design=${design.nameKey}`)
 }
 
 </script>

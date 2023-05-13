@@ -1,7 +1,7 @@
 <template>
 <Bread>
     <Crumb to="/">fwsh</Crumb>
-    <Crumb to="/profile">{{locale.profile.myProfile}}</Crumb>
+    <Crumb to="/orders">{{locale.myOrder.plural}}</Crumb>
     <Crumb last>{{locale.repairOrder.plural}}</Crumb>
 </Bread>
 <div class="width-container pad-05">

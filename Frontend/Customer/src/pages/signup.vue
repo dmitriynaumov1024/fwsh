@@ -8,6 +8,7 @@
 </template>
 
 <script setup>
+import qs from "qs"
 import { arrayToDict } from "@common/utils"
 import { useRouter } from "vue-router"
 import { reactive, inject, computed, onMounted } from "vue"
@@ -16,6 +17,10 @@ import SignupView from "@/comp/views/SignupView.vue"
 const router = useRouter()
 const axios = inject("axios")
 const locale = inject("locale")
+
+const props = defineProps({
+    next: String
+})
 
 const signup = reactive({ })
 
@@ -40,7 +45,8 @@ function signupSubmit (data) {
 }
 
 function goToLogin() {
-    setTimeout(() => router.replace("/login"), 200)
+    const query = qs.stringify({ next: props.next })
+    setTimeout(() => router.replace(`/login?${query}`), 200)
 }
 
 </script>

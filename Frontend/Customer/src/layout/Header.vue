@@ -3,6 +3,7 @@
     <template v-slot:nav>
         <router-link to="/catalog" class="top-navbar-link">{{ locale.header.nav.catalog }}</router-link>
         <template v-if="loggedin">
+            <router-link to="/orders" class="top-navbar-link">{{ locale.myOrder.plural }}</router-link>
             <router-link to="/profile" class="top-navbar-link">{{ locale.header.nav.profile }}</router-link>
         </template>
         <template v-else>

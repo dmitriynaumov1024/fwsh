@@ -17,11 +17,13 @@
         </tr>
         <tr>
             <td>{{locale.design.dimCompact}}</td>
-            <td>{{design.dimCompact.width}} x {{design.dimCompact.length}} x {{design.dimCompact.height}} cm</td>
+            <td>{{design.dimCompact.width}} x {{design.dimCompact.length}} x {{design.dimCompact.height}} 
+                {{locale.measureUnits[design.dimCompact.measureUnit]}}</td>
         </tr>
-        <tr v-if="design.isTransformable">
+        <tr v-if="design.isTransformable && design.dimExpanded">
             <td>{{locale.design.dimExpanded}}</td>
-            <td>{{design.dimExpanded.width}} x {{design.dimExpanded.length}} x {{design.dimExpanded.height}} cm</td>
+            <td>{{design.dimExpanded.width}} x {{design.dimExpanded.length}} x {{design.dimExpanded.height}} 
+                {{locale.measureUnits[design.dimExpanded.measureUnit]}}</td>
         </tr>
         <tr>
             <td>{{locale.design.price}}</td>

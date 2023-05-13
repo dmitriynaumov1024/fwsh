@@ -1,7 +1,7 @@
 <template>
 <Bread>
     <Crumb to="/">fwsh</Crumb>
-    <Crumb to="/profile">{{locale.profile.myProfile}}</Crumb>
+    <Crumb to="/orders">{{locale.myOrder.plural}}</Crumb>
     <Crumb last>{{locale.productionOrder.plural}}</Crumb>
 </Bread>
 <div class="width-container pad-05">
@@ -58,7 +58,7 @@ function goToPage (page) {
 }
 
 function goToItem (item) {
-    router.push(`/orders/production/view/${item?.id}`)
+    router.push(`/orders/production/view/${item?.id}?tab=${props.tab}`)
 }
 
 </script>

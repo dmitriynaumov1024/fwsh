@@ -31,7 +31,7 @@
     </div>
     </template>
     <template v-else>
-    <h3 class="pad-05">{{locale.productionOrder.design}}</h3>
+    <h3 class="pad-05">{{locale.design.single}}</h3>
     <table class="kvtable stripes mar-b-1">
         <tr>
             <td>{{locale.design.displayName}}</td>
@@ -39,7 +39,7 @@
         </tr>
         <tr>
             <td>{{locale.design.type}}</td>
-            <td>{{locale.furnitureTypes[order.design.type]}} ({{order.design.type}})</td>
+            <td>{{locale.furnitureTypes[order.design.type] ?? order.design.type}}</td>
         </tr>
         <tr>
             <td>
@@ -50,7 +50,7 @@
             </td>
         </tr>
     </table>
-    <h3 class="pad-05">{{locale.productionOrder.details}}</h3>
+    <h3 class="pad-05">{{locale.order.single}}</h3>
     <table class="kvtable stripes mar-b-1">
         <tr>
             <td>{{locale.productionOrder.quantity}}</td>
@@ -62,7 +62,7 @@
         </tr>
         <tr>
             <td>{{locale.productionOrder.priceTotal}}</td>
-            <td><b>{{order.priceTotal}} &#8372;</b></td>
+            <td><b>{{order.price || order.pricePerOne * order.quantity}} &#8372;</b></td>
         </tr>
         <tr>
             <td>{{locale.order.status}}</td>
@@ -75,12 +75,20 @@
         </tr>
         </template>
     </table>
+    <div class="flex-stripe">
+        <button v-if="canDeleteOrder" class="button button-secondary accent-bad" 
+            @click="()=> emit('click-delete')">{{locale.action.delete}}</button>
+        <span class="flex-grow"></span>
+        <button v-if="canConfirmOrder" class="button button-primary" 
+            @click="()=> emit('click-confirm')">{{locale.action.confirm}}</button>
+    </div>
     </template>
 </div>
 </template>
 
 <script setup>
-import { ref, inject } from "vue"
+import { ref, computed, inject } from "vue"
+import { OrderStatus } from "@common"
 import { ToggleButton } from "@common/comp/ctrl"
 import { NotificationIcon, XIcon } from "@common/comp/icons"
 
@@ -90,10 +98,21 @@ const props = defineProps({
     order: Object
 })
 
+const canDeleteOrder = computed (() => 
+    props.order?.status == OrderStatus.unknown || 
+    props.order?.status == OrderStatus.submitted
+)
+
+const canConfirmOrder = computed (() => 
+    props.order?.status == OrderStatus.unknown
+)
+
 const emit = defineEmits([
     "click-design",
     "click-read",
-    "click-read-all"
+    "click-read-all",
+    "click-confirm",
+    "click-delete"
 ])
 
 const showNotifications = ref(false)
