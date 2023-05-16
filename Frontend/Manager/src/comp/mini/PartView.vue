@@ -3,7 +3,7 @@
     <table class="kntable stripes">
         <tr>
             <td clickable @click="()=> emit('click-details')">
-                <b>{{part.item.name}}</b>&ensp;<span class="text-gray">#{{part.id}}</span></td>
+                <b>{{part.name}}</b>&ensp;<span class="text-gray">#{{part.id}}</span></td>
         </tr>
         <tr>
             <td>{{locale.resource.externalId}}</td>
@@ -11,9 +11,9 @@
         </tr>
         <tr>
             <td>{{locale.resource.pricePerUnit}}</td>
-            <td>{{part.item.pricePerUnit}} &#8372;</td>
+            <td>{{part.pricePerUnit}} &#8372;</td>
         </tr>
-        <tr>
+        <tr :class="{ 'text-bad': part.needsRefill, 'text-warn': part.timeToRefill }">
             <td>{{locale.resource.inStock}}</td>
             <td><p>{{part.inStock}} / {{part.normalStock}}</p>
                 <button class="button button-inline" @click="()=> emit('click-quantity')">

@@ -14,7 +14,7 @@ export default defineRoutes ( "/blueprints", [
     {
         path: "/designs/list",
         component: designList,
-        props: { page: Number, reverse: Boolean }
+        props: { page: Number }
     },
     {
         path: "/designs/view/:id",

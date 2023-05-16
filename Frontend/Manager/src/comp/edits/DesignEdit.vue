@@ -71,6 +71,7 @@
 </template>
 
 <script setup>
+import { FurnitureTypes } from "@common"
 import { cdnResolve } from "@common/utils"
 import { ref, reactive, computed, inject } from "vue"
 import { Checkbox, Radiobox } from "@common/comp/ctrl"
@@ -88,9 +89,11 @@ const props = defineProps({
 
 const mode = computed(()=> (!props.design.id) ? "create" : "edit")
 
-const designTypes = [
-    "sofa", "corner", "ottoman", "armchair", "pouffe"
-]
+// const designTypes = [
+//     "sofa", "corner", "ottoman", "armchair", "pouffe"
+// ]
+
+const designTypes = Object.values(FurnitureTypes).filter(v => !!v)
 
 function consoleLogDesign() {
     console.log(JSON.stringify(props.design))

@@ -1,16 +1,14 @@
 <template>
-<h2 v-if="part.id" class="mar-b-1">{{locale.part.single}} #{{part.id}}</h2>
+<h2 v-if="part.id" class="mar-b-1">{{locale.part.single}} <span class="text-thin text-gray">#{{part.id}}</span></h2>
 <h2 v-else class="mar-b-1">{{locale.part.create}}</h2>
 
-<inputbox disabled :value="part.id" >
-    {{locale.common.id}}</inputbox>
-<inputbox type="text" v-model="part.item.name" :invalid="badFields.name">
+<inputbox type="text" v-model="part.name" :invalid="badFields.name">
     {{locale.resource.name}}</inputbox>
 <inputbox type="text" v-model="part.externalId" :invalid="badFields.externalId">
     {{locale.resource.externalId}}</inputbox>
-<textbox v-model="part.item.description" :invalid="badFields.description">
+<textbox v-model="part.description" :invalid="badFields.description">
     {{locale.resource.description}}</textbox>
-<inputbox type="number" v-model="part.item.pricePerUnit" :invalid="badFields.pricePerUnit">
+<inputbox type="number" v-model="part.pricePerUnit" :invalid="badFields.pricePerUnit">
     {{locale.resource.pricePerUnit}}, &#8372;</inputbox>
 <inputbox type="number" v-model="part.inStock" :invalid="badFields.inStock">
     {{locale.resource.inStock}}</inputbox>
@@ -18,11 +16,11 @@
     {{locale.resource.normalStock}}</inputbox>
 <inputbox type="number" v-model="part.refillPeriodDays" :invalid="badFields.refillPeriodDays">
     {{locale.resource.refillPeriodDays}}</inputbox>
-<inputbox disabled :value="locale.formatDateTime(part.item.createdAt)">
+<inputbox v-if="part.createdAt" disabled :value="locale.formatDateTime(part.createdAt)">
     {{locale.resource.createdAt}}</inputbox>
-<inputbox disabled :value="locale.formatDateTime(part.lastRefilledAt)">
+<inputbox v-if="part.lastRefilledAt" disabled :value="locale.formatDateTime(part.lastRefilledAt)">
     {{locale.resource.lastRefilledAt}}</inputbox>
-<inputbox disabled :value="locale.formatDateTime(part.lastCheckedAt)">
+<inputbox v-if="part.lastCheckedAt" disabled :value="locale.formatDateTime(part.lastCheckedAt)">
     {{locale.resource.lastCheckedAt}}</inputbox>
 
 <div class="mar-b-2">

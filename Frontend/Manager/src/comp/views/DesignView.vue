@@ -50,9 +50,13 @@
         </main>
     </div>
     <div class="flex-stripe flex-pad-1">
-        <button class="button button-primary" @click="()=>emit('click-edit')">{{locale.action.edit}}</button>
-        <span class="flex-grow"></span>
-        <button class="button button-secondary accent-bad" @click="()=>emit('click-delete')">{{locale.action.delete}}</button>
+        <button class="button button-primary" @click="()=>emit('click-edit')">
+            {{locale.action.edit}}
+        </button>
+        <span class="flex-grow text-right">{{message}}&ensp;</span>
+        <button class="button button-secondary accent-gray" @click="()=>emit('click-toggle-visible')">
+            {{locale.setVisible[design.isVisible]}}
+        </button>
     </div>
 </div>
 </template>
@@ -65,12 +69,13 @@ import { ImageGallery } from "@common/comp/layout"
 const locale = inject("locale")
 
 const props = defineProps({
-    design: Object
+    design: Object,
+    message: String
 })
 
 const emit = defineEmits([
     "click-edit",
-    "click-delete"
+    "click-toggle-visible"
 ])
 
 </script>

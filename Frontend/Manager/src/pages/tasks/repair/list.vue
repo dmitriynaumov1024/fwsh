@@ -1,22 +1,22 @@
 <template>
 <Bread>
     <Crumb to="/">fwsh</Crumb>
-    <Crumb to="/orders">{{locale.order.plural}}</Crumb>
-    <Crumb last>{{locale.productionOrder.plural}}</Crumb>
+    <Crumb to="/tasks">{{locale.task.plural}}</Crumb>
+    <Crumb last>{{locale.repairTask.plural}}</Crumb>
 </Bread>
 <div class="width-container pad-05">
-    <h2 class="mar-b-05">{{locale.productionOrder.plural}}</h2>
+    <h2 class="mar-b-05">{{locale.repairTask.plural}}</h2>
     <div class="flex-stripe flex-pad-1">
         <template v-for="nextTab of ['list', 'archive']">
             <button v-if="nextTab==props.tab" 
                 class="button button-secondary accent-weak text-strong">{{locale.common[nextTab]}}</button>
-            <router-link v-else :to="`/orders/production/${nextTab}?page=0`" 
+            <router-link v-else :to="`/tasks/repair/${nextTab}?page=0`" 
                 class="button button-primary accent-weak">{{locale.common[nextTab]}}</router-link>
         </template>
         <span class="flex-grow"></span>
     </div>
 </div>
-<Fetch :url="`/manager/orders/production/${props.tab}`"
+<Fetch :url="`/manager/tasks/repair/${props.tab}`"
     :params="{ page: props.page }" :cacheTTL="2"
     class-error="width-container card pad-1 mar-b-1">
     <template v-slot:default="{ data }">
@@ -28,7 +28,13 @@
         <template v-slot:title>
         </template>
         <template v-slot:repeating="{ item }">
-            <ProductionOrderView :order="item" @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" />
+            <div class="card-card pad-1 mar-b-1" clickable @click="()=> goToItem(item)">
+                <p><b>{{locale.task.single}}</b> # {{item.id}}</p>
+                <p>{{locale.order.single}}: {{item.orderId}}</p>
+                <p>{{locale.worker.single}}: {{item.workerId}}</p>
+                <p>{{item.description}}</p>
+            </div>
+            <!-- <ProductionTaskView :order="item" @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" /> -->
         </template>
     </Pagination>
     </template>
@@ -40,7 +46,7 @@ import { useRouter } from "vue-router"
 import { reactive, inject, watch } from "vue"
 import { Fetch } from "@common/comp/special"
 import { Bread, Crumb, Pagination } from "@common/comp/layout"
-import ProductionOrderView from "@/comp/mini/ProductionOrderView.vue"
+// import ProductionTaskView from "@/comp/mini/ProductionOrderView.vue"
 
 const router = useRouter()
 const axios = inject("axios")
@@ -53,11 +59,11 @@ const props = defineProps({
 
 function goToPage (page) {
     if (page != null && page != undefined)
-        router.push(`/orders/production/${props.tab}?page=${page}`)
+        router.push(`/tasks/repair/${props.tab}?page=${page}`)
 }
 
 function goToItem (item) {
-    router.push(`/orders/production/view/${item?.id}?tab=${props.tab}`)
+    router.push(`/tasks/repair/view/${item?.id}?tab=${props.tab}`)
 }
 
 </script>

@@ -1,36 +1,36 @@
 <template>
-<h2 v-if="material.id" class="mar-b-1">{{locale.material.single}} #{{material.id}}</h2>
+<h2 v-if="mat.id" class="mar-b-1">{{locale.material.single}} #{{mat.id}}</h2>
 <h2 v-else class="mar-b-1">{{locale.material.create}}</h2>
 
-<inputbox disabled :value="material.id" >
+<inputbox disabled :value="mat.id" >
     {{locale.common.id}}</inputbox>
-<inputbox type="text" v-model="material.item.name" :invalid="badFields.name">
+<inputbox type="text" v-model="mat.name" :invalid="badFields.name">
     {{locale.resource.name}}</inputbox>
-<inputbox type="text" v-model="material.externalId" :invalid="badFields.externalId">
+<inputbox type="text" v-model="mat.externalId" :invalid="badFields.externalId">
     {{locale.resource.externalId}}</inputbox>
-<textbox v-model="material.item.description" :invalid="badFields.description">
+<textbox v-model="mat.description" :invalid="badFields.description">
     {{locale.resource.description}}</textbox>
 <groupbox :invalid="badFields.measureUnit">
     <template v-slot:header>
         {{locale.resource.measureUnit}}
     </template>
-    <radiobox v-for="unit of measureUnits" v-model="material.item.measureUnit" :value="unit">
+    <radiobox v-for="unit of measureUnits" v-model="mat.measureUnit" :value="unit">
         <span>{{locale.measureUnits[unit]}} ({{unit}})</span>
     </radiobox>
 </groupbox>
-<inputbox type="number" v-model="material.item.pricePerUnit" :invalid="badFields.pricePerUnit">
+<inputbox type="number" v-model="mat.pricePerUnit" :invalid="badFields.pricePerUnit">
     {{locale.resource.pricePerUnit}}, &#8372;</inputbox>
-<inputbox type="number" v-model="material.inStock" :invalid="badFields.inStock">
-    {{locale.resource.inStock}}, {{locale.measureUnits[material.item.measureUnit]}}</inputbox>
-<inputbox type="number" v-model="material.normalStock" :invalid="badFields.normalStock">
-    {{locale.resource.normalStock}}, {{locale.measureUnits[material.item.measureUnit]}}</inputbox>
-<inputbox type="number" v-model="material.refillPeriodDays" :invalid="badFields.refillPeriodDays">
+<inputbox type="number" v-model="mat.inStock" :invalid="badFields.inStock">
+    {{locale.resource.inStock}}, {{locale.measureUnits[mat.measureUnit]}}</inputbox>
+<inputbox type="number" v-model="mat.normalStock" :invalid="badFields.normalStock">
+    {{locale.resource.normalStock}}, {{locale.measureUnits[mat.measureUnit]}}</inputbox>
+<inputbox type="number" v-model="mat.refillPeriodDays" :invalid="badFields.refillPeriodDays">
     {{locale.resource.refillPeriodDays}}</inputbox>
-<inputbox disabled :value="locale.formatDateTime(material.item.createdAt)">
+<inputbox v-if="mat.createdAt" disabled :value="locale.formatDateTime(mat.createdAt)">
     {{locale.resource.createdAt}}</inputbox>
-<inputbox disabled :value="locale.formatDateTime(material.lastRefilledAt)">
+<inputbox v-if="mat.lastRefilledAt" disabled :value="locale.formatDateTime(mat.lastRefilledAt)">
     {{locale.resource.lastRefilledAt}}</inputbox>
-<inputbox disabled :value="locale.formatDateTime(material.lastCheckedAt)">
+<inputbox v-if="mat.lastCheckedAt" disabled :value="locale.formatDateTime(mat.lastCheckedAt)">
     {{locale.resource.lastCheckedAt}}</inputbox>
 
 <div class="mar-b-2">
@@ -52,7 +52,7 @@ import { Groupbox, Inputbox, Textbox, Radiobox } from "@common/comp/ctrl"
 const locale = inject("locale") 
 
 const props = defineProps({
-    material: Object,
+    mat: Object,
     successMessage: String,
     errorMessage: String,
     badFields: {

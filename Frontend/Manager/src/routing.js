@@ -5,6 +5,7 @@ import blueprints from "./pages/blueprints/.routes.js"
 import orders from "./pages/orders/.routes.js"
 import people from "./pages/people/.routes.js"
 import resources from "./pages/resources/.routes.js"
+import tasks from "./pages/tasks/.routes.js"
 
 import error404 from "./pages/error404.vue"
 
@@ -22,5 +23,6 @@ export default arrayConcat (
     orders,
     people,
     resources,
+    tasks,
     garbage
 )

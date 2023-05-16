@@ -1,6 +1,6 @@
 <template>
 <div class="mar-b-2">
-    <h3 class="mar-b-05">{{resource.item?.name}} <span class="text-thin text-gray">#{{resource.id}}</span></h3>
+    <h3 class="mar-b-05">{{resource.name}} <span class="text-thin text-gray">#{{resource.id}}</span></h3>
     <table class="kntable align-right">
         <tr>
             <td>{{locale.resource.externalId}}</td>
@@ -8,11 +8,11 @@
         </tr>
         <tr>
             <td>{{locale.resource.normalStock}}</td>
-            <td>{{resource.normalStock}} {{locale.measureUnits[resource.item.measureUnit]}}</td>
+            <td>{{resource.normalStock}} <span v-if="resource.measureUnit">{{locale.measureUnits[resource.measureUnit]}}</span></td>
         </tr>
         <tr>
             <td>{{locale.resource.quantity}}</td>
-            <td>{{resource.inStock}} {{locale.measureUnits[resource.item.measureUnit]}}</td>
+            <td>{{resource.inStock}} <span v-if="resource.measureUnit">{{locale.measureUnits[resource.measureUnit]}}</span></td>
         </tr>
         <tr>
             <td>{{locale.resource.actualQuantity}}</td>
@@ -62,7 +62,6 @@ const emit = defineEmits([
 ])
 
 function submitButtonClick() {
-    console.log(props.resource)
     let quantity = Number(data.actualQuantity)
     if (Number.isNaN(quantity) || data.actualQuantity.length == 0) {
         data.valid = false

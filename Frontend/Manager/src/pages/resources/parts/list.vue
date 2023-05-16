@@ -84,7 +84,7 @@ function updateQuantity (data, newQuantity) {
     let item = data.selectedItem
     axios.post({
         url: `/resources/parts/set-quantity/${item.id}`,
-        data: newQuantity
+        params: { quantity: newQuantity }
     })
     .then(({ status, data: response }) => {
         if (response.success) {
@@ -97,8 +97,12 @@ function updateQuantity (data, newQuantity) {
             data.quantityErrorMessage = locale.value.formatBadFields(response.badFields, l => l.resource)
         }
         else {
-            data.quantityErrorMessage = locale.value.common.somethingWrong
+            data.quantityErrorMessage = locale.value.saveFailed.description
         }
+    })
+    .catch(error => {
+        data.quantityErrorMessage = locale.value.saveFailed.description
+        console.error(error)
     })
 }
 

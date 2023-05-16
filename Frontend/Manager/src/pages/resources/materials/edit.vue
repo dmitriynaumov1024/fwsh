@@ -7,7 +7,7 @@
 </Bread>
 <div class="width-container card pad-1">
     <MaterialEdit v-if="data.material" 
-        :material="data.material"
+        :mat="data.material"
         :badFields="data.badFields"
         :errorMessage="data.errorMessage"
         :successMessage="data.successMessage" 
@@ -85,7 +85,7 @@ function submitMaterial () {
         url: material.id ? 
             `/resources/materials/update/${material.id}` : 
             `/resources/materials/create`,
-        data: { ...material, ...material.item }
+        data: { ...material }
     })
     .then(({ status, data: response }) => {
         if (status == 200) {

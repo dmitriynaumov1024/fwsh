@@ -13,6 +13,9 @@
     <router-link to="/orders" class="card pad-1 mar-b-1">
         <h3 class="text-center">{{locale.order.plural}}</h3>
     </router-link>
+    <router-link to="/tasks" class="card pad-1 mar-b-1">
+        <h3 class="text-center">{{locale.task.plural}}</h3>
+    </router-link>
 </div>
 </template>
 

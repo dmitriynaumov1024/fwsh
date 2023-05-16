@@ -85,7 +85,7 @@ function submitPart () {
         url: part.id ? 
             `/resources/parts/update/${part.id}` : 
             `/resources/parts/create`,
-        data: { ...part, ...part.item }
+        data: { ...part }
     })
     .then(({ status, data: response }) => {
         if (status == 200) {
