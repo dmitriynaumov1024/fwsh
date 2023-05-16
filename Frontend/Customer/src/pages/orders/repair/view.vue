@@ -1,14 +1,13 @@
 <template>
-<Fetch :url="`/customer/orders/production/view/${id}`" :cacheTTL="3" @load="onLoad" no-default 
+<Fetch :url="`/customer/orders/repair/view/${id}`" :cacheTTL="3" @load="onLoad" no-default 
     class-error="width-container card pad-1 mar-b-1" />
 <template v-if="order">
 <Bread>
     <Crumb to="/">fwsh</Crumb>
-    <Crumb :to="`/orders/production/${tab??'list'}?page=0`">{{locale.productionOrder.plural}}</Crumb>
+    <Crumb :to="`/orders/repair/${tab??'list'}?page=0`">{{locale.repairOrder.plural}}</Crumb>
     <Crumb last>{{locale.order.single}} #{{order.id}}</Crumb>
 </Bread>
-<ProductionOrderView :order="order" 
-    @click-design="goToDesign"
+<RepairOrderView :order="order" 
     @click-read="readNotification"
     @click-read-all="readAllNotifications"
     @click-confirm="confirmOrder"
@@ -22,7 +21,7 @@ import { ref, reactive, inject, watch } from "vue"
 import { OrderStatus } from "@common"
 import { Fetch } from "@common/comp/special"
 import { Bread, Crumb } from "@common/comp/layout"
-import ProductionOrderView from "@/comp/views/ProductionOrderView.vue"
+import RepairOrderView from "@/comp/views/RepairOrderView.vue"
 
 const router = useRouter()
 
@@ -40,15 +39,9 @@ function onLoad (data) {
     order.value = data
 }
 
-function goToDesign (design) {
-    setTimeout(() => {
-        router.push(`/catalog/designs/view/${design.id}`)
-    }, 200)
-}
-
 function readNotification (notification) {
     axios.post({
-        url: "/customer/orders/production/read-notifications",
+        url: "/customer/orders/repair/read-notifications",
         params: { order: props.id, id: notification.id }
     })
     .then(({ status, data: response }) => {
@@ -60,7 +53,7 @@ function readNotification (notification) {
 
 function readAllNotifications () {
     axios.post({
-        url: "/customer/orders/production/read-notifications",
+        url: "/customer/orders/repair/read-notifications",
         params: { order: props.id, last: 999999999 }
     })
     .then(({ status, data: response }) => {
@@ -74,7 +67,7 @@ function readAllNotifications () {
 
 function confirmOrder () {
     axios.post({
-        url: `/customer/orders/production/confirm-submit/${props.id}`
+        url: `/customer/orders/repair/confirm-submit/${props.id}`
     })
     .then(({ status, data: response }) => {
         if (status < 299 && response.success) {
@@ -85,11 +78,11 @@ function confirmOrder () {
 
 function deleteOrder () {
     axios.delete({
-        url: `/customer/orders/production/delete/${props.id}`
+        url: `/customer/orders/repair/delete/${props.id}`
     })
     .then(({ status, data: response }) => {
         if (status < 299) {
-            router.push("/orders/production/list?page=0")
+            router.push("/orders/repair/list?page=0")
         }
     })
 }

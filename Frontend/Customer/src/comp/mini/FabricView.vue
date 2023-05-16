@@ -1,7 +1,9 @@
 <template>
 <div class="flex-row flex-pad-1 mini-resource-view">
-    <img v-if="hasPhoto" :src="cdnResolve(fabric.photoUrl)" @error="()=> { hasPhoto = false }" class="fabric-card-thumbnail">
-    <div v-if="fabric.color" class="fabric-card-thumbnail" :style="{ position: 'absolute', zIndex: 1, opacity: 0.5, backgroundColor: fabric.color.rgbCode }"></div>
+    <img v-if="fabric.photoUrl && hasPhoto" :src="cdnResolve(fabric.photoUrl)" 
+        @error="()=> { hasPhoto = false }" class="fabric-card-thumbnail">
+    <div v-if="fabric.color" class="fabric-card-thumbnail fabric-card-overlay"
+        :style="{ backgroundColor: fabric.color.rgbCode }"></div>
     <UnknownImage v-else class="fabric-card-thumbnail" />
     <div class="flex-grow">
         <p><b>{{fabric.name}}</b></p>

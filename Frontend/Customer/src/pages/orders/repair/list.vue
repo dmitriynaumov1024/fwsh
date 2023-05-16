@@ -14,6 +14,7 @@
                 class="button button-primary accent-weak">{{locale.common[nextTab]}}</router-link>
         </template>
         <span class="flex-grow"></span>
+        <router-link to="/orders/repair/create" class="button button-primary">+ {{locale.order.single}}</router-link>
     </div>
 </div>
 <Fetch :url="`/customer/orders/repair/${props.tab}`"

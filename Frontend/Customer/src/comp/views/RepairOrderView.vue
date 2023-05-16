@@ -1,7 +1,7 @@
 <template>
 <div class="width-container card pad-1 mar-b-1">
     <div class="flex-stripe mar-b-1">
-        <h2>{{locale.productionOrder.single}} #{{order.id}}</h2>
+        <h2>{{locale.repairOrder.single}} #{{order.id}}</h2>
         <span class="flex-grow"></span>
         <ToggleButton v-model="showNotifications" v-slot="{ active }">
             <XIcon v-if="active" class="icon-2" />
@@ -31,48 +31,23 @@
     </div>
     </template>
     <template v-else>
-    <template v-if="order.design">
-    <h3 class="pad-05">{{locale.design.single}}</h3>
+    <ImageGallery :items="order.photoUrls" class="mar-b-2">
+        <template v-slot="{ active, item }">
+            <img :src="cdnResolve(item)" :class="{ 'visible': active }">
+        </template>
+    </ImageGallery>
     <table class="kvtable stripes mar-b-1">
         <tr>
-            <td>{{locale.design.displayName}}</td>
-            <td>{{order.design.displayName}}</td>
+            <td>{{locale.repairOrder.description}}</td>
+            <td>{{order.description}}</td>
         </tr>
         <tr>
-            <td>{{locale.design.type}}</td>
-            <td>{{locale.furnitureTypes[order.design.type] ?? order.design.type}}</td>
+            <td>{{locale.repairOrder.price}}</td>
+            <td>{{order.price}} &#8372;</td>
         </tr>
         <tr>
-            <td>
-                <button class="button link" 
-                    @click="()=> emit('click-design', order.design)">
-                    {{locale.action.details}}
-                </button>
-            </td>
-        </tr>
-    </table>
-    </template>
-    <h3 class="pad-05 mar-b-05">{{locale.order.single}}</h3>
-    <table class="kvtable stripes mar-b-1">
-        <tr>
-            <td>{{locale.fabric.single}}</td>
-            <td><FabricView v-if="order.fabric" :fabric="order.fabric" /></td>
-        </tr>
-        <tr>
-            <td>{{locale.decor.single}}</td>
-            <td><MaterialView v-if="order.decor" :mat="order.decor" /></td>
-        </tr>
-        <tr>
-            <td>{{locale.productionOrder.quantity}}</td>
-            <td>{{order.quantity}}</td>
-        </tr>
-        <tr>
-            <td>{{locale.productionOrder.pricePerOne}}</td>
-            <td>{{order.pricePerOne}} &#8372;</td>
-        </tr>
-        <tr>
-            <td>{{locale.productionOrder.priceTotal}}</td>
-            <td><b>{{order.price || order.pricePerOne * order.quantity}} &#8372;</b></td>
+            <td>{{locale.repairOrder.prepayment}}</td>
+            <td>{{order.payment}} &#8372;</td>
         </tr>
         <tr>
             <td>{{locale.order.status}}</td>
@@ -99,7 +74,9 @@
 <script setup>
 import { ref, computed, inject } from "vue"
 import { OrderStatus } from "@common"
+import { cdnResolve } from "@common/utils"
 import { ToggleButton } from "@common/comp/ctrl"
+import { ImageGallery } from "@common/comp/layout"
 import { NotificationIcon, XIcon } from "@common/comp/icons"
 import MaterialView from "../mini/MaterialView.vue"
 import FabricView from "../mini/FabricView.vue"
@@ -109,6 +86,8 @@ const locale = inject("locale")
 const props = defineProps({
     order: Object
 })
+
+const showNotifications = ref(false)
 
 const canDeleteOrder = computed (() => 
     props.order?.status == OrderStatus.unknown || 
@@ -120,13 +99,11 @@ const canConfirmOrder = computed (() =>
 )
 
 const emit = defineEmits([
-    "click-design",
     "click-read",
     "click-read-all",
     "click-confirm",
     "click-delete"
 ])
 
-const showNotifications = ref(false)
 
 </script>

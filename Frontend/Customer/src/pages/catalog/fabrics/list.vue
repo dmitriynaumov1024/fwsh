@@ -26,6 +26,7 @@
 </template>
 
 <script setup>
+import qs from "qs"
 import { useRouter } from "vue-router"
 import { reactive, inject, watch } from "vue"
 import { Fetch } from "@common/comp/special"
@@ -37,12 +38,17 @@ const locale = inject("locale")
 const axios = inject("axios")
 
 const props = defineProps({
-    page: Number
+    page: Number,
+    color: Number,
+    fabrictype: Number,
+    reverse: Boolean
 })
 
 function goToPage (page) {
-    if (page != null && page != undefined)
-        router.push(`/catalog/fabrics/list?page=${page}`)
+    if (page != null && page != undefined) {
+        let query = qs.stringify({ ...props, page: page })
+        router.push(`/catalog/fabrics/list?${query}`)
+    }
 }
 
 </script>

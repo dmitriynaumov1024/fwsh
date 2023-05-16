@@ -34,12 +34,25 @@ function signupSubmit (data) {
             signup.success = true
         }
         else {
-            signup.badFields = arrayToDict(response.badFields)
-            signup.errorMessage = locale.value.formatBadFields(response.badFields, l => l.profile)
+            if (status == 400 && response.badFields) { 
+                signup.badFields = arrayToDict(response.badFields)
+                signup.errorMessage = locale.value.formatBadFields(response.badFields, l => l.profile)
+            }
+            else if (status == 404 && response.badFields) {
+                signup.badFields = arrayToDict(response.badFields)
+                signup.errorMessage = locale.value.formatNotFound(response.badFields, l => l.profile)
+            }
+            else if (status == 302 && response.badFields) {
+                signup.badFields = arrayToDict(response.badFields)
+                signup.errorMessage = locale.value.formatAlreadyExists(response.badFields, l => l.profile)
+            } 
+            else {
+                signup.errorMessage = locale.value.error.description
+            }
         }
     })
     .catch(error => {
-        signup.errorMessage = `${locale.value.common.somethingWrong}. ${locale.value.common.seeConsole}`
+        signup.errorMessage = locale.value.error.description
         console.error(error)
     })
 }

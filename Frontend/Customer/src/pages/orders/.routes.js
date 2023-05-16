@@ -7,7 +7,8 @@ import productionOrderView from "./production/view.vue"
 import productionOrderCreate from "./production/create.vue"
 
 import repairOrderList from "./repair/list.vue"
-
+import repairOrderView from "./repair/view.vue"
+import repairOrderCreate from "./repair/create.vue"
 
 export default defineRoutes ( "/orders", [
     {
@@ -33,5 +34,14 @@ export default defineRoutes ( "/orders", [
         path: "/repair/:tab(list|archive)",
         component: repairOrderList,
         props: { tab: String, page: Number }
+    },
+    {
+        path: "/repair/view/:id",
+        component: repairOrderView,
+        props: { tab: String, id: Number }
+    },
+    {
+        path: "/repair/create",
+        component: repairOrderCreate
     }
 ])

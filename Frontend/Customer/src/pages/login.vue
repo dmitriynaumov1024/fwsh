@@ -42,12 +42,20 @@ function loginSubmit ({ phone, password } = data) {
             })
         }
         else {
-            if ((response.badFields instanceof Array) && response.badFields.length) { 
+            if (status == 400 && response.badFields) { 
                 login.badFields = arrayToDict(response.badFields)
                 login.errorMessage = locale.value.formatBadFields(response.badFields, l => l.profile)
             }
+            else if (status == 404 && response.badFields) {
+                login.badFields = arrayToDict(response.badFields)
+                login.errorMessage = locale.value.formatNotFound(response.badFields, l => l.profile)
+            }
+            else if (status == 302 && response.badFields) {
+                login.badFields = arrayToDict(response.badFields)
+                login.errorMessage = locale.value.formatAlreadyExists(response.badFields, l => l.profile)
+            } 
             else {
-                login.errorMessage = response.message ?? locale.value.common.somethingWrong
+                login.errorMessage = locale.value.error.description
             }
         }
     })
