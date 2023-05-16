@@ -79,6 +79,12 @@
   object-fit: cover;
 }
 
+img.fabric-card-thumbnail + .fabric-card-overlay {
+  z-index: 2;
+  opacity: 50%;
+  position: absolute;
+}
+
 @media screen and (max-width: 489px) {
   .mini-resource-view {
     flex-wrap: wrap;

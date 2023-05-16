@@ -7,11 +7,20 @@ export default {
             return date.toLocaleDateString(this.key)
         }
     },
-    formatBadFields (badFields, selector) {
+    formatBadFieldsImpl (badFields, selector, wrap) {
         if (!badFields instanceof Array) badFields = Object.keys(badFields)
         if (selector instanceof Function) 
             badFields = badFields.map(key => selector(this)[key]).filter(key => key != undefined)
-        return `${this.badFields.before} ${badFields.map(field => field.toLowerCase()).join(", ")} ${this.badFields.after}`
+        return `${wrap.before} ${badFields.map(field => field.toLowerCase()).join(", ")} ${wrap.after}`
+    },
+    formatBadFields (badFields, selector) {
+        return this.formatBadFieldsImpl (badFields, selector, this.badFields)
+    },
+    formatNotFound (badFields, selector) {
+        return this.formatBadFieldsImpl (badFields, selector, this.notFound)
+    },
+    formatAlreadyExists (badFields, selector) {
+        return this.formatBadFieldsImpl (badFields, selector, this.alreadyExists)
     },
     formatDate (dateTimeString) {
         let date = new Date(dateTimeString)

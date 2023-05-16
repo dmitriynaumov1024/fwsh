@@ -9,7 +9,9 @@ const dateFormat = createDateFormat("uk-UA")
 export default nestedObjectMerge (base, {
     key: "uk-UA",
     displayName: "Українська",
-    dateFormat: dateFormat,
+    dateFormat: {
+        format: dateFormat.format
+    },
     yesNo: {
         [true]: "Так",
         [false]: "Ні"
@@ -93,7 +95,13 @@ export default nestedObjectMerge (base, {
     },
     notFound: {
         title: "Тут нічого немає",
-        description: "На жаль, нам не вдалося завантажити дані, або ця сторінка не існує."
+        description: "На жаль, нам не вдалося завантажити дані, або ця сторінка не існує.",
+        before: "",
+        after: "не знайдено"
+    },
+    alreadyExists: {
+        before: "Такий",
+        after: "вже існує"
     },
     noDataYet: {
         title: "Тут ще нічого немає",
@@ -137,7 +145,7 @@ export default nestedObjectMerge (base, {
     signup: {
         title: "Реєстрація",
         success: "Реєстрація пройшла успішно!",
-        successDescription: "Ваш обліковий запис покупця був щойно створений. Тепер Ви можете увійти в систему та замовити меблі!",
+        successDescription: "Ваш обліковий запис був щойно створений. Тепер Ви можете увійти в систему.",
         goToLogin: "Увійти в обл.запис",
         iAmOrganization: "Я представляю організацію",
         alreadyHaveAccount: "Вже маєте обліковий запис?"
@@ -207,6 +215,7 @@ export default nestedObjectMerge (base, {
         impossible: "Неможливо",
         rejected: "Відхилено",
         received: "Отримано",
+        paid: "Оплачено",
         receivedpaid: "Отримано та оплачено"
     },
     notification: {
@@ -241,13 +250,18 @@ export default nestedObjectMerge (base, {
     productionOrder: {
         single: "Виробниче замовлення",
         plural: "Виробничі замовлення",
+        create: "Нове виробниче замовлення",
         quantity: "Кількість",
         pricePerOne: "Ціна за одиницю",
         priceTotal: "Сумарна вартість",
+        design: "Дизайн",
+        fabric: "Тканина",
+        decor: "Декор"
     },
     repairOrder: {
         single: "Ремонтне замовлення",
         plural: "Ремонтні замовлення",
+        create: "Нове ремонтне замовлення",
         price: "Вартість робіт",
         prepayment: "Внесена передплата",
         description: "Опис замовлення"
@@ -386,6 +400,7 @@ export default nestedObjectMerge (base, {
         role: "Роль",
         resourceUsage: "Використання ресурсів",
         instructions: "Інструкції",
+        notAssigned: "Не призначено"
     },
     productionTask: {
         single: "Виробнича задача",

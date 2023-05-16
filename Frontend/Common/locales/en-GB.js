@@ -9,7 +9,9 @@ const dateFormat = createDateFormat("en-GB")
 export default nestedObjectMerge (base, {
     key: "en-GB",
     displayName: "English",
-    dateFormat: dateFormat,
+    dateFormat: {
+        format: dateFormat.format
+    },
     yesNo: {
         [true]: "Yes",
         [false]: "No"
@@ -93,7 +95,13 @@ export default nestedObjectMerge (base, {
     },
     notFound: {
         title: "Nothing here",
-        description: "Sorry, data can not be loaded, or this page doesn't exist yet."
+        description: "Sorry, data can not be loaded, or this page doesn't exist yet.",
+        before: "Can not find",
+        after: ""
+    },
+    alreadyExists: {
+        before: "",
+        after: "already exists"
     },
     noDataYet: {
         title: "Nothing here yet",
@@ -207,6 +215,7 @@ export default nestedObjectMerge (base, {
         impossible: "Impossible",
         rejected: "Rejected",
         received: "Received",
+        paid: "Paid",
         receivedpaid: "Received and paid"
     },
     notification: {
@@ -241,16 +250,18 @@ export default nestedObjectMerge (base, {
     productionOrder: {
         single: "Production order",
         plural: "Production orders",
+        create: "New production order",
         quantity: "Quantity",
         pricePerOne: "Price per one",
         priceTotal: "Price total",
         design: "Design",
         fabric: "Fabric",
-        decorMaterial: "Decor. material"
+        decor: "Decor. material"
     },
     repairOrder: {
         single: "Repair order",
         plural: "Repair orders",
+        create: "New repair order",
         price: "Price",
         prepayment: "Prepayment",
         description: "Description"
@@ -389,6 +400,7 @@ export default nestedObjectMerge (base, {
         role: "Role",
         resourceUsage: "Resource usage",
         instructions: "Instructions",
+        notAssigned: "Not assigned"
     },
     productionTask: {
         single: "Production task",
