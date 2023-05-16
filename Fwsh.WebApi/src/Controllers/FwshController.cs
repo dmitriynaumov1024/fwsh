@@ -28,7 +28,14 @@ public class FwshController : ControllerBase
     public ObjectResult ServerError<T> (T data)
     {
         return new ObjectResult(data) {
-            StatusCode = 500
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
+    }
+
+    public ObjectResult Found<T> (T data)
+    {
+        return new ObjectResult(data) {
+            StatusCode = StatusCodes.Status302Found
         };
     }
 }

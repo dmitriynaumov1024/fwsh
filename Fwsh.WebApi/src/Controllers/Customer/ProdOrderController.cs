@@ -170,9 +170,11 @@ public class ProdOrderController : FwshController
 
         customer.UpdateDiscountPercent();
 
-        int fixedPrice = (int)(design.Price 
-            + fabric.PricePerUnit * design.FabricUsage
-            + (decor?.PricePerUnit ?? 0) * design.DecorUsage);
+        int priceDiff = (int)Math.Max ( 0,
+            (fabric.PricePerUnit - PriceFormation.DefaultFabricPrice)* design.FabricUsage +
+            ((decor?.PricePerUnit ?? 0) - PriceFormation.DefaultDecorPrice)* design.DecorUsage );
+
+        int fixedPrice = design.Price + priceDiff;
 
         request.ApplyTo(order);
 

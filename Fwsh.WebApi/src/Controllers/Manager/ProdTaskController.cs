@@ -280,8 +280,8 @@ public class ProdTaskController : FwshController
             return BadRequest(new BadFieldResult("status"));
         }
 
-        bool canChangeStatus = 
-               task.Furniture.Status == OrderStatus.Delayed
+        bool canChangeStatus = task.Status == TaskStatus.Unknown
+            || task.Furniture.Status == OrderStatus.Delayed
             || task.Furniture.Status == OrderStatus.Working
             || task.Furniture.Status == OrderStatus.Finished
                 && (DateTime.UtcNow - (DateTime)task.Furniture.FinishedAt).Minutes < 10; 

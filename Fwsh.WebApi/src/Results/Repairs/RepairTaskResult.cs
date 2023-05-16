@@ -14,6 +14,7 @@ public class RepairTaskResult : Result, IResultBuilder<RepairTaskResult>
     public int Id { get; set; }
     public int OrderId { get; set; }
     public int? WorkerId { get; set; }
+    public string Description { get; set; }
     public string Status { get; set; }
     public string Role { get; set; }
     public int Payment { get; set; }
@@ -39,6 +40,7 @@ public class RepairTaskResult : Result, IResultBuilder<RepairTaskResult>
             Id = task.Id,
             OrderId = task.OrderId,
             WorkerId = task.WorkerId,
+            Description = task.Description,
             Status = task.Status,
             Role = task.Role,
             Payment = task.Payment,

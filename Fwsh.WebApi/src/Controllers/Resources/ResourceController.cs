@@ -42,15 +42,22 @@ public abstract class ResourceController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int page = -1, bool reverse = false) 
+    public IActionResult List (int page = -1, bool reverse = false, string query = null) 
     {
         if (page < 0) {
             return BadRequest ( new BadFieldResult("page") );
         }
 
-        var resources = reverse ? 
-            dbQueryableSet.OrderByDescending(r => r.Id) : 
-            dbQueryableSet.OrderBy(r => r.Id);
+        IQueryable<Resource> resources = dbQueryableSet;
+
+        if (query != null) { 
+            query = query.ToLower();
+            resources = resources.Where(r => r.Name.ToLower().Contains(query));
+        }
+
+        resources = reverse ? 
+            resources.OrderByDescending(r => r.Id) : 
+            resources.OrderBy(r => r.Id);
 
         return Ok (
             resources.Paginate(page, PAGESIZE, item => new StoredResourceResult(item))

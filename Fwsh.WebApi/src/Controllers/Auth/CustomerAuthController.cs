@@ -42,7 +42,7 @@ public class CustomerAuthController : FwshController
             .FirstOrDefault() != null; 
 
         if (phoneAlreadyExists) {
-            return BadRequest(new BadFieldResult("phone"));
+            return Found (new BadFieldResult("phone"));
         }
         
         try {

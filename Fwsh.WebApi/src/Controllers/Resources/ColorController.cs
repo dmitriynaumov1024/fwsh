@@ -35,15 +35,22 @@ public class ColorController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int page = -1, bool reverse = false)
+    public IActionResult List (int page = -1, bool reverse = false, string query = null)
     {
         if (page < 0) {
             return BadRequest ( new BadFieldResult("page") );
         }
 
-        var colors = reverse ? 
-            dataContext.Colors.OrderByDescending(r => r.Id) :
-            dataContext.Colors.OrderBy(r => r.Id);
+        IQueryable<Color> colors = dataContext.Colors;
+
+        if (query != null) {
+            query = query.ToLower();
+            colors = colors.Where(c => c.Name.ToLower().Contains(query));
+        }
+
+        colors = reverse ? 
+            colors.OrderByDescending(r => r.Id) :
+            colors.OrderBy(r => r.Id);
 
         return Ok (
             colors.Paginate(page, PAGESIZE, color => new ColorResult(color))

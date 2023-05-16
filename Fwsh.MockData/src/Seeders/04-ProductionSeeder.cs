@@ -35,9 +35,10 @@ public class ProductionSeeder : Seeder
                     bool orderIsActive = random.Probability(0.40);
                     Resource fabric = random.Choice(fabrics);
                     Resource decor = random.Choice(decors);
-                    int fixedPrice = (int)(design.Price 
-                        + fabric.PricePerUnit * design.FabricUsage 
-                        + decor.PricePerUnit * design.DecorUsage); 
+                    int priceDiff = (int)Math.Max ( 0,
+                        (fabric.PricePerUnit - PriceFormation.DefaultFabricPrice)* design.FabricUsage +
+                        ((decor?.PricePerUnit ?? 0) - PriceFormation.DefaultDecorPrice)* design.DecorUsage );
+                    int fixedPrice = design.Price + priceDiff;
                     return new ProdOrder() {
                         Customer = customer,
                         Design = design,

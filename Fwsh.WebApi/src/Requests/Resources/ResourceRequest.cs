@@ -38,7 +38,7 @@ public class ResourceRequest : Request, CreationRequest<Resource>, UpdateRequest
                 .NotNull().LengthInRange(1, 200);
 
         validator.Property("measureUnit", this.MeasureUnit)
-                .NotNull().Condition(MeasureUnits.Contains(this.MeasureUnit));
+                .Condition(MeasureUnits.Contains(this.MeasureUnit));
 
         validator.Property("precision", this.Precision)
                 .ValueInRange(0, 6);

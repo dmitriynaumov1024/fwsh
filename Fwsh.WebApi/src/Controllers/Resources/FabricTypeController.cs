@@ -35,15 +35,22 @@ public class FabricTypeController : FwshController
     }
 
     [HttpGet("list")]
-    public IActionResult List (int page = -1, bool reverse = false)
+    public IActionResult List (int page = -1, bool reverse = false, string query = null)
     {
         if (page < 0) {
             return BadRequest ( new BadFieldResult("page") );
         }
 
-        var fabricTypes = reverse ? 
-            dataContext.FabricTypes.OrderByDescending(r => r.Id) :
-            dataContext.FabricTypes.OrderBy(r => r.Id);
+        IQueryable<FabricType> fabricTypes = dataContext.FabricTypes;
+
+        if (query != null) {
+            query = query.ToLower();
+            fabricTypes = fabricTypes.Where(f => f.Name.ToLower().Contains(query));
+        }
+
+        fabricTypes = reverse ?
+            fabricTypes.OrderByDescending(r => r.Id) :
+            fabricTypes.OrderBy(r => r.Id);
 
         return Ok (
             fabricTypes.Paginate(page, PAGESIZE, ftype => new FabricTypeResult(ftype))

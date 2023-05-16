@@ -47,7 +47,7 @@ public class ManagerAuthController : FwshController
             .FirstOrDefault(c => c.Phone == request.Phone) != null; 
 
         if (phoneAlreadyExists) {
-            return BadRequest(new BadFieldResult("phone"));
+            return Found (new BadFieldResult("phone"));
         }
 
         try {
