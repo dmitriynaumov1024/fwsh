@@ -17,7 +17,10 @@
             <h2 class="mar-b-1">{{locale.part.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
         </template>
         <template v-slot:repeating="{ item }">
-            <PartView :part="item" @click="()=> goToItem(data, item)" class="card pad-1 mar-b-1" />
+            <PartView :part="item" 
+                @click-quantity="()=> selectItem(data, item)" 
+                @click-details="()=> goToItem(item)"
+                class="card pad-1 mar-b-1" />
         </template>
     </Pagination>
     <Modal v-if="data.selectedItem">
@@ -51,7 +54,11 @@ function goToPage(page) {
     if (page != null) router.push(`/resources/parts/list?page=${page}`)
 }
 
-function goToItem (data, item) {
+function goToItem(item) {
+    if (item?.id) router.push(`/resources/parts/view/${item.id}`)
+}
+
+function selectItem (data, item) {
     if (data.selectedItem) return
     console.log("Should go to "+item.id)
     data.selectedItem = item
@@ -61,11 +68,11 @@ function updateQuantity (data, newQuantity) {
     let item = data.selectedItem
     axios.post({
         url: `/resources/parts/set-quantity/${item.id}`,
-        data: newQuantity
+        params: { quantity: newQuantity }
     })
     .then(({ status, data: response }) => {
         if (response.success) {
-            item.inStock = Number.parseInt(newQuantity)
+            item.inStock = Number(newQuantity)
             item.lastCheckedAt = new Date().toISOString()
             data.quantityErrorMessage = undefined
             data.selectedItem = undefined
@@ -74,8 +81,12 @@ function updateQuantity (data, newQuantity) {
             data.quantityErrorMessage = locale.value.formatBadFields(response.badFields, l => l.resource)
         }
         else {
-            data.quantityErrorMessage = locale.value.common.somethingWrong
+            data.quantityErrorMessage = locale.value.saveFailed.description
         }
+    })
+    .catch(error => {
+        data.quantityErrorMessage = locale.value.saveFailed.description
+        console.error(error)
     })
 }
 

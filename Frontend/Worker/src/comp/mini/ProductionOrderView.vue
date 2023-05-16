@@ -8,7 +8,7 @@
     <p v-else>{{locale.customer.single}}: #{{order.customerId}}</p>
     <p>{{locale.order.status}}: {{locale.status[order.status] ?? order.status}}</p>
     <p>{{locale.productionOrder.priceTotal}}: 
-        {{order.pricePerOne}} &#8372; x {{order.quantity}} = <b>{{order.priceTotal}} &#8372;</b></p>
+        {{order.pricePerOne}} &#8372; x {{order.quantity}} = <b>{{order.price}} &#8372;</b></p>
 </div>
 </template>
 
