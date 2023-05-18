@@ -2,6 +2,7 @@ namespace Fwsh.Common;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public abstract class WorkTask
 {
@@ -20,6 +21,17 @@ public abstract class WorkTask
     public virtual Worker Worker { get; set; }
 
     public virtual ICollection<ResourceQuantity> Resources { get; set; }
+
+    public int ExpectPrice => 
+        this.Resources.Sum(res => res.ExpectPrice);
+    
+    public int ActualPrice => 
+        this.Resources.Sum(res => res.ActualPrice);
+
+    public WorkTask() 
+    {
+        this.Resources = new HashSet<ResourceQuantity>();
+    }
 
     public bool TrySetStatus (string status)
     {

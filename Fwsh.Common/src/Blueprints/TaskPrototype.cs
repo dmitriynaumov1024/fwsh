@@ -47,6 +47,7 @@ public class TaskPrototype
             Status = TaskStatus.Unknown,
             Payment = this.Payment,
             Resources = this.Resources.Select(res => new ResourceQuantity {
+                ItemId = res.ItemId,
                 ItemName = res.Item?.Name ?? res.ItemName,
                 SlotName = res.SlotName,
                 Item = (res.SlotName == SlotNames.Decor)? order.Decor :
