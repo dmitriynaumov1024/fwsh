@@ -12,13 +12,12 @@
         :previous="data.previous" :next="data.next"
         @click-previous="()=>goToPage(data.previous)"
         @click-next="()=>goToPage(data.next)"
-        @click-item="goToItem"
         class="width-container pad-05 mar-b-1">
         <template v-slot:title>
             <h2 class="mar-b-1">{{locale.color.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
         </template>
         <template v-slot:repeating="{ item }">
-            <ColorView :color="item" @click="goToItem(item)" class="card-card pad-1 mar-b-1" />
+            <ColorView :color="item" class="card-card pad-1 mar-b-1" />
         </template>
     </Pagination>
     </template>
