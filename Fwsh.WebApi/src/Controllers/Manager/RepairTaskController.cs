@@ -147,15 +147,23 @@ public class RepairTaskController : FwshController
     public IActionResult View (int id)
     {
         var task = dataContext.RepairTasks
-            .Include(t => t.Order.Customer)
+            .Include(t => t.Order)
             .Include(t => t.Worker)
+            .Include(t => t.Resources)
+            .ThenInclude(r => r.Item.Stored)
             .FirstOrDefault(t => t.Id == id);
 
         if (task == null) {
             return NotFound(new BadFieldResult("id")); 
         }
 
-        return Ok(new RepairTaskResult(task).ForManager());
+        try {
+            return Ok(new RepairTaskResult(task).ForManager());
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Something went terribly wrong"));
+        }
     }
 
     [HttpPost("create")]
@@ -210,6 +218,7 @@ public class RepairTaskController : FwshController
         }
 
         var task = dataContext.RepairTasks
+            .Include(t => t.Resources)
             .FirstOrDefault(task => task.Id == id);
 
         if (task == null) {
@@ -234,7 +243,7 @@ public class RepairTaskController : FwshController
         }
         catch (Exception ex) {
             logger.Error(ex.ToString());
-            return ServerError (new FailResult("Something went wrong while trying to create Repair Task"));
+            return ServerError (new FailResult("Something went wrong while trying to update Repair Task"));
         }
     }
 

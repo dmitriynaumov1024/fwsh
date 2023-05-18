@@ -19,12 +19,16 @@ public class RepairTaskResult : Result, IResultBuilder<RepairTaskResult>
     public string Role { get; set; }
     public int Payment { get; set; }
 
+    public int ExpectPrice { get; set; }
+    public int ActualPrice { get; set; }
+
     public DateTime CreatedAt { get; set; }
     public DateTime? StartedAt { get; set; }
     public DateTime? FinishedAt { get; set; }
 
     public RepairOrderResult Order { get; set; }
     public WorkerResult Worker { get; set; }
+    public List<ResourceQuantity> Resources { get; set; }
 
     public RepairTaskResult () { }
 
@@ -46,7 +50,9 @@ public class RepairTaskResult : Result, IResultBuilder<RepairTaskResult>
             Payment = task.Payment,
             CreatedAt = task.CreatedAt,
             StartedAt = task.StartedAt,
-            FinishedAt = task.FinishedAt
+            FinishedAt = task.FinishedAt,
+            ExpectPrice = task.ExpectPrice,
+            ActualPrice = task.ActualPrice
         };
 
         return result;
@@ -64,6 +70,8 @@ public class RepairTaskResult : Result, IResultBuilder<RepairTaskResult>
         if (task.Order != null) 
             result.Order = new RepairOrderResult(task.Order).ForWorker();
 
+        result.Resources = task.Resources.ToList();
+
         return result;
     }
 
@@ -76,7 +84,9 @@ public class RepairTaskResult : Result, IResultBuilder<RepairTaskResult>
 
         if (task.Worker != null)
             result.Worker = new WorkerResult(task.Worker);
-            
+        
+        result.Resources = task.Resources.ToList();
+
         return result;
     }
 }

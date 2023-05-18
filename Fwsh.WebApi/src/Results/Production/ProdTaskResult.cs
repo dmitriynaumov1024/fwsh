@@ -13,6 +13,7 @@ public class ProdTaskResult : Result, IResultBuilder<ProdTaskResult>
 
     public int Id { get; set; }
     public int? OrderId { get; set; }
+    public int? FurnitureId { get; set; }
     public int PrototypeId { get; set; }
     public int? WorkerId { get; set; }
     public int Payment { get; set; }
@@ -25,6 +26,7 @@ public class ProdTaskResult : Result, IResultBuilder<ProdTaskResult>
     public ProdOrderResult Order { get; set; }
     public TaskPrototypeResult Prototype { get; set; }
     public WorkerResult Worker { get; set; }
+    public List<ResourceQuantity> Resources { get; set; }
 
     public ProdTaskResult () { }
 
@@ -40,6 +42,7 @@ public class ProdTaskResult : Result, IResultBuilder<ProdTaskResult>
             Id = task.Id,
             OrderId = task.Furniture?.OrderId,
             PrototypeId = task.PrototypeId,
+            FurnitureId = task.FurnitureId,
             WorkerId = task.WorkerId,
             Payment = task.Payment,
             Status = task.Status,
@@ -67,12 +70,14 @@ public class ProdTaskResult : Result, IResultBuilder<ProdTaskResult>
             Id = task.Id,
             OrderId = task.Furniture.OrderId,
             PrototypeId = task.PrototypeId,
+            FurnitureId = task.FurnitureId,
             WorkerId = task.WorkerId,
             Payment = task.Payment,
             Status = task.Status,
             CreatedAt = task.CreatedAt,
             StartedAt = task.StartedAt,
-            FinishedAt = task.FinishedAt
+            FinishedAt = task.FinishedAt,
+            Resources = task.Resources.ToList()
         };
 
         if (task.Furniture.Order != null) 

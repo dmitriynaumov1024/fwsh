@@ -100,6 +100,27 @@ public class RepairOrderController : FwshController
         }
     }
 
+    [HttpPost("set-active/{id}")]
+    public IActionResult SetActive (int id, string active)
+    {
+        var order = dataContext.RepairOrders
+            .FirstOrDefault(order => order.Id == id);
+
+        if (order == null) 
+            return NotFound(new BadFieldResult("id"));
+
+        try {
+            order.IsActive = active?.ToLower() == "true";
+            dataContext.RepairOrders.Update(order);
+            dataContext.SaveChanges();
+            return Ok ( new SuccessResult($"Successfully set active={active} for RepairOrder {id}") );
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Something went wrong"));
+        }
+    }
+
     [HttpPost("notify/{id}")]
     public IActionResult Notify (int id, [FromBody] string notificationText)
     {

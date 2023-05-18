@@ -61,7 +61,10 @@ public class RepairOrderResult : OrderResult, IResultBuilder<RepairOrderResult>
     public RepairOrderResult ForManager ()
     {
         var result = ForWorker();
-        result.Customer ??= new CustomerResult(order.Customer);
+        
+        if (order.Customer != null) 
+            result.Customer = new CustomerResult(order.Customer);
+        
         return result;
     }
 }

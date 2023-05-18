@@ -12,7 +12,7 @@ using Fwsh.Utils;
 using Fwsh.Common;
 using Fwsh.Database;
 using Fwsh.Logging;
-using Fwsh.WebApi.Controllers;
+using Fwsh.WebApi.Requests.Manager;
 using Fwsh.WebApi.Results;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.Utils;
@@ -51,9 +51,8 @@ public class SupplierController : FwshController
 
         query = query.Trim().ToLower();
 
-        IEnumerable<Supplier> suppliers = dataContext.Suppliers.ToList();
-        suppliers = suppliers.Where (s =>
-            s.Surname.ToLower().Equals(query)
+        var suppliers = dataContext.Suppliers.Where (s =>
+               s.Surname.ToLower().Equals(query)
             || s.Surname.ToLower().Contains(query)
             || s.Name.ToLower().Equals(query) 
             || s.Name.ToLower().Contains(query)
@@ -62,9 +61,7 @@ public class SupplierController : FwshController
             || s.Phone.Contains(query)
             || s.Email.Contains(query));
 
-        return Ok (new ListResult<SupplierResult>() { 
-            Items = suppliers.Select(supplier => new SupplierResult(supplier)).ToList()
-        });
+        return Ok ( suppliers.Listiate(MAX_SIZE, supplier => new SupplierResult(supplier)) );
     }
 
     [HttpGet("view/{id}")]
@@ -80,4 +77,51 @@ public class SupplierController : FwshController
         return Ok ( new SupplierResult(supplier) );
     }
 
+    [HttpPost("create")]
+    public IActionResult Create (PersonRequest request)
+    {
+        if (request.Validate().State.HasBadFields) {
+            return BadRequest(new BadFieldResult(request.State.BadFields));
+        }
+
+        Supplier supplier = new Supplier();
+        request.ApplyTo(supplier);
+
+        try {
+            dataContext.Suppliers.Add(supplier);
+            dataContext.SaveChanges();
+            return Ok(new CreationResult(supplier.Id, "Successfully created new Supplier"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Something went wrong while trying to create Supplier"));
+        }
+    }
+
+    [HttpPost("update/{id}")]
+    public IActionResult Update (int id, PersonRequest request)
+    {
+        if (request.Validate().State.HasBadFields) {
+            return BadRequest(new BadFieldResult(request.State.BadFields));
+        }
+
+        Supplier supplier = dataContext.Suppliers
+            .FirstOrDefault(s => s.Id == id);
+        
+        if (supplier == null) {
+            return NotFound(new BadFieldResult("id"));
+        }
+
+        request.ApplyTo(supplier);
+
+        try {
+            dataContext.Suppliers.Update(supplier);
+            dataContext.SaveChanges();
+            return Ok(new CreationResult(supplier.Id, "Successfully created new Supplier"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Something went wrong while trying to create Supplier"));
+        }
+    }
 }

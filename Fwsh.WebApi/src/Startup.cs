@@ -22,6 +22,7 @@ using Fwsh.WebApi.FileStorage;
 using Fwsh.WebApi.Logging;
 using Fwsh.WebApi.SillyAuth;
 using Fwsh.WebApi.RouteGuard;
+using Fwsh.WebApi.Utils;
 
 public class Startup 
 {
@@ -100,6 +101,10 @@ public class Startup
 
         // Console logging
         app.UseMiddleware<HttpRequestLoggerMiddleware>();
+
+        if (env.isDevelopment) {
+            app.UseStaticFiles ("/files", env.get("UPLOAD_DIR"));
+        }
 
         // Custom silly authentication
         app.UseMiddleware<SillyAuthMiddleware>();

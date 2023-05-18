@@ -55,9 +55,7 @@ public class WorkerController : FwshController
 
         query = query.Trim().ToLower();
 
-        IEnumerable<Worker> workers = dataContext.Workers.ToList();
-        
-        workers = workers.Where(w => 
+        var workers = dataContext.Workers.Where(w => 
                w.Surname.ToLower().Equals(query)
             || w.Surname.ToLower().Contains(query) 
             || w.Name.ToLower().Equals(query)
@@ -65,9 +63,7 @@ public class WorkerController : FwshController
             || w.Phone.Contains(query)
             || w.Email.Contains(query));
 
-        return Ok (new ListResult<WorkerResult>() {
-            Items = workers.Select(worker => new WorkerResult(worker)).ToList()
-        });
+        return Ok ( workers.Listiate(MAX_SIZE, worker => new WorkerResult(worker)) );
     }
 
     [HttpGet("view/{id}")]

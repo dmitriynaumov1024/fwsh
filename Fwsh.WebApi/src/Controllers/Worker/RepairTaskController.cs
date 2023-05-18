@@ -62,8 +62,8 @@ public class RepairTaskController : FwshController
     public IActionResult View (int id)
     {
         var task = dataContext.RepairTasks
-            .Include(t => t.Order.Customer)
-            .Include(t => t.Worker)
+            .Include(t => t.Resources)
+            .ThenInclude(r => r.Item.Stored)
             .FirstOrDefault(t => t.Id == id && t.WorkerId == user.ConfirmedId);
 
         if (task == null) {

@@ -66,12 +66,11 @@ public class ProdTaskController : FwshController
     public IActionResult View (int id)
     {
         var task = dataContext.ProdTasks
-            .Include(t => t.Furniture.Design)
-            .Include(t => t.Furniture.Fabric)
-            .Include(t => t.Furniture.Decor)
-            .Include(t => t.Furniture.Order.Customer)
+            .Include(t => t.Furniture)
             .Include(t => t.Prototype)
             .Include(t => t.Worker)
+            .Include(t => t.Resources)
+            .ThenInclude(r => r.Item.Stored)
             .FirstOrDefault(t => t.Id == id && t.WorkerId == user.ConfirmedId);
 
         if (task == null) {
