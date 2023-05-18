@@ -48,7 +48,8 @@ const locale = inject("locale")
 
 const props = defineProps({
     tab: String,
-    page: Number
+    page: Number,
+    order: Number
 })
 
 function goToPage (page) {

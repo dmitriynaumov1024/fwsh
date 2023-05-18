@@ -14,7 +14,7 @@ export default defineRoutes ( "/tasks", [
     {
         path: "/production/:tab(list|archive)",
         component: productionTaskList,
-        props: { tab: String, page: Number }
+        props: { tab: String, page: Number, order: Number }
     },
     {
         path: "/production/view/:id",
@@ -24,7 +24,7 @@ export default defineRoutes ( "/tasks", [
     {
         path: "/repair/:tab(list|archive)",
         component: repairTaskList,
-        props: { tab: String, page: Number }
+        props: { tab: String, page: Number, order: Number }
     },
     {
         path: "/repair/view/:id",

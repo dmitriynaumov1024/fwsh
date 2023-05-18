@@ -12,7 +12,6 @@
         :previous="data.previous" :next="data.next"
         @click-previous="()=>goToPage(data.previous)"
         @click-next="()=>goToPage(data.next)"
-        @click-item="goToItem"
         class="width-container pad-05 mar-b-1">
         <template v-slot:title>
             <h2 class="mar-b-05">{{locale.fabricType.plural}}</h2>
@@ -31,7 +30,7 @@
             </div>
         </template>
         <template v-slot:repeating="{ item }">
-            <FabricTypeView :ftype="item" @click="goToItem(item)" class="card-card pad-1 mar-b-1" />
+            <FabricTypeView :ftype="item" @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" />
         </template>
     </Pagination>
     </template>
@@ -57,6 +56,10 @@ const props = defineProps({
 function goToPage (page) {
     const query = { page: page, reverse: props.reverse }
     if (page != null) router.push(`/resources/fabrictypes/list?${qs.stringify(query)}`)
+}
+
+function goToItem (item) {
+    router.push(`/resources/fabrictypes/edit/${item.id}`)
 }
 
 </script>

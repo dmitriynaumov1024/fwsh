@@ -16,6 +16,20 @@
     {{locale.resource.normalStock}}</inputbox>
 <inputbox type="number" v-model="part.refillPeriodDays" :invalid="badFields.refillPeriodDays">
     {{locale.resource.refillPeriodDays}}</inputbox>
+
+<groupbox clickable @click="()=> emit('click-supplier')">
+    <template v-slot:header>
+        {{locale.supplier.single}}
+    </template>
+    <template v-if="part.supplier">
+        <p>{{part.supplier.surname}} {{part.supplier.name}}</p>
+        <p>{{part.supplier.orgName}}, {{part.supplier.phone}}</p>
+    </template>
+    <template v-else>
+        <p>{{locale.common.notSelected}}</p>
+    </template>
+</groupbox>
+
 <inputbox v-if="part.createdAt" disabled :value="locale.formatDateTime(part.createdAt)">
     {{locale.resource.createdAt}}</inputbox>
 <inputbox v-if="part.lastRefilledAt" disabled :value="locale.formatDateTime(part.lastRefilledAt)">
@@ -52,6 +66,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
+    "click-supplier",
     "click-reset",
     "click-submit"
 ])

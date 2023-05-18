@@ -11,6 +11,7 @@
         :badFields="data.badFields"
         :errorMessage="data.errorMessage"
         :successMessage="data.successMessage" 
+        @click-supplier="beginSelectSupplier"
         @click-reset="resetPart"
         @click-submit="submitPart" />
     <template v-else>
@@ -18,14 +19,21 @@
         <p>{{locale.noData.description}}</p>
     </template>
 </div>
+<Modal v-if="data.selectingSupplier && data.suppliers">
+    <SupplierSelect :suppliers="data.suppliers" 
+        :selection="data.part.supplier"
+        @click-submit="endSelectSupplier"
+        @click-cancel="endSelectSupplier" />
+</Modal>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
 import { reactive, inject, watch } from "vue"
 import { arrayToDict, nestedObjectCopy } from "@common/utils"
-import { Bread, Crumb } from "@common/comp/layout"
+import { Bread, Crumb, Modal } from "@common/comp/layout"
 import PartEdit from "@/comp/edits/PartEdit.vue"
+import SupplierSelect from "@/comp/mini/SupplierSelect.vue"
 
 const axios = inject("axios")
 const locale = inject("locale")
@@ -34,11 +42,10 @@ const props = defineProps({
     id: Number
 })
 
-let partTemplate = { 
-    item: { }
-}
+let partTemplate = { }
 
 const data = reactive({ 
+    selectingSupplier: false,
     part: undefined,
     errorMessage: undefined,
     successMessage: undefined,
@@ -63,17 +70,17 @@ function getPart () {
             partTemplate = response
             data.part = nestedObjectCopy(partTemplate)
         }
-        else data.errorMessage = locale.value.common.somethingWrong
+        else data.errorMessage = locale.value.error.description
     })
     .catch(error => {
-        data.errorMessage = locale.value.common.somethingWrong
+        data.errorMessage = locale.value.error.description
     })
 }
 
 function resetPart () {
     data.part = nestedObjectCopy(partTemplate)
     data.errorMessage = undefined
-    locale.successMessage = undefined
+    data.successMessage = undefined
 }
 
 function submitPart () {
@@ -90,17 +97,43 @@ function submitPart () {
     .then(({ status, data: response }) => {
         if (status == 200) {
             data.successMessage = locale.value.changesSaved.description
+            partTemplate = nestedObjectCopy(data.part)
             if (response.id) data.part.id = response.id
         }
         else if (response.badFields) {
             data.badFields = arrayToDict(response.badFields)
             data.errorMessage = locale.value.formatBadFields(response.badFields, l => l.resource)
         }
+        else {
+            data.errorMessage = locale.value.saveFailed.description
+        }
     })
     .catch(error => {
         console.error(error)
-        data.errorMessage = `${locale.value.common.somethingWrong}. ${locale.common.seeConsole}`
+        data.errorMessage = locale.value.error.description
     })
+}
+
+function beginSelectSupplier() {
+    data.selectingSupplier = true
+    if (!data.suppliers) {
+        axios.get({
+            url: "/manager/suppliers/list",
+            params: { page: 0 },
+            cacheTTL: 20
+        })
+        .then(({ status, data: response }) => {
+            data.suppliers = response.items
+        })
+    }
+}
+
+function endSelectSupplier (supplier) {
+    data.selectingSupplier = false
+    if (supplier) {
+        data.part.supplier = supplier
+        data.part.supplierId = supplier.id
+    }
 }
 
 </script>

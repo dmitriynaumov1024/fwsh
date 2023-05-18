@@ -4,6 +4,7 @@
     <Crumb to="/blueprints">{{locale.blueprint.plural}}</Crumb>
     <Crumb last>{{locale.design.plural}}</Crumb>
 </Bread>
+<h2 class="width-container pad-05">{{locale.design.plural}}</h2>
 <Fetch url="/manager/designs/list"
     :params="{ page: props.page }" :cacheTTL="4"
     :check-data="data => data.items?.length"
@@ -15,7 +16,14 @@
         @click-next="()=> goToPage(data.next)"
         class="width-container pad-05 mar-b-1">
         <template v-slot:title>
-            <h2 class="mar-b-1">{{locale.design.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
+            <div class="flex-stripe flex-pad-1 mar-b-1">
+                <button class="button button-secondary accent-weak text-strong">
+                    {{locale.common.page}} {{props.page}}</button>
+                <span class="flex-grow"></span>
+                <router-link to="/blueprints/designs/create" 
+                    class="button button-primary">
+                    + {{locale.design.single}}</router-link>
+            </div>
         </template>
         <template v-slot:repeating="{ item }">
             <DesignView :design="item" @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" />

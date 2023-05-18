@@ -6,6 +6,7 @@ import colorList from "./colors/list.vue"
 import colorEdit from "./colors/edit.vue"
 
 import fabricTypeList from "./fabrictypes/list.vue"
+import fabricTypeEdit from "./fabrictypes/edit.vue"
 
 import partList from "./parts/list.vue"
 import partEdit from "./parts/edit.vue"
@@ -14,6 +15,7 @@ import materialList from "./materials/list.vue"
 import materialEdit from "./materials/edit.vue"
 
 import fabricList from "./fabrics/list.vue"
+import fabricEdit from "./fabrics/edit.vue"
 
 export default defineRoutes ( "/resources", [
     {
@@ -38,6 +40,15 @@ export default defineRoutes ( "/resources", [
         path: "/fabrictypes/list",
         component: fabricTypeList,
         props: { page: Number, reverse: Boolean }
+    },
+    {
+        path: "/fabrictypes/create",
+        component: fabricTypeEdit
+    },
+    {
+        path: "/fabrictypes/edit/:id",
+        component: fabricTypeEdit,
+        props: { id: Number }
     },
     {
         path: "/parts/list",
@@ -71,6 +82,15 @@ export default defineRoutes ( "/resources", [
         path: "/fabrics/list",
         component: fabricList,
         props: { page: Number, reverse: Boolean }
-    }
+    },
+    {
+        path: "/fabrics/create",
+        component: fabricEdit
+    },
+    {
+        path: "/fabrics/edit/:id",
+        component: fabricEdit,
+        props: { id: Number }
+    },
 ])
 

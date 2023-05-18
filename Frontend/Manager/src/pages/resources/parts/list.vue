@@ -5,7 +5,7 @@
     <crumb last>{{locale.part.plural}}</crumb>
 </Bread>
 <Fetch url="/resources/parts/list" 
-    :params="{ page: props.page, reverse: props.reverse }" :cacheTTL="4"
+    :params="{ page: props.page, reverse: props.reverse }" :cacheTTL="10"
     class-error="width-container card pad-1">
     <template v-slot:default="{ data }">
     <Pagination :items="data.items" :page="props.page" 

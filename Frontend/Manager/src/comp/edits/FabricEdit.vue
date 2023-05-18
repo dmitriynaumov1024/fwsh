@@ -1,6 +1,6 @@
 <template>
-<h2 v-if="mat.id" class="mar-b-1">{{locale.material.single}} <span class="text-thin text-gray">#{{mat.id}}</span></h2>
-<h2 v-else class="mar-b-1">{{locale.material.create}}</h2>
+<h2 v-if="mat.id" class="mar-b-1">{{locale.fabric.single}} <span class="text-thin text-gray">#{{mat.id}}</span></h2>
+<h2 v-else class="mar-b-1">{{locale.fabric.create}}</h2>
 
 <inputbox type="text" v-model="mat.name" :invalid="badFields.name">
     {{locale.resource.name}}</inputbox>
@@ -8,17 +8,8 @@
     {{locale.resource.externalId}}</inputbox>
 <textbox v-model="mat.description" :invalid="badFields.description">
     {{locale.resource.description}}</textbox>
-<groupbox v-if="selectingMeasureUnit" :invalid="badFields.measureUnit">
-    <template v-slot:header>
-        {{locale.resource.measureUnit}}
-    </template>
-    <radiobox v-for="(unit, _) in MeasureUnits" v-model="mat.measureUnit" :value="unit" 
-        @click="()=> { selectingMeasureUnit = false }">
-        <span>{{locale.measureUnits[unit] ?? unit}}</span>
-    </radiobox>
-</groupbox>
-<inputbox v-else :value="locale.measureUnits[mat.measureUnit] ?? mat.measureUnit"
-    @click="()=> { selectingMeasureUnit = true }">{{locale.resource.measureUnit}}</inputbox>
+<inputbox disabled :value="locale.measureUnits[mat.measureUnit]">
+    {{locale.resource.measureUnit}}</inputbox>
 <inputbox type="number" v-model="mat.precision" :invalid="badFields.precision">
     {{locale.resource.precision}}</inputbox>
 <inputbox type="number" v-model="mat.pricePerUnit" :invalid="badFields.pricePerUnit">
@@ -82,7 +73,5 @@ const emit = defineEmits([
     "click-reset",
     "click-submit"
 ])
-
-const selectingMeasureUnit = ref(false)
 
 </script>

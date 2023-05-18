@@ -1,7 +1,7 @@
 <template>
 <div class="width-container card pad-1 mar-b-1">
     <div class="flex-stripe mar-b-1">
-        <h2>{{locale.productionOrder.single}} #{{order.id}}</h2>
+        <h2>{{locale.repairOrder.single}} #{{order.id}}</h2>
         <span class="flex-grow"></span>
         <ToggleButton v-model="showNotifications" v-slot="{ active }">
             <XIcon v-if="active" class="icon-2" />
@@ -32,11 +32,12 @@
     </button>
     </template>
     <template v-else>
+    <ImageGallery :items="order.photoUrls" class="mar-b-2">
+        <template v-slot="{ active, item }">
+            <img :src="cdnResolve(item)" :class="{ 'visible': active }">
+        </template>
+    </ImageGallery>
     <table class="kvtable stripes mar-b-1">
-        <tr>
-            <td>{{locale.design.single}}</td>
-            <td><button class="button link" @click="()=> emit('click-design')">{{order.design.displayName}}</button></td>
-        </tr>
         <tr>
             <td>{{locale.customer.single}}</td>
             <td>
@@ -46,16 +47,12 @@
             </td>
         </tr>
         <tr>
-            <td>{{locale.productionOrder.quantity}}</td>
-            <td>{{order.quantity}}</td>
+            <td>{{locale.repairOrder.price}}</td>
+            <td>{{order.price}} &#8372;</td>
         </tr>
         <tr>
-            <td>{{locale.productionOrder.pricePerOne}}</td>
-            <td>{{order.pricePerOne}} &#8372;</td>
-        </tr>
-        <tr>
-            <td>{{locale.productionOrder.priceTotal}}</td>
-            <td><b>{{order.price}} &#8372;</b></td>
+            <td>{{locale.repairOrder.prepayment}}</td>
+            <td><b>{{order.payment}} &#8372;</b></td>
         </tr>
         <tr>
             <td>{{locale.order.status}}</td>
@@ -66,6 +63,10 @@
             <td><checkbox :checked="order.isActive" 
                 @click="()=>emit('click-active', !order.isActive)">
                 {{locale.setActiveResult[order.isActive]}}</checkbox></td>
+        </tr>
+        <tr>
+            <td>{{locale.repairOrder.description}}</td>
+            <td>{{order.description}}</td>
         </tr>
         <template v-for="actionAt of ['createdAt', 'startedAt', 'finishedAt', 'receivedAt']">
         <tr v-if="order[actionAt]">
@@ -91,21 +92,14 @@
     </Modal>
     </template>
 </div>
-<div class="width-container card flex-stripe pad-1 mar-b-1">
-    <h2 class="flex-grow">{{locale.task.plural}}</h2>
-    <button v-if="order.status == OrderStatus.submitted" 
-        @click="()=> emit('click-createtasks')" class="button button-primary">{{locale.action.create}}</button>
-    <router-link v-else-if="order.status != OrderStatus.unknown" 
-        :to="`/tasks/production/list?order=${order.id}`"
-        class="button button-primary">{{locale.action.details}}</router-link>
-</div>
 </template>
 
 <script setup>
 import { OrderStatus } from "@common"
+import { cdnResolve } from "@common/utils"
 import { ref, reactive, inject } from "vue"
 import { ToggleButton, Checkbox, Radiobox } from "@common/comp/ctrl"
-import { NotificationIcon, XIcon } from "@common/comp/icons"
+import { NotificationIcon, XIcon, PencilIcon } from "@common/comp/icons"
 import { ImageGallery, Modal } from "@common/comp/layout"
 
 const locale = inject("locale")
@@ -115,11 +109,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-    "click-design",
     "click-notify",
     "click-status",
     "click-active",
-    "click-createtasks"
 ])
 
 const showNotifications = ref(false)

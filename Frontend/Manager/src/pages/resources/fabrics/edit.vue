@@ -2,18 +2,18 @@
 <Bread>
     <crumb to="/">fwsh</crumb>
     <crumb to="/resources">{{locale.resource.plural}}</crumb>
-    <crumb to="/resources/materials/list?page=0">{{locale.material.plural}}</crumb>
+    <crumb to="/resources/fabrics/list?page=0">{{locale.fabric.plural}}</crumb>
     <crumb last v-if="props.id">#{{props.id}}</crumb>
 </Bread>
 <div class="width-container card pad-1">
-    <MaterialEdit v-if="data.material" 
-        :mat="data.material"
+    <FabricEdit v-if="data.fabric" 
+        :mat="data.fabric"
         :badFields="data.badFields"
         :errorMessage="data.errorMessage"
         :successMessage="data.successMessage" 
         @click-supplier="beginSelectSupplier"
-        @click-reset="resetMaterial"
-        @click-submit="submitMaterial" />
+        @click-reset="resetFabric"
+        @click-submit="submitFabric" />
     <template v-else>
         <h2 class="mar-b-1">{{locale.noData.title}}</h2>
         <p>{{locale.noData.description}}</p>
@@ -21,7 +21,7 @@
 </div>
 <Modal v-if="data.selectingSupplier && data.suppliers">
     <SupplierSelect :suppliers="data.suppliers" 
-        :selection="data.material.supplier"
+        :selection="data.fabric.supplier"
         @click-submit="endSelectSupplier"
         @click-cancel="endSelectSupplier" />
 </Modal>
@@ -32,7 +32,7 @@ import { useRouter } from "vue-router"
 import { reactive, inject, watch } from "vue"
 import { arrayToDict, nestedObjectCopy } from "@common/utils"
 import { Bread, Crumb, Modal } from "@common/comp/layout"
-import MaterialEdit from "@/comp/edits/MaterialEdit.vue"
+import FabricEdit from "@/comp/edits/FabricEdit.vue"
 import SupplierSelect from "@/comp/mini/SupplierSelect.vue"
 
 const axios = inject("axios")
@@ -42,33 +42,33 @@ const props = defineProps({
     id: Number
 })
 
-let materialTemplate = { }
+let fabricTemplate = { measureUnit: "m2" }
 
 const data = reactive({ 
+    fabric: undefined,
     selectingSupplier: false,
-    material: undefined,
     errorMessage: undefined,
     successMessage: undefined,
     badFields: { },
 })
 
-watch(() => props.id, getMaterial, { immediate: true })
+watch(() => props.id, getFabric, { immediate: true })
 
-function getMaterial () {
-    data.material = undefined
+function getFabric () {
+    data.fabric = undefined
     data.errorMessage = undefined
     data.successMessage = undefined
     if (!props.id) {
-        data.material = nestedObjectCopy(materialTemplate)
+        data.fabric = nestedObjectCopy(fabricTemplate)
         return
     }
     axios.get({
-        url: `/resources/materials/view/${props.id}`
+        url: `/resources/fabrics/view/${props.id}`
     })
     .then(({ status, data: response }) => {
         if (status < 299) {
-            materialTemplate = response
-            data.material = nestedObjectCopy(materialTemplate)
+            fabricTemplate = response
+            data.fabric = nestedObjectCopy(fabricTemplate)
         }
         else data.errorMessage = locale.value.error.description
     })
@@ -77,28 +77,28 @@ function getMaterial () {
     })
 }
 
-function resetMaterial () {
-    data.material = nestedObjectCopy(materialTemplate)
+function resetFabric () {
+    data.fabric = nestedObjectCopy(fabricTemplate)
     data.errorMessage = undefined
     data.successMessage = undefined
 }
 
-function submitMaterial () {
-    let material = data.material
+function submitFabric () {
+    let fabric = data.fabric
     data.errorMessage = undefined
     data.successMessage = undefined
     data.badFields = { }
     axios.post({
-        url: material.id ? 
-            `/resources/materials/update/${material.id}` : 
-            `/resources/materials/create`,
-        data: { ...material }
+        url: fabric.id ? 
+            `/resources/fabrics/update/${fabric.id}` : 
+            `/resources/fabrics/create`,
+        data: { ...fabric }
     })
     .then(({ status, data: response }) => {
         if (status == 200) {
             data.successMessage = locale.value.changesSaved.description
-            materialTemplate = nestedObjectCopy(data.material)
-            if (response.id) data.material.id = response.id
+            fabricTemplate = nestedObjectCopy(data.fabric)
+            if (response.id) data.fabric.id = response.id
         }
         else if (response.badFields) {
             data.badFields = arrayToDict(response.badFields)
@@ -131,8 +131,8 @@ function beginSelectSupplier() {
 function endSelectSupplier (supplier) {
     data.selectingSupplier = false
     if (supplier) {
-        data.material.supplier = supplier
-        data.material.supplierId = supplier.id
+        data.fabric.supplier = supplier
+        data.fabric.supplierId = supplier.id
     }
 }
 

@@ -17,7 +17,7 @@
     </div>
 </div>
 <Fetch :url="`/manager/tasks/repair/${props.tab}`"
-    :params="{ page: props.page }" :cacheTTL="2"
+    :params="{ page: props.page, order: props.order }" :cacheTTL="2"
     class-error="width-container card pad-1 mar-b-1">
     <template v-slot:default="{ data }">
     <Pagination :items="data.items" :page="props.page" 
@@ -29,7 +29,10 @@
         </template>
         <template v-slot:repeating="{ item }">
             <div class="card-card pad-1 mar-b-1" clickable @click="()=> goToItem(item)">
-                <p><b>{{locale.task.single}}</b> # {{item.id}}</p>
+                <p><b>{{locale.task.single}}</b>&ensp;
+                    <router-link :to="`/tasks/repair/view/${item.id}`"
+                        class="link">#{{item.id}}</router-link>
+                </p>
                 <p>{{locale.order.single}}: {{item.orderId}}</p>
                 <p>{{locale.worker.single}}: {{item.workerId}}</p>
                 <p>{{item.description}}</p>
@@ -54,7 +57,8 @@ const locale = inject("locale")
 
 const props = defineProps({
     tab: String,
-    page: Number
+    page: Number,
+    order: Number
 })
 
 function goToPage (page) {
