@@ -40,6 +40,7 @@ export default nestedObjectMerge (base, {
         logout: "Log out",
         details: "Details",
         makeOrder: "Make order",
+        assignWorker: "Assign worker", 
     },
     common: {
         id: "id",
@@ -53,7 +54,9 @@ export default nestedObjectMerge (base, {
         seeConsole: "See console for problem details", 
         createdAt: "Created at",
         daysSinceCreated: "Days since created",
-        language: "language"
+        language: "language",
+        notSelected: "Not selected",
+        notAssigned: "Not assigned",
     },
     setVisible: {
         [true]: "Hide",
@@ -172,18 +175,22 @@ export default nestedObjectMerge (base, {
     customer: {
         single: "Customer",
         plural: "Customers",
+        create: "Create new customer"
     },
     manager: {
         single: "Manager",
         plural: "Managers",
+        create: "Create new manager"
     },
     worker: {
         single: "Worker",
         plural: "Workers",
+        create: "Create new worker"
     },
     supplier: {
         single: "Supplier",
         plural: "Suppliers",
+        create: "Create new supplier"
     },
     profile: {
         myProfile: "My profile",
@@ -194,6 +201,7 @@ export default nestedObjectMerge (base, {
         patronym: "Patronym",
         phone: "Phone number",
         email: "E-mail",
+        isOrganization: "Is organization",
         orgName: "Org. name",
         roles: "Role(s)",
         discount: "Discount",
@@ -288,6 +296,7 @@ export default nestedObjectMerge (base, {
         pricePer: "Price per",
         pricePerUnit: "Price per unit",
         measureUnit: "Measure unit",
+        precision: "Precision, decimals",
         quantity: "Quantity",
         usedQuantity: "Used quantity",
         actualQuantity: "Actual quantity",
@@ -388,16 +397,20 @@ export default nestedObjectMerge (base, {
     taskPrototype: {
         single: "Task prototype",
         plural: "Task prototypes",
+        description: "Description",
+        precedence: "Precedence"
     },
     task: {
         single: "Task",
         plural: "Tasks",
         status: "Status",
+        isActive: "Active",
         createdAt: "Created at",
         startedAt: "Work started at",
         finishedAt: "Finished at",
         workType: "Work type",
         role: "Role",
+        description: "Description",
         resourceUsage: "Resource usage",
         instructions: "Instructions",
         notAssigned: "Not assigned"
@@ -409,5 +422,9 @@ export default nestedObjectMerge (base, {
     repairTask: {
         single: "Repair task",
         plural: "Repair tasks",
+    },
+    furniture: {
+        single: "Furniture",
+        plural: "Furnitures"
     }
 })

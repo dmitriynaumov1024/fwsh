@@ -21,7 +21,7 @@ const props = defineProps({
 const thisIsChecked = computed (
     () => props.checked == true 
         || props.modelValue == true 
-        || (props.modelValue == props.value) && (props.value != undefined)
+        || (props.modelValue == props.value) && (props.value !== undefined)
 )
 
 const emit = defineEmits([
@@ -29,7 +29,7 @@ const emit = defineEmits([
 ])
 
 function toggle() {
-    if (props.value != undefined) 
+    if (props.value !== undefined) 
         emit("update:modelValue", props.value)
     else 
         emit("update:modelValue", !props.modelValue)

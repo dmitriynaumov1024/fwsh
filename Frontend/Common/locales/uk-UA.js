@@ -39,7 +39,8 @@ export default nestedObjectMerge (base, {
         login: "Увійти",
         logout: "Вийти",
         details: "Докладніше",
-        makeOrder: "Зробити замовлення"
+        makeOrder: "Зробити замовлення",
+        assignWorker: "Призначити робітника"
     },
     common: {
         id: "id",
@@ -53,7 +54,9 @@ export default nestedObjectMerge (base, {
         seeConsole: "Дивіться детальний опис проблеми в консолі", 
         createdAt: "Створено",
         daysSinceCreated: "Днів з моменту створення",
-        language: "мова"
+        language: "мова",
+        notSelected: "Не вибрано",
+        notAssigned: "Не призначено",
     },
     setVisible: {
         [true]: "Сховати",
@@ -172,18 +175,22 @@ export default nestedObjectMerge (base, {
     customer: {
         single: "Покупець",
         plural: "Покупці",
+        create: "Новий покупець"
     },
     manager: {
         single: "Менеджер",
         plural: "Менеджери",
+        create: "Новий менеджер"
     },
     worker: {
         single: "Робітник",
         plural: "Робітники",
+        create: "Новий робітник"
     },
     supplier: {
         single: "Постачальник",
         plural: "Постачальники",
+        create: "Новий постачальник"
     },
     profile: {
         myProfile: "Мій профіль",
@@ -194,6 +201,7 @@ export default nestedObjectMerge (base, {
         patronym: "По батькові",
         phone: "Номер телефону",
         email: "E-mail",
+        isOrganization: "Представник організації",
         orgName: "Назва організації",
         roles: "Ролі",
         discount: "Знижка",
@@ -288,6 +296,7 @@ export default nestedObjectMerge (base, {
         pricePer: "Ціна за 1",
         pricePerUnit: "Ціна за одиницю",
         measureUnit: "Одиниці виміру",
+        precision: "Точність, десяткових знаків",
         quantity: "Кількість",
         usedQuantity: "Використано",
         actualQuantity: "Актуальна кількість",
@@ -388,16 +397,20 @@ export default nestedObjectMerge (base, {
     taskPrototype: {
         single: "Шаблон задачі",
         plural: "Шаблони задач",
+        description: "Опис",
+        precedence: "Порядок виконання"
     },
     task: {
         single: "Задача",
         plural: "Задачі",
         status: "Статус",
+        isActive: "Активно",
         createdAt: "Створено",
         startedAt: "Початок робіт",
         finishedAt: "Завершено",
         workType: "Тип роботи",
         role: "Роль",
+        description: "Опис",
         resourceUsage: "Використання ресурсів",
         instructions: "Інструкції",
         notAssigned: "Не призначено"
@@ -409,5 +422,9 @@ export default nestedObjectMerge (base, {
     repairTask: {
         single: "Ремонтна задача",
         plural: "Ремонтні задачі",
+    },
+    furniture: {
+        single: "Предмет меблів",
+        plural: "Меблі"
     }
 })
