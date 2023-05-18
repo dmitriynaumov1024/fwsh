@@ -24,6 +24,6 @@ public class ConsoleLogger : Logger
         Console.Write("\u001b[00;31m[{0:HH:mm:ss}][x]: ", DateTime.Now);
         if(args.Length > 0) Console.WriteLine(message, args);
         else Console.Write("{0}", message);
-        Console.Write("\u001b[00m");
+        Console.WriteLine("\u001b[00m");
     }
 }
