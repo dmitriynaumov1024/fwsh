@@ -4,7 +4,7 @@
   "author": "Dmitriy Naumov",
   "scripts": {
     "dev": "vite --port 5000 --host",
-    "build": "vite build"
+    "build": "vite build --mode prod"
   },
   "dependencies": {
     "axios": "^0.27.2",
