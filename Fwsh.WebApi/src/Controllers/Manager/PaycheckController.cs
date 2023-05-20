@@ -63,8 +63,6 @@ public class PaycheckController : FwshController
     {
         if (workerId == null) return NotFound(new BadFieldResult("workerId"));
 
-        try {
-
         var worker = dataContext.Workers
             .Include(w => w.Paychecks)
             .Where(w => w.Id == workerId)
@@ -88,7 +86,7 @@ public class PaycheckController : FwshController
                 && t.Order.FinishedAt != null
                 && t.Status == TaskStatus.Finished).ToList();
 
-        List<WorkTask> allTasks = (prodTasks as IEnumerable<WorkTask>).Union(repairTasks).ToList();
+        List<WorkTask> allTasks = (prodTasks as IEnumerable<WorkTask>).Concat(repairTasks).ToList();
 
         if (allTasks.Count == 0) {
             return BadRequest(new TryLaterResult(DateTime.UtcNow + MinPaycheckInterval));
@@ -106,7 +104,7 @@ public class PaycheckController : FwshController
             task.Status = TaskStatus.Paid;
         }
 
-        
+        try {
             dataContext.Workers.Update(worker);
             dataContext.ProdTasks.UpdateRange(prodTasks);
             dataContext.RepairTasks.UpdateRange(repairTasks);

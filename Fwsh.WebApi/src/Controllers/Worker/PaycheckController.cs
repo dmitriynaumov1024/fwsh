@@ -88,7 +88,7 @@ public class PaycheckController : FwshController
                 && t.Order.FinishedAt != null
                 && t.Status == TaskStatus.Finished).ToList();
 
-        List<WorkTask> allTasks = (prodTasks as IEnumerable<WorkTask>).Union(repairTasks).ToList();
+        List<WorkTask> allTasks = (prodTasks as IEnumerable<WorkTask>).Concat(repairTasks).ToList();
 
         if (allTasks.Count == 0) {
             return BadRequest(new TryLaterResult());
