@@ -5,3 +5,4 @@ obj/
 var/
 *.log
 .env
+.env.prod
