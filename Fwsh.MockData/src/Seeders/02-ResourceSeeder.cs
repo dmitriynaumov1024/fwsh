@@ -128,7 +128,9 @@ public class ResourceSeeder : Seeder
                 Item = res,
                 Supplier = res.Stored.Supplier,
                 ExpectQuantity = res.Stored.NormalStock,
-                ExpectPricePerUnit = res.PricePerUnit
+                ExpectPricePerUnit = res.PricePerUnit,
+                Status = OrderStatus.Submitted,
+                IsActive = true
             });
             res.Stored.SupplyOrderCount += 1;
         }
