@@ -70,6 +70,7 @@ public class WorkerController : FwshController
     public IActionResult View (int id) 
     {
         var worker = dataContext.Workers
+            .Include(worker => worker.Paychecks.Where(p => !p.IsReceived))
             .FirstOrDefault(worker => worker.Id == id);
 
         if (worker == null) {

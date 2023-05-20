@@ -348,6 +348,7 @@ public class ProdTaskController : FwshController
 
         try {
             task.WorkerId = worker;
+            task.IsActive = true;
             task.Status = TaskStatus.Assigned;
             dataContext.ProdTasks.Update(task);
             dataContext.SaveChanges();

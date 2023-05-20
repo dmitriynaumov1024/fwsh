@@ -135,4 +135,39 @@ public class ProdTaskController : FwshController
         }
 
     }
+
+    [HttpPost("set-usage/{taskId}")]
+    public IActionResult SetUsage (int taskId, List<ResourceQuantity> resources)
+    {
+        ProdTask task = dataContext.ProdTasks
+            .Include(t => t.Resources)
+            .ThenInclude(r => r.Item.Stored)
+            .FirstOrDefault(t => t.IsActive 
+                && (t.Status == TaskStatus.Working || t.Status == TaskStatus.Finished)
+                && t.WorkerId == user.ConfirmedId && t.Id == taskId);
+
+        if (task == null) {
+            return NotFound(new BadFieldResult("taskId"));
+        }
+
+        foreach (var res in resources) {
+            var existingRes = task.Resources
+                .FirstOrDefault(r => r.ItemId == res.ItemId);
+            if (existingRes?.Item?.Stored == null) continue;
+            double diff = Math.Min(res.ActualQuantity - existingRes.ActualQuantity, existingRes.Item.Stored.InStock);
+            diff = Math.Max(diff, -existingRes.ActualQuantity);
+            existingRes.ActualQuantity += diff;
+            existingRes.Item.Stored.InStock -= diff;
+        }
+
+        try {
+            dataContext.ProdTasks.Update(task);
+            dataContext.SaveChanges();
+            return Ok(new SuccessResult("Successfully set resource usage"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Can not set resource usage"));
+        }
+    }
 }
