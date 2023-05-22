@@ -438,9 +438,13 @@ export default nestedObjectMerge (base, {
         plural: "Закупки ресурсів",
         externalId: "Ідентифікатор",
         expectPrice: "Очікувана ціна",
+        expectPricePerUnit: "Очікувана ціна",
         expectQuantity: "Очікувана кількість",
         actualPrice: "Актуальна ціна",
-        actualQuantity: "Актуальна кількість"
+        actualPricePerUnit: "Актуальна ціна",
+        actualQuantity: "Актуальна кількість",
+        submitOrder: "Надіслати замовлення",
+        closeOrder: "Закрити замовлення"
     },
     paycheck: {
         single: "Заробітна плата",

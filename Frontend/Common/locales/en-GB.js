@@ -438,9 +438,13 @@ export default nestedObjectMerge (base, {
         plural: "Supply orders",
         externalId: "External id",
         expectPrice: "Expected price",
+        expectPricePerUnit: "Expected price",
         expectQuantity: "Expected quantity",
         actualPrice: "Actual price",
-        actualQuantity: "Actual quantity"
+        actualPricePerUnit: "Actual price",
+        actualQuantity: "Actual quantity",
+        submitOrder: "Submit order",
+        closeOrder: "Close order"
     },
     paycheck: {
         single: "Paycheck",
