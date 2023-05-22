@@ -40,7 +40,9 @@ public class SupplierController : FwshController
 
         IQueryable<Supplier> suppliers = dataContext.Suppliers;
 
-        return Ok (suppliers.Paginate((int)page, PAGESIZE, supplier => new SupplierResult(supplier)));
+        return Ok ( suppliers.OrderBy(s => s.Id)
+            .Paginate((int)page, PAGESIZE, supplier => new SupplierResult(supplier))
+        );
     }
 
     [HttpGet("search")]

@@ -14,6 +14,7 @@ public class RepairTaskRequest : Request,
     public int OrderId { get; set; }
     public string Role { get; set; }
     public int Payment { get; set; }
+    public string Description { get; set; }
     public string Status { get; set; }
 
     public List<ResourceQuantity> Resources { get; set; }
@@ -42,17 +43,22 @@ public class RepairTaskRequest : Request,
         task.OrderId = this.OrderId;
         task.Role = this.Role;
         task.Payment = this.Payment;
+        task.Description = this.Description;
         task.Status = this.Status ?? TaskStatus.Unknown;
 
         foreach (var res in this.Resources) {
             if (task.Resources.FirstOrDefault(existing => existing.ItemId == res.ItemId) is ResourceQuantity resource) {
-                resource.ExpectQuantity = res.ExpectQuantity;
-                resource.ActualQuantity = res.ActualQuantity;
+                if (res.ExpectQuantity <= 0) {
+                    task.Resources.Remove(resource);
+                }
+                else {
+                    resource.ExpectQuantity = res.ExpectQuantity;
+                }
             }
-            else {
+            else if (res.ExpectQuantity > 0) {
                 task.Resources.Add(new ResourceQuantity() {
                     ExpectQuantity = res.ExpectQuantity,
-                    ActualQuantity = res.ActualQuantity,
+                    ActualQuantity = 0,
                     ItemId = res.ItemId
                 });
             }

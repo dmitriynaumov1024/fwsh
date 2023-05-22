@@ -139,4 +139,31 @@ public class RepairOrderController : FwshController
             return ServerError ( new FailResult($"Something went wrong while trying to notify RepairOrder {id}") );
         }
     }
+
+    [HttpPost("recalculate/{id}")]
+    public IActionResult Recalculate (int id)
+    {
+        var order = dataContext.RepairOrders
+            .Include(o => o.Tasks)
+            .ThenInclude(t => t.Resources)
+            .ThenInclude(r => r.Item)
+            .FirstOrDefault(o => o.Id == id);
+
+        if (order == null) 
+            return NotFound(new BadFieldResult("id"));
+
+        order.Price = order.Tasks
+            .Sum(t => t.ExpectPrice + t.Payment)
+            .WithMargin();
+
+        try {
+            dataContext.RepairOrders.Update(order);
+            dataContext.SaveChanges();
+            return Ok(new SuccessResult("Successfully recalculated Repair order"));
+        }
+        catch (Exception ex) {
+            logger.Error(ex.ToString());
+            return ServerError(new FailResult("Can not recalculate Repair order"));
+        }
+    }
 }

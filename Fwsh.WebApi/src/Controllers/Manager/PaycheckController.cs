@@ -38,8 +38,14 @@ public class PaycheckController : FwshController
         if (page < 0) return BadRequest (new BadFieldResult("page"));
         
         var workers = dataContext.Workers
-            .Include(w => w.Paychecks.Where(p => !p.IsReceived))
-            .Where(w => w.Paychecks.Count() > 0);
+            .Select(w => new Worker {
+                Surname = w.Surname,
+                Name = w.Name,
+                Patronym = w.Patronym,
+                Phone = w.Phone,
+                Paychecks = w.Paychecks.Where(p => !p.IsReceived).ToList()
+            })
+            .Where(w => w.Paychecks.Count > 0);
 
         return Ok(workers.Paginate(page, PAGESIZE, w => new WorkerResult(w)));
     }
@@ -61,12 +67,16 @@ public class PaycheckController : FwshController
     [HttpPost("create")]
     public IActionResult Create (int? workerId = null)
     {
-        if (workerId == null) return NotFound(new BadFieldResult("workerId"));
+        if (workerId == null) 
+            return NotFound(new BadFieldResult("workerId"));
 
         var worker = dataContext.Workers
             .Include(w => w.Paychecks)
             .Where(w => w.Id == workerId)
             .FirstOrDefault();
+
+        if (worker == null) 
+            return NotFound(new BadFieldResult("workerId"));
 
         var lastPaycheck = worker.Paychecks.OrderByDescending(p => p.Id).FirstOrDefault();
 
@@ -127,11 +137,18 @@ public class PaycheckController : FwshController
             return NotFound(new BadFieldResult("workerId"));
 
         var worker = dataContext.Workers
+            .Include(w => w.Paychecks)
             .Where(w => w.Id == workerId)
             .FirstOrDefault();
 
         if (worker == null) 
             return NotFound(new BadFieldResult("workerId"));
+
+        var lastPaycheck = worker.Paychecks.OrderByDescending(p => p.Id).FirstOrDefault();
+
+        if (lastPaycheck != null && DateTime.UtcNow - lastPaycheck.IntervalEnd < TimeSpan.FromHours(1)) {
+            return BadRequest(new TryLaterResult(lastPaycheck.IntervalEnd + TimeSpan.FromHours(1), "Too early"));
+        }
 
         var paycheck = new WorkerPaycheck() {
             WorkerId = (int)workerId,

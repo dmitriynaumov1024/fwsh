@@ -44,7 +44,9 @@ public class WorkerController : FwshController
             workers = workers.Where(E.Worker.HasRole(role));
         }
 
-        return Ok (workers.Paginate((int)page, PAGESIZE, worker => new WorkerResult(worker)));
+        return Ok ( workers.OrderBy(w => w.Id)
+            .Paginate((int)page, PAGESIZE, worker => new WorkerResult(worker))
+        );
     }
 
     [HttpGet("search")]
