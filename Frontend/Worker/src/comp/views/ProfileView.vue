@@ -44,6 +44,10 @@
     <div class="mar-b-1">
         <span class="text-error" v-if="errorMessage">{{errorMessage}}</span>
     </div>
+    <div class="flex-stripe">
+        <h3 class="flex-grow">{{locale.paycheck.plural}}</h3>
+        <router-link class="button button-primary" to="/paychecks/list?page=0">{{locale.action.details}}</router-link>
+    </div>
 </div>
 </template>
 
