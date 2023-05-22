@@ -126,6 +126,11 @@ export default nestedObjectMerge (base, {
         title: "Could not save changes",
         description: "Could not save changes most likely because of server fault. Check console for problem details."
     },
+    tryLater: {
+        title: "Too early",
+        description: "The requested functionality is not available yet. Please try again later.",
+        before: "Please try later at",
+    },
     header: {
         title: "workshop",
         nav: {
@@ -410,6 +415,7 @@ export default nestedObjectMerge (base, {
         finishedAt: "Finished at",
         workType: "Work type",
         role: "Role",
+        payment: "Payment",
         description: "Description",
         resourceUsage: "Resource usage",
         instructions: "Instructions",
@@ -426,5 +432,33 @@ export default nestedObjectMerge (base, {
     furniture: {
         single: "Furniture",
         plural: "Furnitures"
+    },
+    supplyOrder: {
+        single: "Supply order",
+        plural: "Supply orders",
+        externalId: "External id",
+        expectPrice: "Expected price",
+        expectQuantity: "Expected quantity",
+        actualPrice: "Actual price",
+        actualQuantity: "Actual quantity"
+    },
+    paycheck: {
+        single: "Paycheck",
+        plural: "Paychecks",
+        create: "Create paycheck",
+        created: "Successfully created paycheck",
+        pay: "Confirm payment",
+        paid: "Paycheck was marked as paid",
+        amount: "Amount",
+        isPaid: "Paid",
+        intervalStart: "Interval start",
+        intervalEnd: "Interval end",
+        createdAt: "Created at"
+    },
+    paycheckBonus: {
+        single: "Bonus paycheck",
+        plural: "Bonus paychecks",
+        create: "Create bonus",
+        created: "Successfully created bonus paycheck",
     }
 })

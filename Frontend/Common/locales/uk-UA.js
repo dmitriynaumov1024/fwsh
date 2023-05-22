@@ -126,6 +126,11 @@ export default nestedObjectMerge (base, {
         title: "Не вдалося зберегти зміни",
         description: "Не вдалося зберегти зміни. Скоріш за все, це сталося через проблеми на сервері. Дивіться опис проблеми в консолі"
     },
+    tryLater: {
+        title: "Поперед батька в пекло",
+        description: "Запитувана функція зараз недоступна. Будь ласка, спробуйте пізніше",
+        before: "Спробуйте ще раз",
+    },
     header: {
         title: "workshop",
         nav: {
@@ -410,6 +415,7 @@ export default nestedObjectMerge (base, {
         finishedAt: "Завершено",
         workType: "Тип роботи",
         role: "Роль",
+        payment: "Оплата",
         description: "Опис",
         resourceUsage: "Використання ресурсів",
         instructions: "Інструкції",
@@ -426,5 +432,33 @@ export default nestedObjectMerge (base, {
     furniture: {
         single: "Предмет меблів",
         plural: "Меблі"
+    },
+    supplyOrder: {
+        single: "Закупка ресурсів",
+        plural: "Закупки ресурсів",
+        externalId: "Ідентифікатор",
+        expectPrice: "Очікувана ціна",
+        expectQuantity: "Очікувана кількість",
+        actualPrice: "Актуальна ціна",
+        actualQuantity: "Актуальна кількість"
+    },
+    paycheck: {
+        single: "Заробітна плата",
+        plural: "Заробітні чеки",
+        create: "Оформити заробітну плату",
+        created: "Заробітний чек створений",
+        pay: "Підтвердити оплату",
+        paid: "Заробітна плата виплачена",
+        amount: "Сума",
+        isPaid: "Оплачено",
+        intervalStart: "Початок періоду",
+        intervalEnd: "Кінець періоду",
+        createdAt: "Створено"
+    },
+    paycheckBonus: {
+        single: "Премія",
+        plural: "Премії",
+        create: "Оформити премію",
+        created: "Премія створена",
     }
 })

@@ -26,6 +26,9 @@ export default {
         let date = new Date(dateTimeString)
         return this.dateFormat.format(date)
     },
+    formatDateShort (dateTimeString) {
+        return new Date(dateTimeString).toLocaleDateString(this.key)
+    },
     formatTime (dateTimeString) {
         let date = new Date(dateTimeString)
         return date.toLocaleTimeString(this.key)

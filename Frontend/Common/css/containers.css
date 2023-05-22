@@ -28,6 +28,7 @@
 }
 
 .card-card {
+  display: block;
   background-color: var(--color-back-0);
   border: var(--border);
 }
@@ -81,6 +82,16 @@
 
 .border-bottom {
   border-bottom: var(--border);
+}
+
+.border-left {
+  border-left: var(--border);
+}
+
+.border-left-2 {
+  border-left: var(--border);
+  border-left-width: 4px; 
+  padding-left: 4px;
 }
 
 .default-pagination {

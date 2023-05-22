@@ -163,7 +163,8 @@ input.inline-input {
   min-width: 5rem;
   outline: none;
   border-radius: 0;
-  border: 2px solid transparent;
+  border: none;
+  border-top: 2px solid transparent;
   border-bottom: var(--border);
   line-height: inherit;
   font-family: inherit;

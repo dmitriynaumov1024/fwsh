@@ -58,6 +58,13 @@ function nestedObjectMerge (...sources) {
     return result
 }
 
+// Create a copy of object via JSON.stringify and JSON.parse
+//
+function jsonObjectCopy (source) {
+    let stringified = JSON.stringify(source)
+    return JSON.parse(stringified)
+}
+
 export { 
     arrayToDict,
     arrayConcat,
@@ -65,4 +72,5 @@ export {
     nestedObjectAssign,
     nestedObjectCopy,
     nestedObjectMerge,
+    jsonObjectCopy,
 }
