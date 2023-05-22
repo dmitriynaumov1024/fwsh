@@ -6,7 +6,13 @@
 </Bread>
 <div class="width-container pad-05">
     <h2 class="mar-b-05">{{locale.repairTask.plural}}</h2>
-    <div class="flex-stripe flex-pad-1">
+    <div v-if="props.order" class="flex-stripe flex-pad-1">
+        <button class="button button-secondary accent-weak text-strong">{{locale.order.single}} #{{props.order}}</button>
+        <span class="flex-grow"></span>
+        <router-link v-if="props.order" :to="`/tasks/repair/create?order=${props.order}`" 
+            class="button button-primary">+ {{locale.task.single}}</router-link>
+    </div>
+    <div v-else class="flex-stripe flex-pad-1">
         <template v-for="nextTab of ['list', 'archive']">
             <button v-if="nextTab==props.tab" 
                 class="button button-secondary accent-weak text-strong">{{locale.common[nextTab]}}</button>
@@ -25,19 +31,16 @@
         @click-previous="()=> goToPage(data.previous)"
         @click-next="()=> goToPage(data.next)"
         class="width-container pad-05 mar-b-1">
-        <template v-slot:title>
-        </template>
         <template v-slot:repeating="{ item }">
             <div class="card-card pad-1 mar-b-1" clickable @click="()=> goToItem(item)">
                 <p><b>{{locale.task.single}}</b>&ensp;
                     <router-link :to="`/tasks/repair/view/${item.id}`"
                         class="link">#{{item.id}}</router-link>
                 </p>
-                <p>{{locale.order.single}}: {{item.orderId}}</p>
-                <p>{{locale.worker.single}}: {{item.workerId}}</p>
+                <p>{{locale.order.single}}: #{{item.orderId}}</p>
+                <p>{{locale.worker.single}}: {{item.workerId ? '#'+item.workerId : '-'}}</p>
                 <p>{{item.description}}</p>
             </div>
-            <!-- <ProductionTaskView :order="item" @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" /> -->
         </template>
     </Pagination>
     </template>

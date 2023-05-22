@@ -5,14 +5,23 @@
 </Bread>
 <div class="width-container pad-05 mar-b-1">
     <h2 class="mar-b-1">{{locale.person.plural}}</h2>
-    <router-link to="/people/customers/list?page=0" class="card pad-1 mar-b-1">
+    <router-link to="/people/customers/list?page=0" class="card-card pad-1 mar-b-05">
         <h3 class="text-center">{{locale.customer.plural}}</h3>
     </router-link>
-    <router-link to="/people/workers/list?page=0" class="card pad-1 mar-b-1">
+    <router-link to="/people/workers/list?page=0" class="card-card pad-1 mar-b-05">
         <h3 class="text-center">{{locale.worker.plural}}</h3>
     </router-link>
-    <router-link to="/people/suppliers/list?page=0" class="card pad-1 mar-b-1">
+    <router-link to="/people/suppliers/list?page=0" class="card-card pad-1 mar-b-05">
         <h3 class="text-center">{{locale.supplier.plural}}</h3>
+    </router-link>
+</div>
+<div class="width-container pad-05 mar-b-1">
+    <h2 class="mar-b-1">{{locale.paycheck.plural}}</h2>
+    <router-link to="/people/paychecks/list?page=0" class="card-card pad-1 mar-b-05">
+        <h3 class="text-center">{{locale.common.list}}</h3>
+    </router-link>
+    <router-link to="/people/paychecks/archive?page=0" class="card-card pad-1 mar-b-05">
+        <h3 class="text-center">{{locale.common.archive}}</h3>
     </router-link>
 </div>
 </template>

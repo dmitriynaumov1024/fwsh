@@ -1,10 +1,13 @@
 import { defineRoutes } from "@common"
 
 import index from "./index.vue"
+
 import productionTaskList from "./production/list.vue"
 import productionTaskView from "./production/view.vue"
+
 import repairTaskList from "./repair/list.vue"
 import repairTaskView from "./repair/view.vue"
+import repairTaskEdit from "./repair/edit.vue"
 
 export default defineRoutes ( "/tasks", [
     {
@@ -31,4 +34,14 @@ export default defineRoutes ( "/tasks", [
         component: repairTaskView,
         props: { tab: String, id: Number }
     },
+    {
+        path: "/repair/edit/:id",
+        component: repairTaskEdit,
+        props: { id: Number, order: Number }
+    },
+    {
+        path: "/repair/create",
+        component: repairTaskEdit,
+        props: { order: Number }
+    }
 ])

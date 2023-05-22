@@ -1,10 +1,18 @@
 <template>
-<div class="width-container card pad-1 mar-b-1">
-    <h2 class="mar-b-1">{{locale.task.single}} <span class="text-thin text-gray">#{{task.id}}</span></h2>
+<div>
+    <div class="flex-stripe mar-b-1">
+        <h2 class="flex-grow">{{locale.task.single}} <span class="text-thin text-gray">#{{task.id}}</span></h2>
+        <router-link v-if="canEdit" class="button button-secondary" :to="`/tasks/repair/edit/${task.id}`">
+            <pencil-icon class="icon-1 inline" /> {{locale.action.edit}}</router-link>
+    </div>
     <table class="kvtable stripes mar-b-1">
         <tr>
             <td>{{locale.task.workType}}</td>
             <td>{{locale.roles[task.role]}}</td>
+        </tr>
+        <tr>
+            <td>{{locale.task.payment}}</td>
+            <td>{{task.payment}} &#8372;</td>
         </tr>
         <tr clickable @click="()=> emit('click-assign')">
             <td>{{locale.worker.single}}</td>
@@ -28,9 +36,10 @@
         </tr>
     </table>
     <h3 class="mar-b-1">{{locale.resource.plural}}</h3>
-    <div v-for="res of task.resources" class="mar-b-1">
+    <div v-for="res of task.resources" class="border-left-2 mar-b-1" 
+        :class="{ 'text-error': res.item.stored.inStock < (res.expectQuantity - res.actualQuantity) }">
         <p class="mar-b-05"><b>{{res.item.name}}</b> #{{res.item.id}}</p>
-        <table class="kntable align-right border-bottom">
+        <table class="kntable align-right">
             <tr>
                 <td>{{locale.resource.inStock}}</td>
                 <td>{{res.item.stored.inStock}}
@@ -57,11 +66,13 @@
 
 <script setup>
 import { inject } from "vue"
+import { PencilIcon } from "@common/comp/icons"
 
 const locale = inject("locale")
 
 const props = defineProps({
-    task: Object
+    task: Object,
+    canEdit: Boolean
 })
 
 const emit = defineEmits([

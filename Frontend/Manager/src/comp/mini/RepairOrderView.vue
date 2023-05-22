@@ -4,7 +4,8 @@
     <div>
         <p class="text-125 mar-b-05"><b>{{locale.order.single}}</b> #{{order.id}}</p>
         <p>{{locale.customer.single}}: #{{order.customerId}}</p>
-        <p>{{locale.order.status}}: {{locale.status[order.status]}}</p>
+        <p>{{locale.status[order.status]}}</p>
+        <p>{{order.payment}} &#8372; / {{order.price}} &#8372; </p>
     </div>
 </div>
 </template>

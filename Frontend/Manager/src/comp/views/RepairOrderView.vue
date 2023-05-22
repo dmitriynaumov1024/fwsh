@@ -48,7 +48,9 @@
         </tr>
         <tr>
             <td>{{locale.repairOrder.price}}</td>
-            <td>{{order.price}} &#8372;</td>
+            <td>{{order.price}} &#8372;&ensp;
+                <button class="button button-inline" @click="()=> emit('click-recalculate')">
+                {{locale.action.update}}</button> </td>
         </tr>
         <tr>
             <td>{{locale.repairOrder.prepayment}}</td>
@@ -75,23 +77,28 @@
         </tr>
         </template>
     </table>
-    <Modal v-if="showEditStatus">
-        <h3 class="mar-b-1">{{locale.order.status}}</h3>
-        <div v-for="(status, key) in OrderStatus" class="mar-b-05">
-            <radiobox :checked="status == order.status"
-                @click="()=> endEditStatus(status)">
-                {{locale.status[status]}}
-            </radiobox>
-        </div>
-        <div class="mar-b-2"></div>
-        <div>
-            <button class="button button-inline accent-gray" 
-                @click="()=> endEditStatus()">{{locale.action.cancel}}
-            </button>
-        </div>
-    </Modal>
+    <div class="flex-stripe">
+        <h3 class="flex-grow">{{locale.task.plural}}</h3>
+        <router-link :to="`/tasks/repair/list?order=${order.id}`"
+            class="button button-primary">{{locale.action.details}}</router-link>
+    </div>
     </template>
 </div>
+<Modal v-if="showEditStatus">
+    <h3 class="mar-b-1">{{locale.order.status}}</h3>
+    <div v-for="(status, key) in OrderStatus" class="mar-b-05">
+        <radiobox :checked="status == order.status"
+            @click="()=> endEditStatus(status)">
+            {{locale.status[status]}}
+        </radiobox>
+    </div>
+    <div class="mar-b-2"></div>
+    <div>
+        <button class="button button-inline accent-gray" 
+            @click="()=> endEditStatus()">{{locale.action.cancel}}
+        </button>
+    </div>
+</Modal>
 </template>
 
 <script setup>
@@ -112,6 +119,7 @@ const emit = defineEmits([
     "click-notify",
     "click-status",
     "click-active",
+    "click-recalculate"
 ])
 
 const showNotifications = ref(false)

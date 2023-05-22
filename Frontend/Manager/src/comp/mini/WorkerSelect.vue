@@ -21,10 +21,15 @@ import { ref, inject } from "vue"
 import { Radiobox } from "@common/comp/ctrl"
 
 const props = defineProps({
-    workers: Array
+    workers: Array,
+    selection: Object
 })
 
-const selected = ref(null)
+const selected = ref (
+    props.selection ? 
+    props.workers.find(s => s.id == props.selection.id) :
+    null
+)
 
 const locale = inject("locale")
 

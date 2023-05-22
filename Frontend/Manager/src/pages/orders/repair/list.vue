@@ -28,7 +28,8 @@
         <template v-slot:title>
         </template>
         <template v-slot:repeating="{ item }">
-            <RepairOrderView :order="item" @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" />
+            <RepairOrderView :order="item" clickable
+                @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" />
         </template>
     </Pagination>
     </template>

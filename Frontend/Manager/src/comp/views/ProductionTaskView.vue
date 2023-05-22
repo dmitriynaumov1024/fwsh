@@ -36,9 +36,10 @@
         </template>
     </table>
     <h3 class="mar-b-1">{{locale.resource.plural}}</h3>
-    <div v-for="res of task.resources" class="mar-b-1">
+    <div v-for="res of task.resources" class="border-left-2 mar-b-1" 
+        :class="{ 'text-error': res.item.stored.inStock < (res.expectQuantity - res.actualQuantity) }">
         <p class="mar-b-05"><b>{{res.item.name}}</b> #{{res.item.id}}</p>
-        <table class="kntable align-right border-bottom">
+        <table class="kntable align-right">
             <tr>
                 <td>{{locale.resource.inStock}}</td>
                 <td>{{res.item.stored.inStock}}

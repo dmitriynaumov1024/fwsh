@@ -74,31 +74,31 @@
         </tr>
         </template>
     </table>
-    <Modal v-if="showEditStatus">
-        <h3 class="mar-b-1">{{locale.order.status}}</h3>
-        <div v-for="(status, key) in OrderStatus" class="mar-b-05">
-            <radiobox :checked="status == order.status"
-                @click="()=> endEditStatus(status)">
-                {{locale.status[status]}}
-            </radiobox>
-        </div>
-        <div class="mar-b-2"></div>
-        <div>
-            <button class="button button-inline accent-gray" 
-                @click="()=> endEditStatus()">{{locale.action.cancel}}
-            </button>
-        </div>
-    </Modal>
+    <div class="flex-stripe">
+        <h3 class="flex-grow">{{locale.task.plural}}</h3>
+        <button v-if="order.status == OrderStatus.submitted" 
+            @click="()=> emit('click-createtasks')" class="button button-primary">{{locale.action.create}}</button>
+        <router-link v-else-if="order.status != OrderStatus.unknown" 
+            :to="`/tasks/production/list?order=${order.id}`"
+            class="button button-primary">{{locale.action.details}}</router-link>
+    </div>
     </template>
 </div>
-<div class="width-container card flex-stripe pad-1 mar-b-1">
-    <h2 class="flex-grow">{{locale.task.plural}}</h2>
-    <button v-if="order.status == OrderStatus.submitted" 
-        @click="()=> emit('click-createtasks')" class="button button-primary">{{locale.action.create}}</button>
-    <router-link v-else-if="order.status != OrderStatus.unknown" 
-        :to="`/tasks/production/list?order=${order.id}`"
-        class="button button-primary">{{locale.action.details}}</router-link>
-</div>
+<Modal v-if="showEditStatus">
+    <h3 class="mar-b-1">{{locale.order.status}}</h3>
+    <div v-for="(status, key) in OrderStatus" class="mar-b-05">
+        <radiobox :checked="status == order.status"
+            @click="()=> endEditStatus(status)">
+            {{locale.status[status]}}
+        </radiobox>
+    </div>
+    <div class="mar-b-2"></div>
+    <div>
+        <button class="button button-inline accent-gray" 
+            @click="()=> endEditStatus()">{{locale.action.cancel}}
+        </button>
+    </div>
+</Modal>
 </template>
 
 <script setup>

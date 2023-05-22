@@ -31,12 +31,11 @@
             <div class="card-card pad-1 mar-b-1">
                 <p><b>{{locale.task.single}}</b> 
                     <template v-for="taskId of item.ids">
-                        &ensp;<router-link :to="`/tasks/production/view/${taskId}`" 
-                            class="link">#{{taskId}}</router-link>
+                        &ensp;<router-link :to="`/tasks/production/view/${taskId}`" class="link">#{{taskId}}</router-link>
                     </template>
                 </p>
                 <p>{{item.prototype.description}}</p>
-                <p>{{locale.order.single}}: #{{item.orderId}}</p>
+                <p>{{locale.order.single}}: <router-link :to="`/orders/production/view/${item.orderId}`" class="link">#{{item.orderId}}</router-link></p>
                 <p>{{locale.worker.single}}: {{item.workerId ? '#'+item.workerId : '-'}}</p>
             </div>
             <!-- <ProductionTaskView :order="item" @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" /> -->

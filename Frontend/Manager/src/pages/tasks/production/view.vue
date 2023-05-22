@@ -13,7 +13,8 @@
         <Modal v-if="data.assigning">
         <Fetch :url="`/manager/workers/list?role=${data.prototype.role}&page=0`" :cacheTTL="40" class-error="">
             <template v-slot:default="{ data: workers }">
-                <WorkerSelect :workers="workers.items" @click-cancel="()=> { data.assigning = false }"
+                <WorkerSelect :workers="workers.items" :selection="data.worker"
+                    @click-cancel="()=> { data.assigning = false }"
                     @click-submit="(worker)=> { data.assigning = false; tryAssign(data, worker) }"/>
             </template>
         </Fetch>

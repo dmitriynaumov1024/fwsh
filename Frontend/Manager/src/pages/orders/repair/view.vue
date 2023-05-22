@@ -5,17 +5,20 @@
     <Crumb :to="`/orders/repair/${props.tab??'list'}?page=0`">{{locale.repairOrder.plural}}</Crumb>
     <Crumb last v-if="order">#{{order.id}}</Crumb>
 </Bread>
-<Fetch :url="`/manager/orders/repair/view/${id}`" :cacheTTL="4"
-    @load="onLoad" no-default class-error="width-container card pad-1 mar-b-1"/>
 <RepairOrderView v-if="order" :order="order" 
     @click-status="setStatus"
     @click-active="setActive"
+    @click-recalculate="recalculate"
     @click-notify="notifyOrder" />
+<div v-else class="width-container card pad-1">
+    <h2 class="mar-b-05">{{locale.notFound.title}}</h2>
+    <p>{{locale.notFound.description}}</p>
+</div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router" 
-import { ref, inject } from "vue" 
+import { ref, inject, watch } from "vue" 
 import { Fetch } from "@common/comp/special"
 import { Bread, Crumb } from "@common/comp/layout"
 import RepairOrderView from "@/comp/views/RepairOrderView.vue"
@@ -32,8 +35,18 @@ const props = defineProps({
 
 const order = ref(null)
 
-function onLoad (data) {
-    order.value = data
+watch(()=> props.id, getOrder, { immediate: true })
+
+function getOrder() {
+    axios.get({
+        url: `/manager/orders/repair/view/${props.id}`,
+        cacheTTL: 4
+    })
+    .then(({ status, data: response }) => {
+        if (status < 299) {
+            order.value = response
+        }
+    })
 }
 
 function setStatus (newStatus) {
@@ -62,6 +75,17 @@ function setActive (active) {
         }
         else {
             order.value.errorMessage = locale.value.saveFailed
+        }
+    })
+}
+
+function recalculate () {
+    axios.post({
+        url: `/manager/orders/repair/recalculate/${props.id}`,
+    })
+    .then(({ status, data: response }) => {
+        if (response.success) {
+            getOrder()
         }
     })
 }
