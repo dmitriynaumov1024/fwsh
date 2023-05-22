@@ -65,6 +65,9 @@ public class PropertyValidator
         if (this.IsValid && this.Value is int number)
             if (number < min || number > max) this.IsValid = false;
 
+        if (this.IsValid && this.Value is double dnumber) 
+            if (dnumber < min || dnumber > max) this.IsValid = false;
+
         return this;
     }
 
