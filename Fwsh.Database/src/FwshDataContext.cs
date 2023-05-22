@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Logging;
+
 using Fwsh.Common;
 using Fwsh.Logging;
 using Fwsh.Utils;
@@ -54,6 +56,7 @@ public class FwshDataContext : DbContext
 
         var loggingCategories = new List<string>();
         if (env.isTrue("DB_LOG_QUERIES")) loggingCategories.Add(DbLoggerCategory.Query.Name);
+        if (env.isTrue("DB_LOG_QUERIES")) loggingCategories.Add(DbLoggerCategory.Database.Command.Name);
         if (env.isTrue("DB_LOG_UPDATES")) loggingCategories.Add(DbLoggerCategory.Update.Name); 
 
         if (loggingCategories.Count > 0) {
@@ -64,7 +67,7 @@ public class FwshDataContext : DbContext
             };
 
             if (env.isDevelopment) optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.LogTo(message => logger.Log(message));
+            optionsBuilder.LogTo(message => logger.Log(message), loggingCategories, LogLevel.Information);
         }
     }
 
