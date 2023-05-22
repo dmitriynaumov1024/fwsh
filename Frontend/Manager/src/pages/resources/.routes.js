@@ -17,6 +17,9 @@ import materialEdit from "./materials/edit.vue"
 import fabricList from "./fabrics/list.vue"
 import fabricEdit from "./fabrics/edit.vue"
 
+import supplyOrderList from "./supply/list.vue"
+import supplyOrderEdit from "./supply/edit.vue"
+
 export default defineRoutes ( "/resources", [
     {
         path: "",
@@ -92,5 +95,20 @@ export default defineRoutes ( "/resources", [
         component: fabricEdit,
         props: { id: Number }
     },
+    {
+        path: "/supply/:tab(list|archive)",
+        component: supplyOrderList,
+        props: { tab: String, page: Number, resource: Number }
+    },
+    {
+        path: "/supply/create",
+        component: supplyOrderEdit,
+        props: { resource: Number }
+    },
+    {
+        path: "/supply/edit/:id",
+        component: supplyOrderEdit,
+        props: { id: Number }
+    }
 ])
 

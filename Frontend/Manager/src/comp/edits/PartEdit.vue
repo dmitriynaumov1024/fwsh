@@ -1,5 +1,9 @@
 <template>
-<h2 v-if="part.id" class="mar-b-1">{{locale.part.single}} <span class="text-thin text-gray">#{{part.id}}</span></h2>
+<div v-if="part.id" class="flex-stripe mar-b-1">
+    <h2 class="flex-grow">{{locale.part.single}} <span class="text-thin text-gray">#{{part.id}}</span></h2>
+    <router-link :to="`/resources/supply/list?page=0&resource=${part.id}`" 
+        class="button button-secondary">{{locale.supplyOrder.plural}}</router-link>
+</div>
 <h2 v-else class="mar-b-1">{{locale.part.create}}</h2>
 
 <inputbox type="text" v-model="part.name" :invalid="badFields.name">

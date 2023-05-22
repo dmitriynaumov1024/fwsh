@@ -1,5 +1,9 @@
 <template>
-<h2 v-if="mat.id" class="mar-b-1">{{locale.fabric.single}} <span class="text-thin text-gray">#{{mat.id}}</span></h2>
+<div v-if="mat.id" class="flex-stripe mar-b-1">
+    <h2 class="flex-grow">{{locale.fabric.single}} <span class="text-thin text-gray">#{{mat.id}}</span></h2>
+    <router-link :to="`/resources/supply/list?page=0&resource=${mat.id}`" 
+        class="button button-secondary">{{locale.supplyOrder.plural}}</router-link>
+</div>
 <h2 v-else class="mar-b-1">{{locale.fabric.create}}</h2>
 
 <inputbox type="text" v-model="mat.name" :invalid="badFields.name">

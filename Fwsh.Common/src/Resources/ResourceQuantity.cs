@@ -13,7 +13,8 @@ public class ResourceQuantity
 
     public virtual Resource Item { get; set; }
 
-    public int ExpectPrice => (int)Math.Ceiling((this.Item?.PricePerUnit ?? this.DefaultPrice()) * this.ExpectQuantity);
+    public int ExpectPrice => 
+        (int)Math.Ceiling((this.Item?.PricePerUnit ?? this.DefaultPrice()) * this.ExpectQuantity);
 
     public int ActualPrice => (this.Item == null)? 0 :
         (int)Math.Ceiling(this.Item.PricePerUnit * this.ActualQuantity);
