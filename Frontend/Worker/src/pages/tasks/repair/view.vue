@@ -5,6 +5,9 @@
     <Crumb :to="`/tasks/repair/${props.tab??'list'}?page=0`">{{locale.repairTask.plural}}</Crumb>
     <Crumb last>#{{props.id}}</Crumb>
 </Bread>
+<RepairOrderView v-if="data.task?.order"
+    :order="data.task.order" 
+    class="width-container card pad-1 mar-b-1" />
 <RepairTaskView v-if="data.task" 
     :task="data.task"
     :errorMessage="data.errorMessage"
@@ -24,6 +27,7 @@ import { useRouter } from "vue-router"
 import { reactive, inject, watch } from "vue" 
 import { Bread, Crumb } from "@common/comp/layout"
 import RepairTaskView from "@/comp/views/RepairTaskView.vue"
+import RepairOrderView from "@/comp/mini/RepairOrderView.vue"
 
 const router = useRouter()
 

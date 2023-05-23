@@ -11,6 +11,10 @@
             <td>{{locale.roles[task.role]}}</td>
         </tr>
         <tr>
+            <td>{{locale.task.description}}</td>
+            <td>{{task.description}}</td>
+        </tr>
+        <tr>
             <td>{{locale.task.status}}</td>
             <td clickable @click="beginSelectStatus">
                 <span class="button button-inline">{{locale.status[task.status]}}</span></td>
