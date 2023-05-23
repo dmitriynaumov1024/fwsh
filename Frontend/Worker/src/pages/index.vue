@@ -4,9 +4,6 @@
     <router-link to="/resources" class="card pad-1 mar-b-1">
         <h3>{{locale.resource.plural}} &gt;</h3>
     </router-link>
-    <router-link to="/blueprints" class="card pad-1 mar-b-1">
-        <h3>{{locale.blueprint.plural}} &gt;</h3>
-    </router-link>
     <router-link to="/tasks" class="card pad-1 mar-b-1">
         <h3>{{locale.task.plural}} &gt;</h3>
     </router-link>

@@ -5,7 +5,7 @@
     <crumb last>{{locale.material.plural}}</crumb>
 </Bread>
 <Fetch url="/resources/materials/list" 
-    :params="{ page: props.page }" :cacheTTL="4"
+    :params="{ page: props.page, reverse: props.reverse }" :cacheTTL="4"
     class-error="width-container card pad-1">
     <template v-slot:default="{ data }">
     <Pagination :items="data.items" :page="props.page" 
@@ -14,7 +14,17 @@
         @click-next="()=> goToPage(data.next)"
         class="width-container pad-05 mar-b-1">
         <template v-slot:title>
-            <h2 class="mar-b-1">{{locale.material.plural}} &ndash; {{locale.common.page}} {{props.page}}</h2>
+            <h2 class="mar-b-05">{{locale.material.plural}}</h2>
+            <div class="flex-stripe flex-pad-1 mar-b-1">
+                <button class="button button-secondary accent-weak text-strong">
+                    {{locale.common.page}} {{props.page}}
+                </button>
+                <router-link :to="`/resources/materials/list?page=0&reverse=${!props.reverse}`" 
+                    class="button button-secondary accent-weak text-strong">
+                    {{locale.common.id}} {{reverse ? '▼' : '▲'}}
+                </router-link>
+                <span class="flex-grow"></span>
+            </div>
         </template>
         <template v-slot:repeating="{ item }">
             <MaterialView :mat="item" 
@@ -34,6 +44,7 @@
 </template>
 
 <script setup>
+import qs from "qs"
 import { useRouter } from "vue-router"
 import { reactive, inject } from "vue"
 import { nestedObjectAssign } from "@common/utils"
@@ -47,11 +58,13 @@ const axios = inject("axios")
 const locale = inject("locale")
 
 const props = defineProps({
-    page: Number
+    page: Number,
+    reverse: Boolean
 })
 
 function goToPage(page) {
-    if (page != null) router.push(`/resources/materials/list?page=${page}`)
+    let query = qs.stringify({ page: props.page, reverse: props.reverse })
+    if (page != null) router.push(`/resources/materials/list?${query}`)
 }
 
 function goToItem(item) {

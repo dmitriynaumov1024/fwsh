@@ -31,9 +31,8 @@
             <div class="card-card pad-1 mar-b-1" clickable @click="goToItem(item)">
                 <p><b>{{locale.task.single}}</b> #{{item.id}}</p>
                 <p>{{item.prototype.description}}</p>
-                <p>{{locale.order.single}}: #{{item.orderId}}</p>
+                <p>{{locale.furniture.single}}: {{item.prototype.designName}} #{{item.furnitureId}}</p>
             </div>
-            <!-- <ProductionTaskView :order="item" @click="()=> goToItem(item)" class="card-card pad-1 mar-b-1" /> -->
         </template>
     </Pagination>
     </template>

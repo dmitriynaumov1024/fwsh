@@ -1,7 +1,7 @@
 <template>
 <div class="width-container card pad-1 mar-b-1">
     <h2 class="mar-b-1">{{locale.task.single}} <span class="text-thin text-gray">#{{task.id}}</span></h2>
-    <table class="kvtable stripes mar-b-2">
+    <table class="kvtable stripes mar-b-1">
         <tr v-if="task.worker">
             <td>{{locale.worker.single}}</td>
             <td>{{task.worker.surname}} {{task.worker.name}} {{task.worker.patronym}}</td>
@@ -9,6 +9,10 @@
         <tr>
             <td>{{locale.furniture.single}}</td>
             <td>{{task.prototype.designName}} #{{task.furnitureId}}</td>
+        </tr>
+        <tr>
+            <td>{{locale.task.payment}}</td>
+            <td>{{task.payment ?? task.prototype.payment}} &#8372;</td>
         </tr>
         <tr>
             <td>{{locale.task.workType}}</td>
@@ -24,7 +28,8 @@
         </tr>
         <tr>
             <td>{{locale.task.status}}</td>
-            <td>{{locale.status[task.status]}}</td>
+            <td clickable @click="beginSelectStatus">
+                <span class="button button-inline">{{locale.status[task.status]}}</span></td>
         </tr>
         <template v-for="actionAt of ['createdAt', 'startedAt', 'finishedAt']">
         <tr v-if="task[actionAt]">
@@ -33,10 +38,17 @@
         </tr>
         </template>
     </table>
+    <div class="mar-b-1">
+        <p v-if="errorMessage" class="text-error">{{errorMessage}}</p>
+        <p v-if="successMessage">{{successMessage}}</p>
+    </div>
     <h3 class="mar-b-1">{{locale.resource.plural}}</h3>
-    <div v-for="res of task.resources" class="mar-b-1">
-        <p class="mar-b-05"><b>{{res.item.name}}</b> #{{res.item.id}}</p>
-        <table class="kntable align-right border-bottom">
+    <div v-for="res of task.resources" class="border-left-2 mar-b-1">
+        <table class="kntable stripes align-right" 
+            :class="{ 'text-error': res.item.stored.inStock < (res.expectQuantity - res.actualQuantity) }">
+            <tr>
+                <td><b>{{res.item.name}}</b> #{{res.item.id}}</td>
+            </tr>
             <tr>
                 <td>{{locale.resource.inStock}}</td>
                 <td>{{res.item.stored.inStock}}
@@ -49,25 +61,70 @@
             </tr>
             <tr>
                 <td>{{locale.resourceUsage.actualQuantity}}</td>
-                <td>{{res.actualQuantity}}
-                    <span v-if="res.item.measureUnit">{{locale.measureUnits[res.item.measureUnit]}}</span></td>
+                <td><input class="inline-input width-4" v-model="res.actualQuantity" maxlength="8">
+                    <span v-if="res.item.measureUnit">&nbsp;{{locale.measureUnits[res.item.measureUnit]}}</span></td>
             </tr>
         </table>
     </div>
+    <div class="flex-stripe">
+        <button class="button button-secondary accent-weak text-gray"
+            @click="()=> emit('click-reset-usage')">{{locale.action.reset}}</button>
+        <span class="flex-grow"></span>
+        <button class="button button-primary"
+            @click="()=> emit('click-submit-usage')">{{locale.action.save}}</button>
+    </div>
 </div>
+<Modal v-if="data.selectingStatus">
+    <h3 class="mar-b-1">{{locale.task.status}}</h3>
+    <div class="mar-b-1">
+        <radiobox v-for="status of TaskStatus" v-model="data.status" :value="status"
+            class="mar-b-05">
+            {{locale.status[status]}}
+        </radiobox>
+    </div>
+    <div class="flex-stripe">
+        <button class="button button-inline text-gray"
+            @click="()=> endSelectStatus(false)">{{locale.action.cancel}}</button>
+        <span class="flex-grow"></span>
+        <button class="button button-primary" 
+            @click="()=> endSelectStatus(true)">{{locale.action.confirm}}</button>
+    </div>
+</Modal>
 </template>
 
 <script setup>
-import { inject } from "vue"    
+import { TaskStatus } from "@common"
+import { reactive, inject } from "vue"
+import { Radiobox } from "@common/comp/ctrl" 
+import { Modal } from "@common/comp/layout"
 
 const locale = inject("locale")
 
 const props = defineProps({
-    task: Object
+    task: Object,
+    successMessage: String,
+    errorMessage: String
 })
 
 const emit = defineEmits([
-
+    "click-submit-usage",
+    "click-reset-usage",
+    "click-set-status"
 ])
+
+const data = reactive({
+    selectingStatus: false,
+    status: undefined
+})
+
+function beginSelectStatus() {
+    data.status = props.task.status
+    data.selectingStatus = true
+}
+
+function endSelectStatus (success) {
+    data.selectingStatus = false
+    if (success) emit("click-set-status", data.status)
+}
 
 </script>
