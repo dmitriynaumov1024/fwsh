@@ -1,5 +1,5 @@
 <template>
-<Fetch :url="`/manager/designs/view/${id}`" :cacheTTL="20" 
+<Fetch :url="`/manager/designs/view/${id}?t=${data.refresh}`" :cacheTTL="2" 
     @load="onLoad" no-default class-error="width-container card pad-1" />
 <template v-if="data.design">
 <Bread>
@@ -11,7 +11,8 @@
 <DesignView :design="data.design"
     :message="data.message"
     @click-edit="editDesign"
-    @click-toggle-visible="toggleDesignVisibility" />
+    @click-toggle-visible="toggleDesignVisibility"
+    @click-recalculate="recalculateDesign" />
 </template>
 </template>
 
@@ -30,7 +31,10 @@ const props = defineProps({
     id: [ Number, String ]
 })
 
-const data = reactive({ })
+const data = reactive({ 
+    refresh: 0,
+    design: undefined
+})
 
 function onLoad (design) {
     if (!data.design) data.design = design
@@ -61,6 +65,16 @@ function toggleDesignVisibility() {
     .catch(error => {
         console.log(error)
         data.message = locale.value.error.description
+    })
+}
+
+function recalculateDesign() {
+    axios.post({
+        url: "/manager/designs/recalculate",
+        params: { id: props.id }
+    })
+    .then(({ status, data: response }) => {
+        if (status == 200) data.refresh = Number(new Date) % 3713837
     })
 }
 

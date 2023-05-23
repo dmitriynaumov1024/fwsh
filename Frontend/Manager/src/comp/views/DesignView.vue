@@ -1,6 +1,11 @@
 <template>
 <div class="width-container card pad-1 mar-b-2">
-    <h2 class="mar-b-1">{{design.displayName}}</h2>
+    <div class="flex-stripe mar-b-1">
+        <h2>{{design.displayName}} <span class="text-thin text-gray">#{{design.id}}</span></h2>
+        <span class="flex-grow"></span>
+        <router-link :to="`/blueprints/taskprototypes/list?design=${design.id}`"
+            class="button button-secondary">{{locale.task.plural}}</router-link>
+    </div>
     <table class="kvtable stripes mar-b-2">
         <tr>
             <td>{{locale.common.id}}</td>
@@ -32,7 +37,9 @@
         </tr>
         <tr>
             <td>{{locale.design.price}}</td>
-            <td>{{design.price}} &#8372;</td>
+            <td>{{design.price}} &#8372; &ensp;
+                <button class="button button-inline" @click="()=> emit('click-recalculate')">
+                {{locale.action.update}}</button></td>
         </tr>
         <tr>
             <td>{{locale.design.description}}</td>
@@ -75,7 +82,8 @@ const props = defineProps({
 
 const emit = defineEmits([
     "click-edit",
-    "click-toggle-visible"
+    "click-toggle-visible",
+    "click-recalculate"
 ])
 
 </script>
