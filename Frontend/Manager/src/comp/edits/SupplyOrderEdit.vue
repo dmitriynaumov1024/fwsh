@@ -55,7 +55,7 @@
     <p>{{successMessage}}</p>
 </div>
 
-<div class="flex-stripe mar-b-1">
+<div v-if="canEdit" class="flex-stripe mar-b-1">
     <button class="button button-secondary accent-weak text-gray" 
         @click="()=> emit('click-reset')">{{locale.action.reset}}</button>
     <span class="flex-grow"></span>

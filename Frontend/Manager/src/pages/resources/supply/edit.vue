@@ -22,7 +22,7 @@
 </div>
 <Modal v-if="data.selectingSupplier">
     <h3 class="mar-b-05">{{locale.supplier.single}}</h3>
-    <div class="height-15 scroll mar-b-1">
+    <div class="pad-05 height-15 scroll mar-b-1">
     <Pagination v-if="data.suppliers.items" 
         :items="data.suppliers.items"
         :page="data.suppliers.page"
@@ -40,10 +40,10 @@
     </div>
     <div class="flex-stripe">
         <button class="button button-inline accent-gray" 
-            @click="endSelectSupplier">{{locale.action.cancel}}</button>
+            @click="()=> endSelectSupplier(false)">{{locale.action.cancel}}</button>
         <span class="flex-grow"></span>
         <button v-if="data.suppliers.selected" class="button button-primary" 
-            @click="endSelectSupplier">{{locale.action.confirm}}</button>
+            @click="()=> endSelectSupplier(true)">{{locale.action.confirm}}</button>
     </div>
 </Modal>
 </template>
@@ -84,7 +84,7 @@ watch(()=> [ props.id, props.resource ], getOrder, { immediate: true })
 function getOrder() {
     if (props.id) axios.get({
         url: `/manager/orders/supply/view/${props.id}`,
-        cacheTTL: 2
+        cacheTTL: 1
     })
     .then(({ status, data: response }) => {
         if (status < 299) {
@@ -96,14 +96,16 @@ function getOrder() {
 }
 
 function beginSelectSupplier() {
+    data.suppliersPage ??= 0
     data.selectingSupplier = true
-    data.suppliersPage = 0
+    if (data.suppliers.items) data.suppliers.selected = data.suppliers.items
+        .find(s => s.id == data.order.item.supplier.id)
 }
 
-function endSelectSupplier() {
+function endSelectSupplier (success) {
     data.selectingSupplier = false
     let supplier = data.suppliers.selected
-    if (!supplier) return
+    if (!supplier || !success) return
     data.order.supplier = supplier
     data.order.supplierId = supplier.id
 }
@@ -120,7 +122,8 @@ function getSuppliers() {
     .then(({ status, data: response }) => {
         if (status < 299) {
             data.suppliers = response
-            data.suppliers.selected = data.order.item.supplier
+            data.suppliers.selected = data.suppliers.items
+                .find(s => s.id == data.order.item.supplier.id)
         }
     })
 }
@@ -146,7 +149,7 @@ function getResource() {
 
 function resetOrder (template) {
     if (template) orderTemplate = template
-    data.order = jsonObjectCopy(template)
+    data.order = jsonObjectCopy(orderTemplate)
 }
 
 function submitOrder() {
@@ -195,13 +198,18 @@ function confirmSubmit() {
 }
 
 function confirmReceive() {
-    submitOrder().then(()=> {
+    axios.post({
+        url: `/manager/orders/supply/update/${props.id}`,
+        data: data.order
+    })
+    .then(()=> {
         axios.post({
             url: `/manager/orders/supply/confirm-receive/${props.id}`
         })
         .then(({ status, data: response }) => {
             if (status < 299) {
-                getOrder()
+                data.order.status = OrderStatus.unknown
+                setTimeout(getOrder, 1000)
             }
         })
         .catch(error => {

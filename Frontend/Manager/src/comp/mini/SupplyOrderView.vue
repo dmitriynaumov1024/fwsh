@@ -22,7 +22,7 @@
     </tr>
     <tr v-if="order.actualPrice != 0">
         <td>{{locale.supplyOrder.actualPrice}}</td>
-        <td>{{order.expectPricePerUnit}} &#8372;
+        <td>{{order.actualPricePerUnit}} &#8372;
         <template v-if="order.item.measureUnit">/ {{locale.measureUnits[order.item.measureUnit]}}</template></td>
     </tr>
     <tr>
