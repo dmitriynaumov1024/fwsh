@@ -170,8 +170,8 @@ public class SupplyOrderController : FwshController
                 double newPricePerUnit = (stored.InStock * order.Item.PricePerUnit 
                     + order.ActualQuantity * order.ActualPricePerUnit) 
                     / (stored.InStock + order.ActualQuantity);
-                order.Item.PricePerUnit = newPricePerUnit;
-                stored.InStock += order.ActualQuantity;
+                order.Item.PricePerUnit = Math.Round(newPricePerUnit, 2);
+                stored.InStock = Math.Round(stored.InStock + order.ActualQuantity, order.Item.Precision);
                 stored.LastRefilledAt = DateTime.UtcNow;
             } 
             else {

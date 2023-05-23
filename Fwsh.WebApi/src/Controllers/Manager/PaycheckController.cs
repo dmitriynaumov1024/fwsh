@@ -115,6 +115,7 @@ public class PaycheckController : FwshController
         }
 
         try {
+            worker.Paychecks.Add(paycheck);
             dataContext.Workers.Update(worker);
             dataContext.ProdTasks.UpdateRange(prodTasks);
             dataContext.RepairTasks.UpdateRange(repairTasks);

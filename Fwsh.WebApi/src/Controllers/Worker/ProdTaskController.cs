@@ -66,9 +66,8 @@ public class ProdTaskController : FwshController
     public IActionResult View (int id)
     {
         var task = dataContext.ProdTasks
-            .Include(t => t.Furniture)
+            .Include(t => t.Furniture.Design)
             .Include(t => t.Prototype)
-            .Include(t => t.Worker)
             .Include(t => t.Resources)
             .ThenInclude(r => r.Item.Stored)
             .FirstOrDefault(t => t.Id == id && t.WorkerId == user.ConfirmedId);
