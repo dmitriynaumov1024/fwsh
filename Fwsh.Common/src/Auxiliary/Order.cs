@@ -31,10 +31,10 @@ public abstract class Order
             this.StartedAt ??= DateTime.UtcNow;
 
         if (status == OrderStatus.Finished) 
-            this.FinishedAt ??= DateTime.UtcNow;
+            this.FinishedAt = DateTime.UtcNow;
 
         if (status == OrderStatus.Received) 
-            this.ReceivedAt ??= DateTime.UtcNow;
+            this.ReceivedAt = DateTime.UtcNow;
 
         return true;
     }
