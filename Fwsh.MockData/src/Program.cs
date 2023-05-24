@@ -26,6 +26,7 @@ public class Program
             new BlueprintSeeder(),
             new ProductionSeeder(),
             new RepairSeeder()
+            new ImageSeeder()
         };
 
         context.Database.EnsureDeleted();
