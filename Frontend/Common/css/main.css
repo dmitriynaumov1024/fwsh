@@ -43,7 +43,7 @@
   margin-bottom: 0.5rem;
 }
 
-.clickable, [clickable="true"] {
+.clickable, [clickable]:not([clickable="false"]) {
   cursor: pointer;
 }
 
@@ -181,11 +181,28 @@ button.disabled, button[disabled] {
   row-gap: 1rem;
 }
 
-/* fixed height*/
+/* fixed height */
 .height-1 {
   min-height: 1rem;
 }
 
 .height-2 {
   min-height: 2rem;
+}
+
+/* fixed width */
+.width-1 {
+  width: 1rem;
+}
+
+.width-2 {
+  width: 2rem;
+}
+
+.width-4 {
+  width: 4rem;
+}
+
+.width-6 {
+  width: 6rem;
 }

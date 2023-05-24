@@ -291,9 +291,16 @@ export default nestedObjectMerge (base, {
         Kg: "Kg",
         g: "g"
     },
+    slotNames: {
+        [null]: "Unknown",
+        decor: "Decor",
+        fabric: "Fabric",
+    },
     resource: {
         single: "Resource",
         plural: "Resources",
+        type: "Type",
+        slotName: "Slot",
         name: "Name",
         externalId: "External id",
         description: "Description",

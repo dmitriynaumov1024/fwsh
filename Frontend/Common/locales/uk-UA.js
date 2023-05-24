@@ -291,9 +291,16 @@ export default nestedObjectMerge (base, {
         Kg: "кг",
         g: "г"
     },
+    slotNames: {
+        [null]: "Невідомо",
+        decor: "Декор",
+        fabric: "Тканина",
+    },
     resource: {
         single: "Ресурс",
         plural: "Ресурси",
+        type: "Тип",
+        slotName: "Слот",
         name: "Найменування",
         externalId: "Ідентифікатор",
         description: "Опис",
