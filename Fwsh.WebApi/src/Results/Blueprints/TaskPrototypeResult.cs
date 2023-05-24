@@ -21,9 +21,7 @@ public class TaskPrototypeResult : Result, IResultBuilder<TaskPrototypeResult>
 
     public DesignResult Design { get; set; }
 
-    public List<ResourceQuantity> Parts { get; set; }
-    public List<ResourceQuantity> Materials { get; set; }
-    public List<ResourceQuantity> Fabrics { get; set; }
+    public List<ResourceQuantity> Resources { get; set; }
 
     public TaskPrototypeResult() { }
 
@@ -63,9 +61,7 @@ public class TaskPrototypeResult : Result, IResultBuilder<TaskPrototypeResult>
             Role = task.Role,
             Payment = task.Payment,
             Description = task.Description,
-            Parts = task.Parts.ToList(),
-            Materials = task.Materials.ToList(),
-            Fabrics = task.Fabrics.ToList()
+            Resources = task.Resources.ToList()
         };
 
         if (task.Design != null && !rbcontext.Contains(result.Design)) {
