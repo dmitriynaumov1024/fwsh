@@ -28,7 +28,12 @@ public class Startup
 {
     public void ConfigureServices (IServiceCollection services)
     {
-        services.AddSingleton<Logger, ConsoleLogger>();
+        string logfile = env.get("API_LOGFILE");
+
+        if (logfile == null || logfile == "console")
+            services.AddSingleton<Logger, ConsoleLogger>();
+        else
+            services.AddSingleton<Logger>(FileLogger.To(logfile));
 
         if (env.get("DB_HOST") == "memory") 
             services.AddDbContext<FwshDataContext, FwshDataContextInMemory>(ServiceLifetime.Scoped);
