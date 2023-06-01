@@ -1,72 +1,72 @@
 <template>
-    <div class="fancy-input" :invalid="badFields?.nameKey">
-        <label for="input-design-name">{{locale.design.nameKey}}</label>
-        <input type="text" id="input-design-name" v-model="design.nameKey" :disabled="mode=='edit'" />
-    </div>
-    <div class="fancy-input" :invalid="badFields?.displayName">
-        <label for="input-design-name">{{locale.design.displayName}}</label>
-        <input type="text" id="input-design-name" v-model="design.displayName" />
-    </div>
-    <div class="fancy-group" :invalid="badFields?.type">
-        <header>{{locale.design.type}}</header>
-        <main>
-            <Radiobox v-for="type of designTypes" v-model="design.type" :value="type">
-                <span>{{locale.furnitureTypes[type]}} ({{type}})</span>
-            </Radiobox>
-        </main>
+    <inputbox type="text" v-model="design.nameKey" 
+        :disabled="mode=='edit'" :invalid="badFields?.nameKey">
+        {{locale.design.nameKey}}
+    </inputbox>
+    <inputbox type="text" v-model="design.displayName" 
+        :invalid="badFields?.displayName">
+        {{locale.design.displayName}}
+    </inputbox>
+    <groupbox :invalid="badFields?.type">
+        <template v-slot:header>{{locale.design.type}}</template>
+        <radiobox v-for="type of designTypes" v-model="design.type" :value="type">
+            <span>{{locale.furnitureTypes[type]}} ({{type}})</span>
+        </radiobox>
+    </groupbox>
+    <div class="mar-b-1">
+        <checkbox v-model="design.isVisible">
+            {{locale.design.isVisible}}</checkbox>
     </div>
     <div class="mar-b-1">
-        <Checkbox v-model="design.isVisible">{{locale.design.isVisible}}</Checkbox>
+        <checkbox v-model="design.isTransformable">
+            {{locale.design.isTransformable}}</checkbox>
     </div>
-    <div class="mar-b-1">
-        <Checkbox v-model="design.isTransformable">{{locale.design.isTransformable}}</Checkbox>
-    </div>
-    <div class="fancy-group" :invalid="badFields?.dimCompact">
-        <header>{{locale.design.dimCompact}}</header>
-        <main>
-            <div v-for="dimension of ['width', 'length', 'height']" class="fancy-input">
-                <label :for="'input-design-compact-'+dimension">{{locale.design[dimension]}}, cm</label>
-                <input type="number" :id="'input-design-compact-'+dimension" v-model="design.dimCompact[dimension]" />
+    <groupbox :invalid="badFields?.dimCompact">
+        <template v-slot:header>{{locale.design.dimCompact}}</template>
+        <inputbox v-for="dimension of ['width', 'length', 'height']"
+            type="number" v-model="design.dimCompact[dimension]">
+            {{locale.design[dimension]}}, cm
+        </inputbox>
+    </groupbox>
+    <groupbox v-if="design.isTransformable" :invalid="badFields?.dimExpanded">
+        <template v-slot:header>{{locale.design.dimExpanded}}</template>
+        <inputbox v-for="dimension of ['width', 'length', 'height']"
+            type="number" v-model="design.dimExpanded[dimension]">
+            {{locale.design[dimension]}}, cm
+        </inputbox>
+    </groupbox>
+    <textbox v-model="design.description" :invalid="badFields?.description">
+        {{locale.design.description}}
+    </textbox>
+    <groupbox>
+        <template v-slot:header>{{locale.photo.plural}}</template>
+        <div class="preview-photo-gallery">
+            <div v-for="url of design.photoUrls">
+                <img :src="cdnResolve(url)">
             </div>
-        </main>
-    </div>
-    <div class="fancy-group" v-if="design.isTransformable" :invalid="badFields?.dimExpanded">
-        <header>{{locale.design.dimExpanded}}</header>
-        <main>
-            <div v-for="dimension of ['width', 'length', 'height']" class="fancy-input">
-                <label :for="'input-design-expanded-'+dimension">{{locale.design[dimension]}}, cm</label>
-                <input type="number" :id="'input-design-expanded-'+dimension" v-model="design.dimExpanded[dimension]" />
+            <div v-for="photo of photos">
+                <img :src="URL.createObjectURL(photo)" 
+                @load="URL.revokeObjectURL(photo)">
             </div>
-        </main>
-    </div>
-    <div class="fancy-textarea" :invalid="badFields?.description">
-        <label for="input-design-description">{{locale.design.description}}</label>
-        <textarea id="input-design-description" v-model="design.description"></textarea>
-    </div>
-    <div class="fancy-group">
-        <header>{{locale.photo.plural}}</header>
-        <main>
-            <div class="preview-photo-gallery">
-                <div v-for="url of design.photoUrls"><img :src="cdnResolve(url)"></div>
-                <div v-for="photo of photos"><img :src="URL.createObjectURL(photo)" @load="URL.revokeObjectURL(photo)"></div>
-            </div>
-            <div>
-                <input type="file" multiple id="input-photos" ref="photoInput" 
-                    @change="photoInputChanged" class="hidden">
-                <label for="input-photos" 
-                    class="button button-secondary button-block accent-gray">
-                    + {{locale.action.addPhotos}}
-                </label>
-            </div>
-        </main>
-    </div>
+        </div>
+        <div>
+            <input type="file" multiple id="input-photos" ref="photoInput" 
+                @change="photoInputChanged" class="hidden">
+            <label for="input-photos" 
+                class="button button-secondary button-block accent-gray">
+                + {{locale.action.addPhotos}}
+            </label>
+        </div>
+    </groupbox>
     <div class="mar-b-2">
         <span class="text-error">{{errorMessage}}</span>
     </div>
     <div class="flex-stripe flex-pad-1">
+        <button class="button button-inline accent-bad" 
+            @click="()=> emit('reset')">{{locale.action.reset}}</button>
         <span class="flex-grow"></span>
-        <button class="button button-inline accent-bad" @click="()=> emit('reset')">{{locale.action.clear}}</button>
-        <button class="button button-primary" @click="()=> emit('submit')">{{locale.action.submit}}</button>
+        <button class="button button-primary" 
+            @click="()=> emit('submit')">{{locale.action.submit}}</button>
     </div>
 </template>
 
@@ -74,7 +74,7 @@
 import { FurnitureTypes } from "@common"
 import { cdnResolve } from "@common/utils"
 import { ref, reactive, computed, inject } from "vue"
-import { Checkbox, Radiobox } from "@common/comp/ctrl"
+import { Groupbox, Inputbox, Textbox, Checkbox, Radiobox } from "@common/comp/ctrl"
 
 const URL = window.URL
 
@@ -88,10 +88,6 @@ const props = defineProps({
 })
 
 const mode = computed(()=> (!props.design.id) ? "create" : "edit")
-
-// const designTypes = [
-//     "sofa", "corner", "ottoman", "armchair", "pouffe"
-// ]
 
 const designTypes = Object.values(FurnitureTypes).filter(v => !!v)
 

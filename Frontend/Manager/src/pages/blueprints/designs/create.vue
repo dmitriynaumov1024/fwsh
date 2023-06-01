@@ -81,6 +81,7 @@ function attachPhotosToDesign() {
 
 function resetDesign() {
     data.photos = [ ]
+    data.badFields = { }
     data.design = designTemplate()
 }
 
