@@ -39,4 +39,24 @@ cd Frontend
 npm i -w <user>
 npm run dev -w <user>
 ```
-7. Open [`http://localhost:5000/`](http://localhost:5000/) in web browser
+7. Open [`http://localhost:5000/`](http://localhost:5000/) in your browser.
+
+## Production deployment
+
+Server prerequisites: 
+- apache2, apache2-ssl, apache2-proxy
+- postgresql
+
+Dev prerequisites:
+- dotnet 6
+- node 18
+- npm 8
+
+How to build and deploy:
+1. Go to repository root directory.
+2. Exec `./deploy/interactive.sh` . Initially you will be prompted for 
+   server IP, server user name, etc. Then you will be prompted to configure
+   .env files for Fwsh.WebApi and Frontend. Also you will be prompted for
+   server user password, server root password and (?) local root password.
+3. Install rootca.crt certificate in your browser.
+4. Open [`https://www.fwsh.example.com`](https://www.fwsh.example.com) in your browser. 
