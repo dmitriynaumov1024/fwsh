@@ -46,11 +46,13 @@ npm run dev -w <user>
 Server prerequisites: 
 - apache2, apache2-ssl, apache2-proxy
 - postgresql
+- rsync
 
 Dev prerequisites:
 - dotnet 6
 - node 18
 - npm 8
+- rsync
 
 How to build and deploy:
 1. Go to repository root directory.

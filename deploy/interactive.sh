@@ -10,25 +10,39 @@ p() {
     printf "$*\n"
 }
 
+[[ "${PWD}" =~ .*deploy$ ]] && cd ..
+[[ -e "deploy/interactive.sh" ]] || exit
+
 h1 "This is interactive deployment script"
 sleep 1
 
+[[ -e "dist"           ]] || mkdir dist
+[[ -e "dist/cdn"       ]] || mkdir dist/cdn
+[[ -e "dist/cdn/files" ]] || mkdir dist/cdn/files
+[[ -e "dist/.logs"     ]] || mkdir dist/.logs
+[[ -e "dist/.confs"    ]] || mkdir dist/.confs
+[[ -e "dist/.certs"    ]] || mkdir dist/.certs
+
+[[ -e "dist/api"       ]] && rm -r dist/api
+[[ -e "dist/www"       ]] && rm -r dist/www
+[[ -e "dist/worker"    ]] && rm -r dist/worker
+[[ -e "dist/manager"   ]] && rm -r dist/manager
+
+
+if [[ -e "deploy/.env" ]]; then
+h1 "[1]. Variables loaded from deploy/.env"
+source deploy/.env
+else
 h1 "[1]. Asking for some variables"
-sleep 1
 printf "Server IP    = " && read FWSH_SERVER_IP
 printf "Server user  = " && read FWSH_SERVER_USER
+cat > deploy/.env << EOF
+FWSH_SERVER_IP=${FWSH_SERVER_IP}
+FWSH_SERVER_USER=${FWSH_SERVER_USER}
+EOF
+FWSH_SERVER_BASE="/home/${FWSH_SERVER_USER}/fwsh.example.com"
 sleep 1
-
-mkdir dist
-rm -r dist/api
-rm -r dist/www
-rm -r dist/worker
-rm -r dist/manager
-mkdir dist/cdn
-mkdir dist/cdn/files
-mkdir dist/.logs
-mkdir dist/.confs
-mkdir dist/.certs
+fi
 
 h1 "[2]. Configure and build Fwsh.WebApi"
 cd Fwsh.WebApi
@@ -40,9 +54,7 @@ grep -E "DB_(DATABASE|USER)" -- ./.env.prod > ./.env.prod.tmp \
 && source ./.env.prod.tmp \
 && rm ./.env.prod.tmp
 p "Building Fwsh.WebApi..."
-dotnet publish -p:OutDir=../dist/api \
-    -p:PublishTrimmed=True \
-    --self-contained --os=linux-musl
+dotnet publish -p:OutDir=../dist/api -p:PublishTrimmed=True --self-contained --os=linux-musl
 cp ./.env.prod ../dist/api/.env
 p "Fwsh.WebApi has been built."
 cd ..
@@ -68,7 +80,6 @@ cd ..
 
 h1 "[4]. Create vhosts"
 cd dist
-FWSH_SERVER_BASE="/home/${FWSH_SERVER_USER}/fwsh.example.com"
 for vhost in cdn manager worker www
 do
 p "Creating ${vhost} vhost..."
@@ -78,13 +89,13 @@ cat > ./.confs/${vhost}.conf << EOF
   DocumentRoot ${FWSH_SERVER_BASE}/${vhost}
   <Directory ${FWSH_SERVER_BASE}/${vhost}>
     Require all granted
+    $([[ "$vhost" =~ cdn ]] || echo "FallbackResource /index.html")
   </Directory>
   ErrorLog ${FWSH_SERVER_BASE}/.logs/${vhost}.error.log
   SSLCertificateFile ${FWSH_SERVER_BASE}/.certs/${vhost}/host.crt
   SSLCertificateKeyFile ${FWSH_SERVER_BASE}/.certs/${vhost}/host.key
 </VirtualHost>
 EOF
-sleep 1
 done
 p "Creaing api vhost..."
 cat > ./.confs/api.conf << EOF
@@ -120,7 +131,7 @@ if [[ -e "./.rootCA.key" && -e "./.rootCA.crt" ]]; then
 p "Root certificate authority exists. Skipping."
 else
 p "Creating new root certificate authority..."
-printf "Country = " && read CERT_COUNTRY
+printf "Country   = " && read CERT_COUNTRY
 printf "City/Town = " && read CERT_LOCATION
 openssl req -x509 -sha256 -nodes -newkey rsa:2048 \
   -subj "/CN=fwsh.example.com/C=${CERT_COUNTRY}/L=${CERT_LOCATION}" \
@@ -128,7 +139,7 @@ openssl req -x509 -sha256 -nodes -newkey rsa:2048 \
 p "Root certificate authority dist/.certs/.rootCA.crt has been created."
 fi
 p "Creating certificates for vhosts..."
-printf "Country = " && read CERT_COUNTRY
+printf "Country   = " && read CERT_COUNTRY
 printf "City/Town = " && read CERT_LOCATION
 for host in api cdn manager worker www
 do
@@ -168,7 +179,6 @@ openssl x509 -req -sha256 \
   -extfile ./${host}/cert.conf \
   -CA ./.rootCA.crt -CAkey ./.rootCA.key \
   -CAcreateserial -out ./${host}/host.crt
-sleep 1 
 done
 p "All necessary certificates have been created."
 cd ../..
@@ -207,7 +217,7 @@ printf "Press ENTER to continue" && read
 
 h1 "[7]. Upload dist to ${FWSH_SERVER_USER}@${FWSH_SERVER_IP}:fwsh.example.com/"
 p "uploading dist directory (quiet mode)..."
-scp -q -r dist/ ${FWSH_SERVER_USER}@${FWSH_SERVER_IP}:fwsh.example.com/
+rsync -r dist/ ${FWSH_SERVER_USER}@${FWSH_SERVER_IP}:fwsh.example.com/
 p "dist directory has been uploaded."
 
 h1 "[8]. Connect to ${FWSH_SERVER_USER}@${FWSH_SERVER_IP} and finish configuration"
