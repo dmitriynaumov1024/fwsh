@@ -5,6 +5,7 @@ import index from "./index.vue"
 import designList from "./designs/list.vue"
 import designView from "./designs/view.vue"
 import designCreate from "./designs/create.vue"
+import designEdit from "./designs/edit.vue"
 
 import taskPrototypeList from "./taskprototypes/list.vue"
 import taskPrototypeEdit from "./taskprototypes/edit.vue"
@@ -25,8 +26,13 @@ export default defineRoutes ( "/blueprints", [
         props: { id: Number }
     },
     {
+        path: "/designs/edit/:id",
+        component: designEdit,
+        props: { id: Number }
+    },
+    {
         path: "/designs/create",
-        component: designCreate
+        component: designEdit
     },
     {
         path: "/taskprototypes/list",

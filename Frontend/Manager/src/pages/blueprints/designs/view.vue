@@ -41,7 +41,7 @@ function onLoad (design) {
 }
 
 function editDesign() {
-    console.log("Should edit design")
+    setTimeout(()=> router.push(`/blueprints/designs/edit/${data.design.id}`), 100)
 }
 
 function toggleDesignVisibility() {
