@@ -112,7 +112,7 @@ public class DesignController : FwshController
 
         try {
             request.ApplyTo(design);
-            dataContext.Designs.Add(design);
+            dataContext.Designs.Update(design);
             dataContext.SaveChanges();
             return Ok (new CreationResult(design.Id, $"Successfully created Design {design.Id}"));
         }
@@ -215,23 +215,26 @@ public class DesignController : FwshController
     }
 
     [HttpPost("delete-photos/{designId}")]
-    public IActionResult DeletePhotos (int designId, [FromBody] IList<string> urls)
+    public IActionResult DeletePhotos (int designId, List<string> urls)
     {
         Design design = dataContext.Designs
             .FirstOrDefault(d => d.Id == designId);
 
-        int count = 0;
-        var photoUrls = design.PhotoUrls.ToList();
-
-        foreach (var photoUrl in photoUrls) {
-            if (urls.Contains(photoUrl)) {
-                storage.TryDelete(photoUrl);
-                photoUrls.Remove(photoUrl);
-                count += 1;
-            }
-        }
+        if (design == null) 
+            return NotFound(new BadFieldResult("id"));
 
         try {
+            int count = 0;
+            var photoUrls = design.PhotoUrls?.ToList() ?? new List<string>();
+
+            foreach (var photoUrl in photoUrls.ToList()) {
+                if (urls.Contains(photoUrl)) {
+                    storage.TryDelete(photoUrl);
+                    photoUrls.Remove(photoUrl);
+                    count += 1;
+                }
+            }
+
             design.PhotoUrls = photoUrls;
             dataContext.Designs.Update(design);
             dataContext.SaveChanges();
