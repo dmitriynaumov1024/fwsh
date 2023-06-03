@@ -8,8 +8,22 @@
 .preview-photo-gallery img {
   display: block;
   width: 100%;
-  height: 60vw;
+  max-height: 70vw;
   object-fit: contain;
+  border: 1px solid var(--color-back-2);
+}
+
+.preview-photo-gallery .delete {
+  background-color: var(--color-back-1);
+  opacity: 60%; 
+  padding: 1px; 
+  position: absolute; 
+  top: 2px; right: 2px;
+}
+
+.preview-photo-gallery .delete:hover {
+  background-color: var(--color-bad);
+  opacity: 95%;
 }
 
 @media screen and (min-width: 760px) {

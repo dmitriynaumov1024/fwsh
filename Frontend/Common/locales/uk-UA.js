@@ -131,6 +131,13 @@ export default nestedObjectMerge (base, {
         description: "Запитувана функція зараз недоступна. Будь ласка, спробуйте пізніше",
         before: "Спробуйте ще раз",
     },
+    photoLimitExceeded: {
+        title: "Перевищено ліміт фото",
+        description: "Перевищено максимально допустиму кількість прикріплених фото.",
+        getDescription(n) {
+            return `Перевищено максимально допустиму кількість прикріплених фото (${n}).`
+        }
+    },
     header: {
         title: "workshop",
         nav: {

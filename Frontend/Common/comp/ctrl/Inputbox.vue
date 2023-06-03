@@ -3,8 +3,9 @@
     <label :for="`input-${$.vnode.key}`"><slot></slot></label>
     <input :id="`input-${$.vnode.key}`" ref="input"
         :type="nativeInputType"
-        :value="value ?? props.modelValue" 
-        :disabled="props.disabled" 
+        :value="props.value ?? props.modelValue" 
+        :disabled="props.disabled"
+        :tabindex="props.tabindex" 
         @change="emitUpdate" />
 </div>
 </template>
@@ -19,6 +20,7 @@ const props = defineProps({
     },
     invalid: Boolean,
     disabled: Boolean,
+    tabindex: undefined,
     value: undefined,
     modelValue: undefined
 })

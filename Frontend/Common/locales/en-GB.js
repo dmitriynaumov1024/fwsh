@@ -131,6 +131,13 @@ export default nestedObjectMerge (base, {
         description: "The requested functionality is not available yet. Please try again later.",
         before: "Please try later at",
     },
+    photoLimitExceeded: {
+        title: "Photo limit exceeded",
+        description: "Photo limit was exceeded.",
+        getDescription(n) {
+            return `Photo limit (${n}) was exceeded.`
+        }
+    },
     header: {
         title: "workshop",
         nav: {

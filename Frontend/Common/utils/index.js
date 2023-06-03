@@ -65,6 +65,16 @@ function jsonObjectCopy (source) {
     return JSON.parse(stringified)
 }
 
+// Create FormData from array of files
+//
+function filesToFormData (files) {
+    let result = new FormData()
+    for (const item of files) {
+        result.append("files", item)
+    }
+    return result
+}
+
 export { 
     arrayToDict,
     arrayConcat,
@@ -73,4 +83,5 @@ export {
     nestedObjectCopy,
     nestedObjectMerge,
     jsonObjectCopy,
+    filesToFormData,
 }
