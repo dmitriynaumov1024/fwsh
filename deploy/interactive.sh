@@ -40,9 +40,10 @@ cat > deploy/.env << EOF
 FWSH_SERVER_IP=${FWSH_SERVER_IP}
 FWSH_SERVER_USER=${FWSH_SERVER_USER}
 EOF
-FWSH_SERVER_BASE="/home/${FWSH_SERVER_USER}/fwsh.example.com"
 sleep 1
 fi
+
+FWSH_SERVER_BASE="/home/${FWSH_SERVER_USER}/fwsh.example.com"
 
 h1 "[2]. Configure and build Fwsh.WebApi"
 cd Fwsh.WebApi
