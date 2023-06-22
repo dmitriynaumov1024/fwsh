@@ -1,7 +1,7 @@
 <template>
 <div class="fancy-input" :invalid="props.invalid">
-    <label :for="`input-${$.vnode.key}`"><slot></slot></label>
-    <input :id="`input-${$.vnode.key}`" ref="input"
+    <label :for="`input-${idInternal}`"><slot></slot></label>
+    <input :id="`input-${idInternal}`" ref="input"
         :type="nativeInputType"
         :value="props.value ?? props.modelValue" 
         :disabled="props.disabled"
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, onMounted } from "vue"
 
 const props = defineProps({
     type: {
@@ -20,10 +20,13 @@ const props = defineProps({
     },
     invalid: Boolean,
     disabled: Boolean,
+    name: String,
     tabindex: undefined,
     value: undefined,
     modelValue: undefined
 })
+
+const idInternal = ref(null)
 
 const emit = defineEmits([
     "update:modelValue"
@@ -34,6 +37,16 @@ const input = ref(null)
 const nativeInputType = computed(() => {
     // just for now
     return props.type == "password" ? "password" : "text" 
+})
+
+onMounted(() => {
+    if (props.name) {
+        idInternal.value = props.name
+    }
+    else {
+        window._idInternal = (window._idInternal ?? 0) + 1
+        idInternal.value = window._idInternal
+    }
 })
 
 function emitUpdate() {

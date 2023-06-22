@@ -1,9 +1,9 @@
 <template>
 <div class="fancy-textarea" :invalid="props.invalid">
-    <label :for="`input-${$.vnode.key}`">
+    <label :for="`input-${idInternal}`">
         <slot></slot>
     </label>
-    <textarea :id="`input-${$.vnode.key}`" ref="input"
+    <textarea :id="`input-${idInternal}`" ref="input"
         :value="props.value ?? props.modelValue" 
         :disabled="props.disabled"
         :tabindex="props.tabindex" 
@@ -18,6 +18,7 @@ import { ref, computed } from "vue"
 const props = defineProps({
     invalid: Boolean,
     disabled: Boolean,
+    name: String,
     tabindex: undefined,
     value: undefined,
     modelValue: undefined
@@ -26,6 +27,18 @@ const props = defineProps({
 const emit = defineEmits([
     "update:modelValue"
 ])
+
+const idInternal = ref(null)
+
+onMounted(() => {
+    if (props.name) {
+        idInternal.value = props.name
+    }
+    else {
+        window._idInternal = (window._idInternal ?? 0) + 1
+        idInternal.value = window._idInternal
+    }
+})
 
 const input = ref(null)
 
