@@ -1,6 +1,7 @@
 # fwsh
 
-Production management and order processing system for a furniture workshop
+**fwsh** `/fish/` - is a production management and order processing system for a 
+furniture workshop; a project for my bachelor's qualifying paper. 
 
 Copyright 2022 - 2023 Dmitriy Naumov naumov1024@gmail.com
 
